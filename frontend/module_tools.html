@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>运营自动化组件</title>
+  <style>
+    :root {
+      --bg: #eef3fb;
+      --line: #c9d7ee;
+      --navy: #2f5ea8;
+      --text: #162033;
+      --muted: #4f5d78;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px 12px 32px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .top h1 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--navy);
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .menu {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .menu a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: #fff;
+      border: 1px solid var(--navy);
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 12px 28px rgba(47, 94, 168, 0.14);
+    }
+
+    .tool-card h2 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      color: var(--navy);
+    }
+
+    .tool-card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .sub-tools {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .sub-tool {
+      border: 1px dashed #c4d3ec;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fbfdff;
+    }
+
+    .sub-tool h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: var(--navy);
+    }
+
+    .script-path {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: #5f7192;
+      word-break: break-all;
+    }
+
+    .upload-area {
+      position: relative;
+      border: 1px dashed #97afd6;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 20px 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      cursor: not-allowed;
+    }
+
+    .upload-input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: not-allowed;
+    }
+
+    .upload-btn {
+      margin-top: 10px;
+      border: 1px solid #b9c9e6;
+      border-radius: 8px;
+      padding: 8px 14px;
+      background: #e9f0fb;
+      color: #7b8aa6;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: not-allowed;
+    }
+
+    .coming-soon {
+      display: inline-block;
+      margin-top: 6px;
+      color: #6a7e9f;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <h1>运营自动化组件</h1>
+      <a class="back" href="./IPO.html">返回日历页</a>
+    </div>
+
+    <div class="menu">
+      <a href="#invoice">发票分类</a>
+      <a href="#video">询价视频</a>
+      <a href="#redemption">巨额赎回</a>
+      <a href="#related-deal">关联交易</a>
+    </div>
+
+    <section class="tool-card" id="invoice">
+      <h2>妥妥递发票托管分类</h2>
+      <p class="script-path">脚本：module_tools/invoice/Invoice_organization_local.py</p>
+      <label class="upload-area">
+        <input class="upload-input" type="file" disabled>
+        拖拽文件到此处，或点击选择文件
+        <span class="coming-soon">即将上线</span>
+      </label>
+      <button class="upload-btn" type="button" disabled data-api="/api/invoice">上传</button>
+    </section>
+
+    <section class="tool-card" id="video">
+      <h2>新股询价现场通讯工具上交登记表</h2>
+      <p class="script-path">脚本：module_tools/inquiry_video/video.py</p>
+      <label class="upload-area">
+        <input class="upload-input" type="file" disabled>
+        拖拽文件到此处，或点击选择文件
+      </label>
+      <button class="upload-btn" type="button" disabled data-api="/api/video">上传</button>
+    </section>
+
+    <section class="tool-card" id="redemption">
+      <h2>触发巨额赎回的公告</h2>
+      <p class="script-path">脚本：module_tools/big_redemption/multi_fund.py</p>
+      <label class="upload-area">
+        <input class="upload-input" type="file" disabled>
+        拖拽文件到此处，或点击选择文件
+      </label>
+      <button class="upload-btn" type="button" disabled data-api="/api/redemption">上传</button>
+    </section>
+
+    <section class="tool-card" id="related-deal">
+      <h2>关联交易</h2>
+      <div class="sub-tools">
+        <div class="sub-tool">
+          <h3>关联交易决策机制</h3>
+          <p class="script-path">脚本：module_tools/related_deal/convert_openyxl.py</p>
+          <label class="upload-area">
+            <input class="upload-input" type="file" disabled>
+            拖拽文件到此处，或点击选择文件
+          </label>
+          <button class="upload-btn" type="button" disabled data-api="/api/excel">上传</button>
+        </div>
+
+        <div class="sub-tool">
+          <h3>触发关联交易的公告</h3>
+          <p class="script-path">脚本：module_tools/related_deal/multi_fund.py</p>
+          <label class="upload-area">
+            <input class="upload-input" type="file" disabled>
+            拖拽文件到此处，或点击选择文件
+          </label>
+          <button class="upload-btn" type="button" disabled data-api="/api/fund">上传</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

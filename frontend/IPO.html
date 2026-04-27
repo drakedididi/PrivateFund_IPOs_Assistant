@@ -1,0 +1,1512 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>私募网下打新助手</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap");
+
+    :root {
+      --bg: #eef3fb;
+      --paper: #ffffff;
+      --line: #c9d7ee;
+      --line-strong: #7c9ccc;
+      --navy: #2f5ea8;
+      --navy-deep: #24477f;
+      --red: #e0463a;
+      --text: #162033;
+      --muted: #647089;
+      --shadow: 0 18px 42px rgba(30, 54, 101, 0.12);
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(47, 94, 168, 0.1), transparent 32%),
+        linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
+    }
+
+    .page {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 16px 8px 20px;
+    }
+
+    .shell {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(124, 156, 204, 0.25);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 18px 10px;
+      border-bottom: 1px solid rgba(124, 156, 204, 0.22);
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-family: "Noto Serif SC", serif;
+      font-size: clamp(24px, 2.6vw, 32px);
+      color: var(--navy-deep);
+      letter-spacing: 1px;
+    }
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ops-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: #fff;
+      background: var(--navy);
+      border: 1px solid var(--navy);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      transition: 0.2s ease;
+    }
+
+    .ops-link:hover {
+      background: var(--navy-deep);
+      border-color: var(--navy-deep);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy-deep);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+    }
+
+    .tab-btn.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(47, 94, 168, 0.22);
+    }
+
+    .board-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 18px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .range-strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .view {
+      display: none;
+      padding: 10px 14px 16px;
+      gap: 12px;
+    }
+
+    .view.active {
+      display: grid;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+      color: var(--navy-deep);
+      font-weight: 700;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy-deep);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .pill.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+
+    .calendar {
+      display: grid;
+      gap: 12px;
+    }
+
+    .week-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .day-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      min-height: 248px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .day-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(47, 94, 168, 0.12);
+    }
+
+    .day-card.today {
+      border-color: var(--red);
+      box-shadow: 0 16px 28px rgba(224, 70, 58, 0.15);
+    }
+
+    .weekday {
+      background: linear-gradient(180deg, var(--navy) 0%, #3d71c1 100%);
+      color: #fff;
+      text-align: center;
+      font-size: 40px;
+      font-weight: 700;
+      padding: 8px 8px;
+      line-height: 1.2;
+      font-family: "Noto Serif SC", serif;
+    }
+
+    .day-card.today .weekday {
+      background: linear-gradient(180deg, #ff6b5f 0%, var(--red) 100%);
+    }
+
+    .date-line {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 12px 8px;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(47, 94, 168, 0.05), rgba(47, 94, 168, 0));
+      line-height: 1;
+    }
+
+    .date-line small {
+      font-size: 24px;
+      color: var(--muted);
+      margin-left: 4px;
+      font-weight: 500;
+    }
+
+    .day-card.today .date-line {
+      color: var(--red);
+      background: linear-gradient(180deg, rgba(224, 70, 58, 0.12), rgba(224, 70, 58, 0));
+    }
+
+    .events {
+      padding: 8px 10px 12px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .event-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: start;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .event-label {
+      min-width: 92px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      height: 26px;
+      padding: 0 8px;
+      border: 1px solid #b8cbed;
+      border-radius: 8px;
+      color: var(--navy-deep);
+      background: #f6f9ff;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .event-value {
+      color: var(--text);
+      word-break: break-all;
+      padding-top: 2px;
+    }
+
+    .event-value.empty {
+      color: #8d95a8;
+    }
+
+    .market-closed {
+      border: 1px dashed #bfcde6;
+      border-radius: 10px;
+      background: #f7f9fd;
+      color: #4f5d78;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px 8px;
+    }
+
+    .reserve-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .reserve-grid.one {
+      grid-template-columns: 1fr;
+    }
+
+    .reserve-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px dashed #9fb2d3;
+      border-radius: 12px;
+      min-height: 120px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .reserve-title {
+      margin: 0;
+      font-size: 15px;
+      color: #18345f;
+      font-weight: 700;
+    }
+
+    .reserve-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .board-wrap {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .board-title {
+      margin: 0;
+      font-size: 17px;
+      color: var(--navy-deep);
+      font-weight: 700;
+    }
+
+    .board-empty {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .board-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .board-card {
+      border: 1px solid #d4e0f2;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fbfdff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .board-stock {
+      margin: 0;
+      font-size: 15px;
+      color: #1d365f;
+    }
+
+    .board-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 15px;
+    }
+
+    .board-table th,
+    .board-table td {
+      border: 1px solid #dbe5f5;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+      width: 33.333%;
+    }
+
+    .board-table th {
+      background: #f3f7ff;
+      color: #2a4d85;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .status-cell {
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+
+    .done-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #9fb2d3;
+      border-radius: 4px;
+      background: #fff;
+      color: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 18px;
+      padding: 0;
+    }
+
+    .done-box.checked {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: #fff;
+    }
+
+    @media (max-width: 1200px) {
+      .weekday {
+        font-size: 34px;
+      }
+
+      .date-line {
+        font-size: 36px;
+      }
+
+      .date-line small {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 1060px) {
+      .week-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 8px;
+      }
+
+      .topbar {
+        display: grid;
+        padding: 12px 12px 8px;
+      }
+
+      .board-meta {
+        padding: 8px 12px 0;
+      }
+
+      .view {
+        padding: 10px;
+      }
+
+      .week-row {
+        grid-template-columns: 1fr;
+      }
+
+      .reserve-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header class="topbar">
+        <div class="title-wrap">
+          <h1 id="mainTitle">私募网下打新助手</h1>
+          <a class="ops-link" href="./module_tools.html">前往运营自动化组件</a>
+          <a class="ops-link" href="./trade_tools.html">前往交易自动化组件</a>
+        </div>
+        <div class="tabs" id="tabs">
+          <button class="tab-btn active" data-tab="a_share">A股日历</button>
+          <button class="tab-btn" data-tab="bond">可转债日历</button>
+          <button class="tab-btn" data-tab="h_share">H股日历</button>
+        </div>
+      </header>
+
+      <div class="board-meta">
+        <span class="range-strong" id="dateRange"></span>
+        <span id="todayInfo"></span>
+        <span id="viewInfo"></span>
+      </div>
+
+      <section class="view active" id="view-a_share">
+        <div class="panel-head">
+          <h2 class="panel-title">A股日历</h2>
+          <div class="filters" id="exchangeFilters">
+            <button class="pill active" data-exchange="all">全部交易所</button>
+            <button class="pill" data-exchange="hs">沪深交易所</button>
+            <button class="pill" data-exchange="bj">北交所</button>
+          </div>
+        </div>
+        <main class="calendar">
+          <div class="week-row" id="aWeekCurrent"></div>
+          <div class="week-row" id="aWeekNext"></div>
+        </main>
+        <section class="board-wrap">
+          <h3 class="board-title">打新群看板</h3>
+          <div id="aShareBoard"></div>
+        </section>
+        <div class="reserve-grid one">
+          <article class="reserve-card">
+            <h3 class="reserve-title">北交所 vs REITs</h3>
+            <p class="reserve-desc">预留输入区域、规则参数和计算结果展示区。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-bond">
+        <div class="panel-head">
+          <h2 class="panel-title">可转债日历</h2>
+        </div>
+        <main class="calendar">
+          <div class="week-row" id="bondWeekCurrent"></div>
+          <div class="week-row" id="bondWeekNext"></div>
+        </main>
+        <div class="reserve-grid one">
+          <article class="reserve-card">
+            <h3 class="reserve-title">可转债双低值</h3>
+            <p class="reserve-desc">预留筛选条件、排序与结果列表区域。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-h_share">
+        <div class="panel-head">
+          <h2 class="panel-title">H股日历</h2>
+        </div>
+        <main class="calendar">
+          <div class="week-row" id="hWeekCurrent"></div>
+          <div class="week-row" id="hWeekNext"></div>
+        </main>
+        <div class="reserve-grid">
+            <article class="reserve-card">
+              <h3 class="reserve-title">H股新股分析</h3>
+              <p class="reserve-desc">招股期重叠、资金规划、申购节奏分析。</p>
+            </article>
+            <article class="reserve-card">
+              <h3 class="reserve-title">暗盘与绿鞋</h3>
+              <p class="reserve-desc">暗盘表现、首日涨跌与绿鞋余量跟踪。</p>
+            </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./unlock_db.js"></script>
+  <script>
+    const WEEK_DAYS = ["周一", "周二", "周三", "周四", "周五"];
+    const TAB_TITLES = {
+      a_share: "私募网下打新助手",
+      bond: "私募网下打新助手",
+      h_share: "私募网下打新助手"
+    };
+    const EXCHANGE_LABELS = {
+      all: "全部交易所",
+      hs: "沪深交易所",
+      bj: "北交所"
+    };
+    const A_TYPES = [
+      { key: "drafting", label: "询价材料撰写" },
+      { key: "drafting_deadline", label: "询价材料截止" },
+      { key: "inquiry", label: "询价" },
+      { key: "subscribe", label: "申购" },
+      { key: "payment", label: "缴款" },
+      { key: "listing", label: "上市" },
+      { key: "unlock", label: "解禁" }
+    ];
+    const TWO_TYPES = [
+      { key: "subscribe", label: "申购" },
+      { key: "listing", label: "上市" }
+    ];
+    const VACATION_DATES = new Set([
+      "2026-05-01",
+      "2026-05-04",
+      "2026-05-05",
+      "2026-06-19",
+      "2026-09-25",
+      "2026-10-01",
+      "2026-10-02",
+      "2026-10-05",
+      "2026-10-06",
+      "2026-10-07"
+    ]);
+    const UNLOCK_DEFAULT_LOCK_MONTHS = 6;
+
+    let calendarData = {
+      a_share: {
+        all: {},
+        hs: {},
+        bj: {}
+      },
+      bond: {},
+      h_share: {}
+    };
+
+    const tabsEl = document.getElementById("tabs");
+    const mainTitleEl = document.getElementById("mainTitle");
+    const dateRangeEl = document.getElementById("dateRange");
+    const todayInfoEl = document.getElementById("todayInfo");
+    const viewInfoEl = document.getElementById("viewInfo");
+    const exchangeFiltersEl = document.getElementById("exchangeFilters");
+    const aShareBoardEl = document.getElementById("aShareBoard");
+
+    const views = {
+      a_share: document.getElementById("view-a_share"),
+      bond: document.getElementById("view-bond"),
+      h_share: document.getElementById("view-h_share")
+    };
+
+    const targets = {
+      a_share: {
+        current: document.getElementById("aWeekCurrent"),
+        next: document.getElementById("aWeekNext")
+      },
+      bond: {
+        current: document.getElementById("bondWeekCurrent"),
+        next: document.getElementById("bondWeekNext")
+      },
+      h_share: {
+        current: document.getElementById("hWeekCurrent"),
+        next: document.getElementById("hWeekNext")
+      }
+    };
+
+    let activeTab = "a_share";
+    let activeExchange = "all";
+    const BOARD_CHECK_STORAGE_KEY = "ipo_board_checks_v1";
+    const BOARD_MARKETS = new Set(["SH", "SZ"]);
+    const boardCheckSet = loadBoardChecks();
+    const unlockDb = initUnlockDb(window.UNLOCK_DB);
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function isIsoDateKey(value) {
+      return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ""));
+    }
+
+    function normalizeUnlockRecord(record) {
+      if (!record || typeof record !== "object") {
+        return null;
+      }
+      const code = String(record.code || "").trim();
+      const name = String(record.name || "").trim();
+      const market = String(record.market || "").trim().toUpperCase();
+      const listingDateRaw = record.listing_date;
+      const listingDate = listingDateRaw == null ? null : String(listingDateRaw).trim();
+      const reits = isReitsCode(code);
+
+      let lockDay = record.lock_day;
+      if (lockDay === "" || lockDay == null) {
+        lockDay = null;
+      } else {
+        lockDay = Number(lockDay);
+        if (!Number.isFinite(lockDay) || lockDay < 0) {
+          lockDay = null;
+        } else {
+          lockDay = Math.floor(lockDay);
+        }
+      }
+
+      let lockMonths = record.lock_months;
+      if (lockMonths === "" || lockMonths == null) {
+        lockMonths = null;
+      } else {
+        lockMonths = Number(lockMonths);
+        if (lockMonths !== 6 && lockMonths !== 12) {
+          lockMonths = null;
+        }
+      }
+
+      if (lockDay == null && lockMonths == null && !reits) {
+        lockMonths = UNLOCK_DEFAULT_LOCK_MONTHS;
+      }
+
+      if (!code || !name || !BOARD_MARKETS.has(market)) {
+        return null;
+      }
+
+      return {
+        code,
+        name,
+        market,
+        listing_date: isIsoDateKey(listingDate) ? listingDate : null,
+        lock_months: lockMonths,
+        lock_day: lockDay
+      };
+    }
+
+    function sortUnlockDbInPlace(records) {
+      records.sort((a, b) => {
+        const da = a.listing_date || "9999-99-99";
+        const db = b.listing_date || "9999-99-99";
+        if (da !== db) {
+          return da.localeCompare(db);
+        }
+        return String(a.code || "").localeCompare(String(b.code || ""));
+      });
+    }
+
+    function initUnlockDb(raw) {
+      if (!Array.isArray(raw)) {
+        return [];
+      }
+      const result = [];
+      const seen = new Set();
+      raw.forEach((item) => {
+        const normalized = normalizeUnlockRecord(item);
+        if (!normalized) {
+          return;
+        }
+        const key = normalized.code;
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+        result.push(normalized);
+      });
+      sortUnlockDbInPlace(result);
+      return result;
+    }
+
+    function loadBoardChecks() {
+      try {
+        const raw = localStorage.getItem(BOARD_CHECK_STORAGE_KEY);
+        if (!raw) {
+          return new Set();
+        }
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+          return new Set();
+        }
+        return new Set(parsed.map((item) => String(item)));
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function saveBoardChecks() {
+      try {
+        localStorage.setItem(BOARD_CHECK_STORAGE_KEY, JSON.stringify(Array.from(boardCheckSet)));
+      } catch (e) {
+      }
+    }
+
+    function setBoardChecked(id, checked) {
+      if (!id) {
+        return;
+      }
+      if (checked) {
+        boardCheckSet.add(id);
+      } else {
+        boardCheckSet.delete(id);
+      }
+      saveBoardChecks();
+    }
+
+    function isBoardChecked(id) {
+      return boardCheckSet.has(id);
+    }
+
+    function applyDoneBoxState(button, checked) {
+      button.classList.toggle("checked", checked);
+      button.textContent = checked ? "✓" : "";
+      button.setAttribute("aria-checked", checked ? "true" : "false");
+    }
+
+    function formatDateKey(date) {
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+
+    function startOfWeek(date) {
+      const result = new Date(date);
+      const day = result.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      result.setDate(result.getDate() + diff);
+      result.setHours(0, 0, 0, 0);
+      return result;
+    }
+
+    function addDays(date, days) {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    }
+
+    function addMonthsSafe(date, months) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const targetMonth = month + months;
+      const targetYear = year + Math.floor(targetMonth / 12);
+      const normalizedMonth = ((targetMonth % 12) + 12) % 12;
+      const maxDay = new Date(targetYear, normalizedMonth + 1, 0).getDate();
+      return new Date(targetYear, normalizedMonth, Math.min(day, maxDay));
+    }
+
+    function parseNonNegativeInt(value) {
+      if (value == null || value === "") {
+        return null;
+      }
+      if (typeof value === "number" && Number.isFinite(value)) {
+        return value >= 0 ? Math.floor(value) : null;
+      }
+      const text = String(value).trim();
+      const m = text.match(/^\d+/);
+      if (!m) {
+        return null;
+      }
+      const num = Number(m[0]);
+      return Number.isFinite(num) ? num : null;
+    }
+
+    function isTradingDate(date) {
+      const day = date.getDay();
+      if (day === 0 || day === 6) {
+        return false;
+      }
+      const key = formatDateKey(date);
+      return !VACATION_DATES.has(key);
+    }
+
+    function calculateUnlockTradeDate(listingDate, lockMonths, lockDay) {
+      if (!isIsoDateKey(listingDate)) {
+        return "";
+      }
+      const baseDate = new Date(`${listingDate}T00:00:00`);
+      if (Number.isNaN(baseDate.getTime())) {
+        return "";
+      }
+
+      let tradeDate;
+      const dayNum = parseNonNegativeInt(lockDay);
+      if (dayNum != null) {
+        tradeDate = addDays(baseDate, dayNum);
+      } else {
+        const monthNum = parseNonNegativeInt(lockMonths);
+        if (monthNum == null || monthNum <= 0) {
+          return "";
+        }
+        tradeDate = addMonthsSafe(baseDate, monthNum);
+      }
+      tradeDate.setHours(0, 0, 0, 0);
+
+      while (!isTradingDate(tradeDate)) {
+        tradeDate = addDays(tradeDate, 1);
+        tradeDate.setHours(0, 0, 0, 0);
+      }
+      return formatDateKey(tradeDate);
+    }
+
+    function getWeekDays(baseMonday) {
+      return Array.from({ length: 5 }, (_, index) => addDays(baseMonday, index));
+    }
+
+    function formatRange(start, end) {
+      return `${pad(start.getMonth() + 1)}月${pad(start.getDate())}日 - ${pad(end.getMonth() + 1)}月${pad(end.getDate())}日`;
+    }
+
+    function isSameDay(a, b) {
+      return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    }
+
+    function normalizeEventItems(values) {
+      if (!Array.isArray(values)) {
+        return [];
+      }
+      return values
+        .map((item) => {
+          if (item && typeof item === "object") {
+            return {
+              name: (item.name || "").toString().trim(),
+              code: (item.code || "").toString().trim(),
+              market: (item.market || "").toString().trim().toUpperCase()
+            };
+          }
+          const name = item == null ? "" : String(item).trim();
+          return { name, code: "", market: "" };
+        })
+        .filter((item) => item.name || item.code);
+    }
+
+    function formatEventName(item, includeMarket = true) {
+      if (!item || typeof item !== "object") {
+        return "";
+      }
+      const base = item.name || item.code || "";
+      if (!base) {
+        return "";
+      }
+      if (!includeMarket) {
+        return base;
+      }
+      return item.market ? `${base}（${item.market}）` : base;
+    }
+
+    function isExcludedBoardCode(code) {
+      const normalized = (code || "").toString().trim();
+      if (!normalized) {
+        return false;
+      }
+      return normalized.startsWith("5") || normalized.startsWith("1");
+    }
+
+    function inferHsMarketByCode(code) {
+      const normalized = String(code || "").trim();
+      if (normalized.startsWith("6")) {
+        return "SH";
+      }
+      if (normalized.startsWith("0") || normalized.startsWith("3")) {
+        return "SZ";
+      }
+      return "";
+    }
+
+    function isReitsCode(code) {
+      const normalized = String(code || "").trim();
+      return normalized.startsWith("18") || normalized.startsWith("50");
+    }
+
+    function getNextTradingDateKey(date) {
+      const next = addDays(date, 1);
+      const day = next.getDay();
+      if (day === 6) {
+        next.setDate(next.getDate() + 2);
+      } else if (day === 0) {
+        next.setDate(next.getDate() + 1);
+      }
+      return formatDateKey(next);
+    }
+
+    function getPrevTradingDateKeyFromDate(dateKey) {
+      if (!dateKey) {
+        return "";
+      }
+      const d = new Date(`${dateKey}T00:00:00`);
+      if (Number.isNaN(d.getTime())) {
+        return "";
+      }
+      d.setDate(d.getDate() - 1);
+      const day = d.getDay();
+      if (day === 6) {
+        d.setDate(d.getDate() - 1);
+      } else if (day === 0) {
+        d.setDate(d.getDate() - 2);
+      }
+      return formatDateKey(d);
+    }
+
+    function syncUnlockDbFromListing(sourceData) {
+      if (!sourceData || typeof sourceData !== "object") {
+        return;
+      }
+
+      const sortedDates = Object.keys(sourceData).sort();
+      sortedDates.forEach((dateKey) => {
+        if (!isIsoDateKey(dateKey)) {
+          return;
+        }
+        const daily = sourceData[dateKey] || {};
+        const listingItems = normalizeEventItems(daily.listing || []);
+        listingItems.forEach((item) => {
+          const code = String(item.code || "").trim();
+          const name = String(item.name || "").trim();
+          let market = String(item.market || "").trim().toUpperCase();
+          if (!BOARD_MARKETS.has(market)) {
+            market = inferHsMarketByCode(code);
+          }
+          if (!code || !BOARD_MARKETS.has(market)) {
+            return;
+          }
+
+          const exists = unlockDb.find((record) => record.code === code);
+          if (exists) {
+            if (!exists.listing_date) {
+              exists.listing_date = dateKey;
+            }
+            if (!exists.name && name) {
+              exists.name = name;
+            }
+            if (!exists.market && market) {
+              exists.market = market;
+            }
+            return;
+          }
+
+          const reits = isReitsCode(code);
+          unlockDb.push({
+            code,
+            name: name || code,
+            market,
+            listing_date: dateKey,
+            lock_months: reits ? null : UNLOCK_DEFAULT_LOCK_MONTHS,
+            lock_day: null
+          });
+        });
+      });
+      sortUnlockDbInPlace(unlockDb);
+    }
+
+    function purgeExpiredUnlockDb(todayDate) {
+      const today = new Date(todayDate || new Date());
+      today.setHours(0, 0, 0, 0);
+      const todayKey = formatDateKey(today);
+      for (let i = unlockDb.length - 1; i >= 0; i -= 1) {
+        const record = unlockDb[i];
+        if (!record || !record.listing_date) {
+          continue;
+        }
+        const unlockDate = calculateUnlockTradeDate(record.listing_date, record.lock_months, record.lock_day);
+        if (unlockDate && unlockDate < todayKey) {
+          unlockDb.splice(i, 1);
+        }
+      }
+    }
+
+    function getUnlockValuesByDate(date, exchangeScope = "all") {
+      if (exchangeScope === "bj") {
+        return [];
+      }
+      const targetKey = formatDateKey(date);
+      const matches = [];
+      unlockDb.forEach((record) => {
+        if (!record || !record.listing_date || !BOARD_MARKETS.has(record.market)) {
+          return;
+        }
+        const unlockDate = calculateUnlockTradeDate(record.listing_date, record.lock_months, record.lock_day);
+        if (unlockDate === targetKey) {
+          matches.push(`${record.name}（${record.market}）`);
+        }
+      });
+      return matches;
+    }
+
+    function resolveEventValues(typeKey, date, sourceData, includeMarket = true, exchangeScope = "all") {
+      if (typeKey === "unlock") {
+        return getUnlockValuesByDate(date, exchangeScope);
+      }
+      const dateKey = formatDateKey(date);
+      const daily = sourceData[dateKey] || {};
+      if (typeKey === "drafting_deadline") {
+        const nextKey = getNextTradingDateKey(date);
+        const nextDaily = sourceData[nextKey] || {};
+        return normalizeEventItems(nextDaily.inquiry || [])
+          .map((item) => formatEventName(item, includeMarket))
+          .filter(Boolean);
+      }
+      return normalizeEventItems(daily[typeKey] || [])
+        .map((item) => formatEventName(item, includeMarket))
+        .filter(Boolean);
+    }
+
+    function getBoardKey(item) {
+      const code = (item.code || "").trim();
+      const name = (item.name || "").trim();
+      const market = (item.market || "").trim().toUpperCase();
+      if (code) {
+        return `code:${code}`;
+      }
+      return `name:${name}|${market}`;
+    }
+
+    function mergeBoardIdentity(target, item) {
+      if (!target.name && item.name) {
+        target.name = item.name;
+      }
+      if (!target.code && item.code) {
+        target.code = item.code;
+      }
+      if (!target.market && item.market) {
+        target.market = item.market;
+      }
+    }
+
+    function buildCodeLookup(sourceData) {
+      const lookup = new Map();
+      const eventOrder = ["drafting", "inquiry", "subscribe", "payment", "listing"];
+      Object.keys(sourceData || {}).forEach((dateKey) => {
+        const daily = sourceData[dateKey] || {};
+        eventOrder.forEach((eventKey) => {
+          const items = normalizeEventItems(daily[eventKey] || []);
+          items.forEach((item) => {
+            if (!item.code || isExcludedBoardCode(item.code)) {
+              return;
+            }
+            if (!BOARD_MARKETS.has(item.market)) {
+              return;
+            }
+            if (!item.name) {
+              return;
+            }
+            lookup.set(`${item.name}|${item.market}`, item.code);
+          });
+        });
+      });
+      return lookup;
+    }
+
+    function buildAshareBoardStocks(sourceData, todayKey, codeLookup) {
+      const byKey = new Map();
+      const byCode = new Map();
+      const byNameMarket = new Map();
+      const eventOrder = ["drafting", "inquiry", "subscribe", "payment", "listing"];
+      const dates = Object.keys(sourceData || {}).sort();
+
+      dates.forEach((dateKey) => {
+        const daily = sourceData[dateKey] || {};
+        eventOrder.forEach((eventKey) => {
+          const items = normalizeEventItems(daily[eventKey] || []);
+          items.forEach((item) => {
+            if (!BOARD_MARKETS.has(item.market)) {
+              return;
+            }
+            if (item.code && isExcludedBoardCode(item.code)) {
+              return;
+            }
+
+            let stockKey = "";
+            const code = item.code || "";
+            const nameMarketKey = `${item.name || ""}|${item.market || ""}`;
+
+            if (code && byCode.has(code)) {
+              stockKey = byCode.get(code);
+            } else if ((item.name || item.market) && byNameMarket.has(nameMarketKey)) {
+              stockKey = byNameMarket.get(nameMarketKey);
+            } else {
+              stockKey = getBoardKey(item);
+            }
+
+            if (!byKey.has(stockKey)) {
+              byKey.set(stockKey, {
+                key: stockKey,
+                name: "",
+                code: "",
+                market: "",
+                drafting: "",
+                inquiry: "",
+                subscribe: "",
+                payment: "",
+                listing: ""
+              });
+            }
+            const stock = byKey.get(stockKey);
+            mergeBoardIdentity(stock, item);
+            if (!stock.code && codeLookup.has(nameMarketKey)) {
+              stock.code = codeLookup.get(nameMarketKey);
+            }
+
+            if (code) {
+              byCode.set(code, stockKey);
+            }
+            if (item.name || item.market) {
+              byNameMarket.set(nameMarketKey, stockKey);
+            }
+
+            if (!stock[eventKey]) {
+              stock[eventKey] = dateKey;
+            }
+          });
+        });
+      });
+
+      return Array.from(byKey.values())
+        .map((stock) => {
+          const draftingDeadline = stock.inquiry
+            ? getPrevTradingDateKeyFromDate(stock.inquiry)
+            : (stock.drafting || "");
+          return { ...stock, drafting_deadline: draftingDeadline };
+        })
+        .filter((stock) => stock.name || stock.code)
+        .filter((stock) => BOARD_MARKETS.has((stock.market || "").toUpperCase()))
+        .filter((stock) => !stock.code || !isExcludedBoardCode(stock.code))
+        .filter((stock) => !stock.listing || todayKey < stock.listing)
+        .sort((a, b) => {
+          const da = a.subscribe || a.inquiry || a.drafting || a.payment || a.listing || "9999-99-99";
+          const db = b.subscribe || b.inquiry || b.drafting || b.payment || b.listing || "9999-99-99";
+          if (da !== db) {
+            return da.localeCompare(db);
+          }
+          return (a.name || a.code).localeCompare(b.name || b.code, "zh-Hans-CN");
+        });
+    }
+
+    function renderAshareBoard(sourceData, today) {
+      if (!aShareBoardEl) {
+        return;
+      }
+      aShareBoardEl.innerHTML = "";
+      const todayKey = formatDateKey(today);
+      const codeLookup = buildCodeLookup(calendarData.a_share.all || {});
+      const stocks = buildAshareBoardStocks(sourceData, todayKey, codeLookup);
+
+      if (!stocks.length) {
+        const empty = document.createElement("p");
+        empty.className = "board-empty";
+        empty.textContent = "当前视图暂无未上市股票";
+        aShareBoardEl.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement("div");
+      list.className = "board-list";
+
+      stocks.forEach((stock) => {
+        const card = document.createElement("article");
+        card.className = "board-card";
+
+        const title = document.createElement("p");
+        title.className = "board-stock";
+        const strong = document.createElement("strong");
+        strong.textContent = `${stock.name || ""} ${stock.code || ""}` || "未命名股票";
+        title.appendChild(strong);
+
+        const table = document.createElement("table");
+        table.className = "board-table";
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        ["日期", "发行安排", "是否完成"].forEach((label) => {
+          const th = document.createElement("th");
+          th.textContent = label;
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+
+        const tbody = document.createElement("tbody");
+        const rows = [
+          { key: "drafting_deadline", date: stock.drafting_deadline || "-", arrangement: "招股材料审核通过" },
+          { key: "inquiry_0930", date: stock.inquiry ? `${stock.inquiry} 9:30` : "-", arrangement: "初步询价" },
+          { key: "inquiry_1500", date: stock.inquiry ? `${stock.inquiry} 15:00` : "-", arrangement: "报价" },
+          { key: "subscribe", date: stock.subscribe || "-", arrangement: "申购" },
+          { key: "payment", date: stock.payment || "-", arrangement: "缴款" },
+          { key: "listing", date: stock.listing || "待定", arrangement: "上市" }
+        ];
+
+        rows.forEach((row) => {
+          const tr = document.createElement("tr");
+
+          const tdDate = document.createElement("td");
+          tdDate.textContent = row.date;
+          tr.appendChild(tdDate);
+
+          const tdArrangement = document.createElement("td");
+          tdArrangement.textContent = row.arrangement;
+          tr.appendChild(tdArrangement);
+
+          const tdStatus = document.createElement("td");
+          tdStatus.className = "status-cell";
+          const doneBox = document.createElement("button");
+          doneBox.type = "button";
+          doneBox.className = "done-box";
+          const checkId = `${stock.key}|${row.key}`;
+          doneBox.dataset.checkId = checkId;
+          doneBox.setAttribute("aria-label", `${stock.name || stock.code} ${row.arrangement} 完成勾选`);
+          applyDoneBoxState(doneBox, isBoardChecked(checkId));
+          tdStatus.appendChild(doneBox);
+          tr.appendChild(tdStatus);
+
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+
+        card.appendChild(title);
+        card.appendChild(table);
+        list.appendChild(card);
+      });
+
+      aShareBoardEl.appendChild(list);
+    }
+
+    function createEventRow(label, values) {
+      const item = document.createElement("div");
+      item.className = "event-item";
+      const badge = document.createElement("span");
+      badge.className = "event-label";
+      badge.textContent = label;
+      const value = document.createElement("div");
+      const text = Array.isArray(values) && values.length ? values.join(" / ") : "暂无";
+      value.className = text === "暂无" ? "event-value empty" : "event-value";
+      value.textContent = text;
+      item.appendChild(badge);
+      item.appendChild(value);
+      return item;
+    }
+
+    function createDayCard(date, today, eventTypes, sourceData, includeMarket = true, exchangeScope = "all") {
+      const card = document.createElement("article");
+      card.className = "day-card";
+      if (isSameDay(date, today)) {
+        card.classList.add("today");
+      }
+
+      const week = document.createElement("div");
+      week.className = "weekday";
+      week.textContent = WEEK_DAYS[date.getDay() - 1] || "";
+
+      const dateLine = document.createElement("div");
+      dateLine.className = "date-line";
+      dateLine.innerHTML = `${date.getDate()}<small>日</small>`;
+
+      const events = document.createElement("div");
+      events.className = "events";
+      const dateKey = formatDateKey(date);
+      if (VACATION_DATES.has(dateKey)) {
+        const closed = document.createElement("div");
+        closed.className = "market-closed";
+        closed.textContent = "不开市";
+        events.appendChild(closed);
+      } else {
+        eventTypes.forEach((typeItem) => {
+          const values = resolveEventValues(typeItem.key, date, sourceData, includeMarket, exchangeScope);
+          events.appendChild(createEventRow(typeItem.label, values));
+        });
+      }
+
+      card.appendChild(week);
+      card.appendChild(dateLine);
+      card.appendChild(events);
+      return card;
+    }
+
+    function renderWeek(target, weekDates, today, eventTypes, sourceData, includeMarket = true, exchangeScope = "all") {
+      target.innerHTML = "";
+      weekDates.forEach((date) => {
+        target.appendChild(createDayCard(date, today, eventTypes, sourceData, includeMarket, exchangeScope));
+      });
+    }
+
+    function renderViewCalendar(viewKey, currentWeek, nextWeek, today) {
+      if (viewKey === "a_share") {
+        const source = calendarData.a_share[activeExchange] || {};
+        renderWeek(targets.a_share.current, currentWeek, today, A_TYPES, source, true, activeExchange);
+        renderWeek(targets.a_share.next, nextWeek, today, A_TYPES, source, true, activeExchange);
+        renderAshareBoard(source, today);
+        return;
+      }
+      if (viewKey === "bond") {
+        renderWeek(targets.bond.current, currentWeek, today, TWO_TYPES, calendarData.bond || {}, false, "all");
+        renderWeek(targets.bond.next, nextWeek, today, TWO_TYPES, calendarData.bond || {}, false, "all");
+        return;
+      }
+      renderWeek(targets.h_share.current, currentWeek, today, TWO_TYPES, calendarData.h_share || {}, false, "all");
+      renderWeek(targets.h_share.next, nextWeek, today, TWO_TYPES, calendarData.h_share || {}, false, "all");
+    }
+
+    function renderAll() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const monday = startOfWeek(today);
+      const nextMonday = addDays(monday, 7);
+      const currentWeek = getWeekDays(monday);
+      const nextWeek = getWeekDays(nextMonday);
+
+      renderViewCalendar("a_share", currentWeek, nextWeek, today);
+      renderViewCalendar("bond", currentWeek, nextWeek, today);
+      renderViewCalendar("h_share", currentWeek, nextWeek, today);
+
+      dateRangeEl.textContent = formatRange(currentWeek[0], nextWeek[4]);
+      todayInfoEl.textContent = `今天 ${today.getFullYear()}年${pad(today.getMonth() + 1)}月${pad(today.getDate())}日`;
+
+      if (activeTab === "a_share") {
+        viewInfoEl.textContent = `当前视图：${EXCHANGE_LABELS[activeExchange]}`;
+      } else {
+        viewInfoEl.textContent = `当前视图：${TAB_TITLES[activeTab]}`;
+      }
+    }
+
+    function setTab(tab) {
+      activeTab = tab;
+      Array.from(tabsEl.querySelectorAll(".tab-btn")).forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+      });
+      Object.keys(views).forEach((key) => {
+        views[key].classList.toggle("active", key === tab);
+      });
+      mainTitleEl.textContent = TAB_TITLES[tab];
+      renderAll();
+    }
+
+    async function loadCalendarData() {
+      try {
+        const ts = Date.now();
+        const tryFetchJson = async (path) => {
+          try {
+            const response = await fetch(`${path}?t=${ts}`);
+            if (!response.ok) {
+              return null;
+            }
+            return await response.json();
+          } catch (e) {
+            return null;
+          }
+        };
+
+        const ashareData = await tryFetchJson("../data/Asharecalendar_data.json");
+        const bondData = await tryFetchJson("../data/bondcalendar_data.json");
+        const hshareData = await tryFetchJson("../data/Hsharecalendar_data.json");
+        const fallbackData = await tryFetchJson("../data/calendar_data.json");
+        const baseData = ashareData || fallbackData;
+
+        if (!baseData && !bondData) {
+          return;
+        }
+
+        const aShareRaw = (baseData && baseData.a_share) || {};
+        const nestedA = typeof aShareRaw === "object" && (aShareRaw.all || aShareRaw.hs || aShareRaw.bj);
+        const hsMap = (baseData && baseData.hs) || (nestedA ? (aShareRaw.hs || {}) : aShareRaw || {});
+        const bjMap = (baseData && baseData.bj) || (nestedA ? (aShareRaw.bj || {}) : {});
+        const bondMap =
+          (bondData && (bondData.bond || bondData.convertible_bond)) ||
+          (baseData && (baseData.bond || baseData.convertible_bond)) ||
+          {};
+        const hshareMap =
+          (hshareData && (hshareData.h_share || hshareData.hk)) ||
+          (baseData && (baseData.h_share || baseData.hk)) ||
+          {};
+
+        calendarData = {
+          a_share: {
+            all: (baseData && baseData.all) || (nestedA ? (aShareRaw.all || {}) : hsMap || {}),
+            hs: hsMap || {},
+            bj: bjMap || {}
+          },
+          bond: bondMap,
+          h_share: hshareMap
+        };
+        syncUnlockDbFromListing(calendarData.a_share.all || {});
+      } catch (error) {
+        calendarData = {
+          a_share: { all: {}, hs: {}, bj: {} },
+          bond: {},
+          h_share: {}
+        };
+      }
+      purgeExpiredUnlockDb(new Date());
+      renderAll();
+    }
+
+    tabsEl.addEventListener("click", (event) => {
+      const btn = event.target.closest(".tab-btn");
+      if (!btn) {
+        return;
+      }
+      setTab(btn.dataset.tab);
+    });
+
+    exchangeFiltersEl.addEventListener("click", (event) => {
+      const btn = event.target.closest(".pill");
+      if (!btn) {
+        return;
+      }
+      activeExchange = btn.dataset.exchange;
+      Array.from(exchangeFiltersEl.querySelectorAll(".pill")).forEach((pill) => {
+        pill.classList.toggle("active", pill.dataset.exchange === activeExchange);
+      });
+      renderAll();
+    });
+
+    if (aShareBoardEl) {
+      aShareBoardEl.addEventListener("click", (event) => {
+        const button = event.target.closest(".done-box");
+        if (!button) {
+          return;
+        }
+        const checkId = button.dataset.checkId || "";
+        if (!checkId) {
+          return;
+        }
+        const checked = !isBoardChecked(checkId);
+        setBoardChecked(checkId, checked);
+        applyDoneBoxState(button, checked);
+      });
+    }
+
+    purgeExpiredUnlockDb(new Date());
+    setTab("a_share");
+    renderAll();
+    loadCalendarData();
+    setInterval(loadCalendarData, 60 * 60 * 1000);
+  </script>
+</body>
+</html>

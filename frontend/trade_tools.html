@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>交易自动化组件</title>
+  <style>
+    :root {
+      --bg: #eef3fb;
+      --line: #c9d7ee;
+      --navy: #2f5ea8;
+      --text: #162033;
+      --muted: #4f5d78;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px 12px 32px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .top h1 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--navy);
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .menu {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .menu a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: #fff;
+      border: 1px solid var(--navy);
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 12px 28px rgba(47, 94, 168, 0.14);
+    }
+
+    .tool-card h2 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      color: var(--navy);
+    }
+
+    .tool-card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .upload-btn {
+      margin-top: 2px;
+      border: 1px solid #b9c9e6;
+      border-radius: 8px;
+      padding: 8px 14px;
+      background: #e9f0fb;
+      color: #7b8aa6;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <h1>交易自动化组件</h1>
+      <a class="back" href="./IPO.html">返回日历页</a>
+    </div>
+
+    <div class="menu">
+      <a href="#etf-whitelist">ETF白名单系统</a>
+    </div>
+
+    <section class="tool-card" id="etf-whitelist">
+      <h2>ETF白名单系统</h2>
+      <p>系统目标：寻找所有包含指定股票的沪深 ETF 代码及现金替代标志。</p>
+      <p>当前规划：通过 PCF_Whitelist_main.py 串联 4 个爬虫和 2 个白名单处理脚本，手动输入股票代码后导出结果 Excel。</p>
+      <button class="upload-btn" type="button" disabled data-api="/api/pcf/crawl">启动系统（即将上线）</button>
+    </section>
+  </div>
+</body>
+</html>
