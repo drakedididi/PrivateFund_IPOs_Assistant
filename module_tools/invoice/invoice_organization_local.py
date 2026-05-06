@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import io
+import os
 import re
 import shutil
 import tempfile
@@ -16,10 +17,11 @@ from tkinter import filedialog, messagebox
 
 LEGACY_SCRIPT = "Invoice Organization.py"
 DEFAULT_SUFFIX = "_classified.zip"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def _load_legacy_module() -> Any:
-    script_path = Path(__file__).resolve().with_name(LEGACY_SCRIPT)
+    script_path = os.path.join(BASE_DIR, LEGACY_SCRIPT)
     spec = importlib.util.spec_from_file_location("invoice_legacy", script_path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"无法加载脚本: {script_path}")

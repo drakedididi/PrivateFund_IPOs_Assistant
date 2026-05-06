@@ -273,7 +273,7 @@ def fetch(
             raw_data=raw_data,
             date_set=None,
             reference_date=reference_date,
-            limit=10,
+            limit=5,
             verbose=verbose,
         )
 

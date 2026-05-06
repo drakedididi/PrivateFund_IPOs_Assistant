@@ -11,6 +11,7 @@
       --navy: #2f5ea8;
       --text: #162033;
       --muted: #4f5d78;
+      --danger: #b42318;
     }
 
     * {
@@ -75,6 +76,12 @@
       background: var(--navy);
       font-size: 13px;
       font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .menu a.active {
+      box-shadow: 0 8px 18px rgba(47, 94, 168, 0.28);
+      transform: translateY(-1px);
     }
 
     .tool-card {
@@ -84,6 +91,13 @@
       padding: 14px;
       margin-bottom: 10px;
       box-shadow: 0 12px 28px rgba(47, 94, 168, 0.14);
+      scroll-margin-top: 12px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .tool-card.focused {
+      border-color: #87a6d7;
+      box-shadow: 0 14px 30px rgba(47, 94, 168, 0.24);
     }
 
     .tool-card h2 {
@@ -125,17 +139,45 @@
       word-break: break-all;
     }
 
+    .upload-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
     .upload-area {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 1px dashed #97afd6;
       border-radius: 12px;
       background: #f8fbff;
-      padding: 20px 12px;
+      padding: 16px 12px;
+      min-height: 56px;
       text-align: center;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.5;
       cursor: not-allowed;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .upload-area.enabled {
+      border-style: solid;
+      cursor: pointer;
+      background: #ffffff;
+    }
+
+    .upload-area.dragging {
+      border-color: var(--navy);
+      background: #eef4ff;
+    }
+
+    .upload-row .upload-area {
+      flex: 1 1 320px;
+      margin: 0;
     }
 
     .upload-input {
@@ -145,6 +187,10 @@
       height: 100%;
       opacity: 0;
       cursor: not-allowed;
+    }
+
+    .upload-input.enabled {
+      cursor: pointer;
     }
 
     .upload-btn {
@@ -157,6 +203,24 @@
       font-size: 14px;
       font-weight: 700;
       cursor: not-allowed;
+      white-space: nowrap;
+    }
+
+    .upload-row .upload-btn {
+      margin-top: 0;
+      min-width: 128px;
+    }
+
+    .upload-btn.enabled {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .upload-btn.enabled:disabled {
+      opacity: 0.72;
+      cursor: wait;
     }
 
     .coming-soon {
@@ -164,6 +228,18 @@
       margin-top: 6px;
       color: #6a7e9f;
       font-size: 13px;
+    }
+
+    .upload-status {
+      margin: 10px 0 0;
+      min-height: 20px;
+      color: #1f4a90;
+      font-size: 13px;
+      clear: both;
+    }
+
+    .upload-status.error {
+      color: var(--danger);
     }
   </style>
 </head>
@@ -174,22 +250,24 @@
       <a class="back" href="./IPO.html">返回日历页</a>
     </div>
 
-    <div class="menu">
-      <a href="#invoice">发票分类</a>
-      <a href="#video">询价视频</a>
-      <a href="#redemption">巨额赎回</a>
-      <a href="#related-deal">关联交易</a>
+    <div class="menu" id="module-menu">
+      <a href="#invoice" data-target="invoice" class="active">发票分类</a>
+      <a href="#video" data-target="video">询价视频</a>
+      <a href="#redemption" data-target="redemption">巨额赎回</a>
+      <a href="#related-deal" data-target="related-deal">关联交易</a>
     </div>
 
     <section class="tool-card" id="invoice">
       <h2>妥妥递发票托管分类</h2>
       <p class="script-path">脚本：module_tools/invoice/Invoice_organization_local.py</p>
-      <label class="upload-area">
-        <input class="upload-input" type="file" disabled>
-        拖拽文件到此处，或点击选择文件
-        <span class="coming-soon">即将上线</span>
-      </label>
-      <button class="upload-btn" type="button" disabled data-api="/api/invoice">上传</button>
+      <div class="upload-row">
+        <label class="upload-area enabled" id="invoice-upload-area">
+          <input class="upload-input enabled" type="file" id="invoice-file-input" accept=".zip,application/zip">
+          <span id="invoice-file-label">拖拽 ZIP 文件到此处，或点击选择文件</span>
+        </label>
+        <button class="upload-btn enabled" type="button" id="invoice-upload-btn" data-api="/api/invoice">上传并下载结果</button>
+      </div>
+      <p class="upload-status" id="invoice-upload-status">请选择待处理 ZIP 文件</p>
     </section>
 
     <section class="tool-card" id="video">
@@ -198,6 +276,7 @@
       <label class="upload-area">
         <input class="upload-input" type="file" disabled>
         拖拽文件到此处，或点击选择文件
+        <span class="coming-soon">即将上线</span>
       </label>
       <button class="upload-btn" type="button" disabled data-api="/api/video">上传</button>
     </section>
@@ -208,6 +287,7 @@
       <label class="upload-area">
         <input class="upload-input" type="file" disabled>
         拖拽文件到此处，或点击选择文件
+        <span class="coming-soon">即将上线</span>
       </label>
       <button class="upload-btn" type="button" disabled data-api="/api/redemption">上传</button>
     </section>
@@ -221,6 +301,7 @@
           <label class="upload-area">
             <input class="upload-input" type="file" disabled>
             拖拽文件到此处，或点击选择文件
+            <span class="coming-soon">即将上线</span>
           </label>
           <button class="upload-btn" type="button" disabled data-api="/api/excel">上传</button>
         </div>
@@ -231,11 +312,197 @@
           <label class="upload-area">
             <input class="upload-input" type="file" disabled>
             拖拽文件到此处，或点击选择文件
+            <span class="coming-soon">即将上线</span>
           </label>
           <button class="upload-btn" type="button" disabled data-api="/api/fund">上传</button>
         </div>
       </div>
     </section>
   </div>
+
+  <script>
+    (function () {
+      const uploadArea = document.getElementById("invoice-upload-area");
+      const fileInput = document.getElementById("invoice-file-input");
+      const fileLabel = document.getElementById("invoice-file-label");
+      const uploadButton = document.getElementById("invoice-upload-btn");
+      const statusEl = document.getElementById("invoice-upload-status");
+      const menuLinks = Array.from(document.querySelectorAll("#module-menu a[data-target]"));
+
+      if (!uploadArea || !fileInput || !fileLabel || !uploadButton || !statusEl) {
+        return;
+      }
+
+      const defaultLabel = "拖拽 ZIP 文件到此处，或点击选择文件";
+      const isLocalBackendPage = (
+        (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+        && window.location.port === "5000"
+      );
+      const apiBase = isLocalBackendPage ? window.location.origin : "http://127.0.0.1:5000";
+      let selectedFile = null;
+
+      function setActiveMenu(targetId) {
+        menuLinks.forEach(function (link) {
+          link.classList.toggle("active", link.dataset.target === targetId);
+        });
+      }
+
+      function focusSection(targetId) {
+        const section = document.getElementById(targetId);
+        if (!section) {
+          return;
+        }
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        section.classList.add("focused");
+        window.setTimeout(function () {
+          section.classList.remove("focused");
+        }, 650);
+      }
+
+      menuLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const targetId = link.dataset.target;
+          if (!targetId) {
+            return;
+          }
+          setActiveMenu(targetId);
+          focusSection(targetId);
+        });
+      });
+
+      function setStatus(text, isError) {
+        statusEl.textContent = text;
+        statusEl.classList.toggle("error", Boolean(isError));
+      }
+
+      function setLoading(loading) {
+        uploadButton.disabled = loading;
+        fileInput.disabled = loading;
+        uploadButton.textContent = loading ? "处理中..." : "上传并下载结果";
+      }
+
+      function setSelectedFile(file) {
+        selectedFile = file || null;
+        fileLabel.textContent = selectedFile ? ("已选择：" + selectedFile.name) : defaultLabel;
+      }
+
+      function inferDownloadName(response, fallbackName) {
+        const disposition = response.headers.get("Content-Disposition") || "";
+        const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+        if (utf8Match && utf8Match[1]) {
+          try {
+            return decodeURIComponent(utf8Match[1]);
+          } catch (e) {
+            return utf8Match[1];
+          }
+        }
+
+        const plainMatch = disposition.match(/filename="?([^";]+)"?/i);
+        if (plainMatch && plainMatch[1]) {
+          return plainMatch[1];
+        }
+        return fallbackName;
+      }
+
+      function resolveApiUrl(path) {
+        return new URL(path || "/api/invoice", apiBase).toString();
+      }
+
+      function handleDragState(event, dragging) {
+        event.preventDefault();
+        event.stopPropagation();
+        uploadArea.classList.toggle("dragging", dragging);
+      }
+
+      ["dragenter", "dragover"].forEach(function (eventName) {
+        uploadArea.addEventListener(eventName, function (event) {
+          handleDragState(event, true);
+        });
+      });
+
+      ["dragleave", "dragend", "drop"].forEach(function (eventName) {
+        uploadArea.addEventListener(eventName, function (event) {
+          handleDragState(event, false);
+        });
+      });
+
+      uploadArea.addEventListener("drop", function (event) {
+        const files = event.dataTransfer ? event.dataTransfer.files : null;
+        if (!files || files.length === 0) {
+          return;
+        }
+        setSelectedFile(files[0]);
+        setStatus("文件已就绪，可点击上传。", false);
+      });
+
+      fileInput.addEventListener("change", function () {
+        const file = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
+        setSelectedFile(file);
+        if (file) {
+          setStatus("文件已就绪，可点击上传。", false);
+        }
+      });
+
+      uploadButton.addEventListener("click", async function () {
+        if (!selectedFile) {
+          setStatus("请先选择 ZIP 文件。", true);
+          return;
+        }
+
+        if (!selectedFile.name.toLowerCase().endsWith(".zip")) {
+          setStatus("仅支持 ZIP 文件上传。", true);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile, selectedFile.name);
+
+        setLoading(true);
+        setStatus("文件处理中，请稍候...", false);
+
+        try {
+          const response = await fetch(resolveApiUrl(uploadButton.dataset.api), {
+            method: "POST",
+            body: formData
+          });
+
+          if (!response.ok) {
+            let errorMessage = "请求失败（" + response.status + "）";
+            try {
+              const errorBody = await response.json();
+              if (errorBody && errorBody.error) {
+                errorMessage = errorBody.error;
+              }
+            } catch (e) {
+            }
+            throw new Error(errorMessage);
+          }
+
+          const outputBlob = await response.blob();
+          const fallbackName = selectedFile.name.replace(/\.zip$/i, "") + "_classified.zip";
+          const downloadName = inferDownloadName(response, fallbackName);
+          const objectUrl = URL.createObjectURL(outputBlob);
+          const link = document.createElement("a");
+          link.href = objectUrl;
+          link.download = downloadName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(objectUrl);
+
+          setStatus("处理完成，结果已开始下载。", false);
+        } catch (error) {
+          let message = error && error.message ? error.message : "未知错误";
+          if (message === "Failed to fetch") {
+            message = "无法连接后端，请确认 app.py 已运行在 http://127.0.0.1:5000";
+          }
+          setStatus("处理失败：" + message, true);
+        } finally {
+          setLoading(false);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
