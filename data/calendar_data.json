@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-06 09:53:35",
-  "reference_date": "2026-05-06",
+  "generated_at": "2026-05-07 09:00:59",
+  "reference_date": "2026-05-07",
   "date_list": [
     "2025-11-11",
     "2025-12-19",
@@ -317,7 +317,7 @@
         "subscribe": [
           {
             "code": "920200",
-            "name": "振宏股份",
+            "name": "振宏",
             "market": "BJ"
           }
         ],
@@ -485,7 +485,7 @@
         "listing": [
           {
             "code": "920200",
-            "name": "振宏股份",
+            "name": "振宏",
             "market": "BJ"
           }
         ]
@@ -1201,7 +1201,7 @@
         "subscribe": [
           {
             "code": "920200",
-            "name": "振宏股份",
+            "name": "振宏",
             "market": "BJ"
           }
         ],
@@ -1302,7 +1302,7 @@
         "listing": [
           {
             "code": "920200",
-            "name": "振宏股份",
+            "name": "振宏",
             "market": "BJ"
           }
         ]
@@ -1632,7 +1632,7 @@
       "subscribe": [
         {
           "code": "920200",
-          "name": "振宏股份",
+          "name": "振宏",
           "market": "BJ"
         }
       ],
@@ -1800,7 +1800,7 @@
       "listing": [
         {
           "code": "920200",
-          "name": "振宏股份",
+          "name": "振宏",
           "market": "BJ"
         }
       ]
@@ -2516,7 +2516,7 @@
       "subscribe": [
         {
           "code": "920200",
-          "name": "振宏股份",
+          "name": "振宏",
           "market": "BJ"
         }
       ],
@@ -2617,7 +2617,7 @@
       "listing": [
         {
           "code": "920200",
-          "name": "振宏股份",
+          "name": "振宏",
           "market": "BJ"
         }
       ]
@@ -2866,7 +2866,13 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "113702",
+          "name": "113702（斯达转债）+603290（斯达半导）",
+          "market": "SH"
+        }
+      ]
     },
     "2026-05-12": {
       "drafting": [],
@@ -3098,7 +3104,13 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "113702",
+          "name": "113702（斯达转债）+603290（斯达半导）",
+          "market": "SH"
+        }
+      ]
     },
     "2026-05-12": {
       "drafting": [],
