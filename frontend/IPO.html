@@ -1410,6 +1410,7 @@
     async function loadCalendarData() {
       try {
         const ts = Date.now();
+        const DATA_BASE_URL = "https://pub-726d3f620e2c4dbf99889a63c9a5687d.r2.dev";
         const tryFetchJson = async (path) => {
           try {
             const response = await fetch(`${path}?t=${ts}`);
@@ -1422,10 +1423,10 @@
           }
         };
 
-        const ashareData = await tryFetchJson("../data/Asharecalendar_data.json");
-        const bondData = await tryFetchJson("../data/bondcalendar_data.json");
-        const hshareData = await tryFetchJson("../data/Hsharecalendar_data.json");
-        const fallbackData = await tryFetchJson("../data/calendar_data.json");
+        const ashareData = await tryFetchJson(`${DATA_BASE_URL}/Asharecalendar_data.json`);
+        const bondData = await tryFetchJson(`${DATA_BASE_URL}/bondcalendar_data.json`);
+        const hshareData = await tryFetchJson(`${DATA_BASE_URL}/Hsharecalendar_data.json`);
+        const fallbackData = await tryFetchJson(`${DATA_BASE_URL}/calendar_data.json`);
         const baseData = ashareData || fallbackData;
 
         if (!baseData && !bondData) {

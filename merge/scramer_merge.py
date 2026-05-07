@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -24,6 +25,12 @@ ASHARE_FILE = DATA_DIR / "Asharecalendar_data.json"
 BOND_FILE = DATA_DIR / "bondcalendar_data.json"
 HSHARE_FILE = DATA_DIR / "Hsharecalendar_data.json"
 DATE_KEY_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+R2_ENV_VARS = (
+    "R2_ACCESS_KEY_ID",
+    "R2_SECRET_ACCESS_KEY",
+    "R2_ACCOUNT_ID",
+    "R2_BUCKET_NAME",
+)
 
 
 def _empty_map(reference_date: str) -> dict[str, dict[str, list[Any]]]:
@@ -94,6 +101,51 @@ def _write_json(path: str | Path, payload: dict[str, Any]) -> None:
     )
 
 
+def _get_r2_config() -> dict[str, str] | None:
+    config = {name: os.getenv(name, "").strip() for name in R2_ENV_VARS}
+    missing = [name for name, value in config.items() if not value]
+    if len(missing) == len(R2_ENV_VARS):
+        return None
+    if missing:
+        raise RuntimeError(
+            f"missing R2 environment variables: {', '.join(missing)}"
+        )
+    config["endpoint_url"] = (
+        f"https://{config['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com"
+    )
+    return config
+
+
+def _upload_json_files_to_r2(*paths: str | Path) -> None:
+    config = _get_r2_config()
+    if not config:
+        print("[SCRAMER][R2] skipped: R2 environment variables are not set")
+        return
+
+    import boto3
+
+    client = boto3.client(
+        "s3",
+        endpoint_url=config["endpoint_url"],
+        aws_access_key_id=config["R2_ACCESS_KEY_ID"],
+        aws_secret_access_key=config["R2_SECRET_ACCESS_KEY"],
+        region_name="auto",
+    )
+
+    for path in paths:
+        path_obj = Path(path)
+        client.upload_file(
+            str(path_obj),
+            config["R2_BUCKET_NAME"],
+            path_obj.name,
+            ExtraArgs={
+                "ACL": "public-read",
+                "ContentType": "application/json",
+            },
+        )
+        print(f"[SCRAMER][R2] uploaded: {path_obj.name}")
+
+
 def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
     ashare_payload = _safe_build_ashare(reference_date)
     bond_map = _safe_fetch_bond(reference_date)
@@ -158,6 +210,12 @@ def main() -> None:
     _write_json(OUTPUT_FILE, payload)
     print(f"[SCRAMER] written: {OUTPUT_FILE}")
     print(f"[SCRAMER] written: {ASHARE_FILE}, {BOND_FILE}, {HSHARE_FILE}")
+    _upload_json_files_to_r2(
+        ASHARE_FILE,
+        BOND_FILE,
+        HSHARE_FILE,
+        OUTPUT_FILE,
+    )
 
 
 if __name__ == "__main__":
