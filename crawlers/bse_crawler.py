@@ -13,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from utils import clean_data, get_calendar_range, init_calendar_data, normalize_fetch_output
+from utils import clean_data, get_calendar_range, get_playwright_headless, init_calendar_data, normalize_fetch_output
 
 
 URL = "https://www.bse.cn/issue/issue_calendar.html"
@@ -138,7 +138,7 @@ def fetch(
     }
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=get_playwright_headless())
         page = browser.new_page()
         page.goto(URL, wait_until="domcontentloaded", timeout=timeout_ms)
         page.wait_for_selector(f"xpath={TBODY_XPATH}", timeout=timeout_ms)

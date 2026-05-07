@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import datetime as dt
 import json
+import os
 import re
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -18,6 +19,8 @@ EMPTY_DAY = {
 EVENT_KEYS = tuple(EMPTY_DAY.keys())
 _PREFIX_RE = re.compile(r"^(?:\s*(?:N|U|W|ST)\s*)+", re.IGNORECASE)
 _DATE_RE = re.compile(r"(?:(\d{4})[./-])?\s*(\d{1,2})[./-](\d{1,2})")
+_HEADLESS_TRUE_VALUES = {"1", "true", "yes", "on"}
+_HEADLESS_FALSE_VALUES = {"0", "false", "no", "off"}
 
 
 def _to_date(value: dt.date | dt.datetime | str | None = None) -> dt.date:
@@ -54,6 +57,21 @@ def _parse_date_text(text: str, reference: dt.date) -> str:
         candidate = min(candidates, key=lambda d: abs((d - reference).days))
 
     return candidate.strftime("%Y-%m-%d")
+
+
+def get_playwright_headless(default: bool = False) -> bool:
+    raw = os.getenv("PLAYWRIGHT_HEADLESS")
+    if raw is None:
+        return default
+
+    value = raw.strip().lower()
+    if not value:
+        return default
+    if value in _HEADLESS_TRUE_VALUES:
+        return True
+    if value in _HEADLESS_FALSE_VALUES:
+        return False
+    return default
 
 
 def get_calendar_range(reference_date: dt.date | dt.datetime | str | None = None) -> list[str]:

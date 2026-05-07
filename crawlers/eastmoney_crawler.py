@@ -13,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from utils import clean_data, get_calendar_range, init_calendar_data, normalize_fetch_output
+from utils import clean_data, get_calendar_range, get_playwright_headless, init_calendar_data, normalize_fetch_output
 
 
 URL_STOCK = "https://data.eastmoney.com/xg/xg"
@@ -252,7 +252,7 @@ def fetch(
         print(f"[EASTMONEY] 基础窗口: {base_window[0]} ~ {base_window[-1]}，当前模式: 不过滤日期")
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=get_playwright_headless())
         page = browser.new_page()
 
         page.goto(URL_STOCK, wait_until="domcontentloaded", timeout=timeout_ms)

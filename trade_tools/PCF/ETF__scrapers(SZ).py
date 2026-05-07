@@ -1,9 +1,20 @@
 
 
 import asyncio
+import os
 from playwright.async_api import async_playwright
 import openpyxl
 import time
+
+
+def get_playwright_headless(default: bool = False) -> bool:
+    raw = os.getenv("PLAYWRIGHT_HEADLESS")
+    if raw is None:
+        return default
+    value = raw.strip().lower()
+    if not value:
+        return default
+    return value in {"1", "true", "yes", "on"}
 
 async def scrape_etf_links():
     wb = openpyxl.Workbook()
@@ -11,7 +22,7 @@ async def scrape_etf_links():
     ws.append(['ETF代码', '下载链接'])
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=get_playwright_headless())
         page = await browser.new_page()
         await page.goto("https://www.szse.cn/disclosure/fund/currency/index.html", wait_until="load")
         await page.wait_for_timeout(3000)
