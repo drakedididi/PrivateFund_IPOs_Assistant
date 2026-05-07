@@ -143,6 +143,47 @@ def _wait_view_synced(page: Page, target_date: str, timeout_ms: int = 8000) -> b
     return False
 
 
+def _read_event_signature(page: Page, reference_date: str) -> tuple[str, bool]:
+    drafting_items, _, _ = _extract_items_from_rows(
+        page=page,
+        rows_xpath=DRAFTING_ROWS_XPATH,
+        reference_date=reference_date,
+        market="SZ",
+    )
+    inquiry_items, _, _ = _extract_items_from_rows(
+        page=page,
+        rows_xpath=INQUIRY_ROWS_XPATH,
+        reference_date=reference_date,
+        market="SZ",
+    )
+    payload = {
+        "drafting": drafting_items,
+        "inquiry": inquiry_items,
+    }
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True), bool(drafting_items or inquiry_items)
+
+
+def _wait_event_tables_refresh(
+    page: Page,
+    reference_date: str,
+    previous_signature: str,
+    previous_has_data: bool,
+    timeout_ms: int = 2500,
+) -> str:
+    # The title date may change before the detail tables finish updating.
+    page.wait_for_timeout(250)
+    if not previous_has_data:
+        return "previous_empty"
+
+    deadline = time.monotonic() + timeout_ms / 1000.0
+    while time.monotonic() < deadline:
+        current_signature, _ = _read_event_signature(page, reference_date=reference_date)
+        if current_signature != previous_signature:
+            return "changed"
+        page.wait_for_timeout(200)
+    return "unchanged"
+
+
 def _extract_items_from_rows(
     page: Page,
     rows_xpath: str,
@@ -282,6 +323,10 @@ def fetch(
             browser.close()
             return normalize_fetch_output(raw_data, date_list=date_list, reference_date=reference_date)
 
+        previous_signature, previous_has_data = _read_event_signature(
+            page,
+            reference_date=reference_date,
+        )
         page.wait_for_timeout(500)
         first_synced = _wait_view_synced(page, target_date=first_date, timeout_ms=8000)
         if not first_synced:
@@ -289,6 +334,15 @@ def fetch(
                 print(f"[SZSE][{first_date}] 视图未同步到本周一，终止本轮抓取。")
             browser.close()
             return normalize_fetch_output(raw_data, date_list=date_list, reference_date=reference_date)
+
+        first_refresh_status = _wait_event_tables_refresh(
+            page=page,
+            reference_date=reference_date,
+            previous_signature=previous_signature,
+            previous_has_data=previous_has_data,
+        )
+        if verbose and first_refresh_status == "unchanged":
+            print(f"[SZSE][{first_date}] detail tables did not change after date sync; recording current DOM snapshot")
 
         _capture_and_log_for_date(
             page=page,
@@ -310,12 +364,25 @@ def fetch(
                         print(f"[SZSE][{target_date}] 点击日期失败，状态={click_status}。")
                 continue
 
+            previous_signature, previous_has_data = _read_event_signature(
+                page,
+                reference_date=reference_date,
+            )
             page.wait_for_timeout(500)
             synced = _wait_view_synced(page, target_date=target_date, timeout_ms=8000)
             if not synced:
                 if verbose:
                     print(f"[SZSE][{target_date}] 视图未同步到目标日期，跳过抓取。")
                 continue
+
+            refresh_status = _wait_event_tables_refresh(
+                page=page,
+                reference_date=reference_date,
+                previous_signature=previous_signature,
+                previous_has_data=previous_has_data,
+            )
+            if verbose and refresh_status == "unchanged":
+                print(f"[SZSE][{target_date}] detail tables did not change after date sync; recording current DOM snapshot")
 
             _capture_and_log_for_date(
                 page=page,
