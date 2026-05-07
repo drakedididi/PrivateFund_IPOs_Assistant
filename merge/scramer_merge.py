@@ -25,10 +25,10 @@ ASHARE_FILE = DATA_DIR / "Asharecalendar_data.json"
 BOND_FILE = DATA_DIR / "bondcalendar_data.json"
 HSHARE_FILE = DATA_DIR / "Hsharecalendar_data.json"
 DATE_KEY_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+R2_ENDPOINT_URL = "https://0cb4978c638c310279a1d85ef69f1d23.r2.cloudflarestorage.com"
 R2_ENV_VARS = (
     "R2_ACCESS_KEY_ID",
     "R2_SECRET_ACCESS_KEY",
-    "R2_ACCOUNT_ID",
     "R2_BUCKET_NAME",
 )
 
@@ -110,9 +110,6 @@ def _get_r2_config() -> dict[str, str] | None:
         raise RuntimeError(
             f"missing R2 environment variables: {', '.join(missing)}"
         )
-    config["endpoint_url"] = (
-        f"https://{config['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com"
-    )
     return config
 
 
@@ -126,7 +123,7 @@ def _upload_json_files_to_r2(*paths: str | Path) -> None:
 
     client = boto3.client(
         "s3",
-        endpoint_url=config["endpoint_url"],
+        endpoint_url=R2_ENDPOINT_URL,
         aws_access_key_id=config["R2_ACCESS_KEY_ID"],
         aws_secret_access_key=config["R2_SECRET_ACCESS_KEY"],
         region_name="auto",
@@ -138,12 +135,8 @@ def _upload_json_files_to_r2(*paths: str | Path) -> None:
             str(path_obj),
             config["R2_BUCKET_NAME"],
             path_obj.name,
-            ExtraArgs={
-                "ACL": "public-read",
-                "ContentType": "application/json",
-            },
         )
-        print(f"[SCRAMER][R2] uploaded: {path_obj.name}")
+        print(f"已上传: {path_obj.name}")
 
 
 def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
