@@ -1030,14 +1030,14 @@
     function purgeExpiredUnlockDb(todayDate) {
       const today = new Date(todayDate || new Date());
       today.setHours(0, 0, 0, 0);
-      const todayKey = formatDateKey(today);
+      const windowStartKey = formatDateKey(startOfWeek(today));
       for (let i = unlockDb.length - 1; i >= 0; i -= 1) {
         const record = unlockDb[i];
         if (!record || !record.listing_date) {
           continue;
         }
         const unlockDate = calculateUnlockTradeDate(record.listing_date, record.lock_months, record.lock_day);
-        if (unlockDate && unlockDate < todayKey) {
+        if (unlockDate && unlockDate < windowStartKey) {
           unlockDb.splice(i, 1);
         }
       }
