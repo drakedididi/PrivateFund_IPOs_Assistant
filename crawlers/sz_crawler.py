@@ -27,6 +27,8 @@ DRAFTING_ROWS_XPATH = "//div[text()='招股公告']/..//table//tr"
 INQUIRY_ROWS_XPATH = "//*[@id='app']/div/div/div/div[2]/div[1]/div/div[2]/div[2]/div[2]/table/tr"
 CALENDAR_CLICK_SETTLE_MS = 1500
 CALENDAR_SYNC_POLL_MS = 400
+INQUIRY_REFRESH_TIMEOUT_MS = 12000
+INQUIRY_STABLE_POLLS = 3
 
 
 def _onclick_token(date_key: str) -> str:
@@ -142,6 +144,53 @@ def _wait_view_synced(page: Page, target_date: str, timeout_ms: int = 8000) -> b
         if parsed == target_date:
             return True
         page.wait_for_timeout(CALENDAR_SYNC_POLL_MS)
+    return False
+
+
+def _get_inquiry_signature(page: Page, reference_date: str) -> str:
+    rows = page.locator(f"xpath={INQUIRY_ROWS_XPATH}")
+    if rows.count() == 0:
+        return "__missing__"
+
+    parts: list[str] = []
+    for i in range(rows.count()):
+        text_raw = (rows.nth(i).inner_text() or "").replace("\xa0", " ").strip()
+        text = clean_data(text_raw, reference_date=reference_date)
+        parts.append(str(text))
+
+    return f"{rows.count()}::" + "||".join(parts)
+
+
+def _wait_inquiry_refreshed(
+    page: Page,
+    reference_date: str,
+    previous_signature: str | None,
+    timeout_ms: int = INQUIRY_REFRESH_TIMEOUT_MS,
+) -> bool:
+    deadline = time.monotonic() + timeout_ms / 1000.0
+    grace_deadline = time.monotonic() + CALENDAR_CLICK_SETTLE_MS / 1000.0
+    stable_signature: str | None = None
+    stable_count = 0
+    changed = previous_signature is None
+
+    while time.monotonic() < deadline:
+        current_signature = _get_inquiry_signature(page, reference_date=reference_date)
+        if previous_signature is None or current_signature != previous_signature:
+            changed = True
+
+        if current_signature == stable_signature:
+            stable_count += 1
+        else:
+            stable_signature = current_signature
+            stable_count = 1
+
+        if stable_count >= INQUIRY_STABLE_POLLS and (
+            changed or time.monotonic() >= grace_deadline
+        ):
+            return True
+
+        page.wait_for_timeout(CALENDAR_SYNC_POLL_MS)
+
     return False
 
 
@@ -284,11 +333,24 @@ def fetch(
             browser.close()
             return normalize_fetch_output(raw_data, date_list=date_list, reference_date=reference_date)
 
+        previous_inquiry_signature = _get_inquiry_signature(page, reference_date=reference_date)
         page.wait_for_timeout(CALENDAR_CLICK_SETTLE_MS)
         first_synced = _wait_view_synced(page, target_date=first_date, timeout_ms=12000)
         if not first_synced:
             if verbose:
                 print(f"[SZSE][{first_date}] 视图未同步到本周一，终止本轮抓取。")
+            browser.close()
+            return normalize_fetch_output(raw_data, date_list=date_list, reference_date=reference_date)
+
+        first_inquiry_ready = _wait_inquiry_refreshed(
+            page,
+            reference_date=reference_date,
+            previous_signature=previous_inquiry_signature,
+            timeout_ms=INQUIRY_REFRESH_TIMEOUT_MS,
+        )
+        if not first_inquiry_ready:
+            if verbose:
+                print(f"[SZSE][{first_date}] inquiry region did not finish refreshing")
             browser.close()
             return normalize_fetch_output(raw_data, date_list=date_list, reference_date=reference_date)
 
@@ -301,6 +363,7 @@ def fetch(
         )
 
         for target_date in date_list[1:]:
+            previous_inquiry_signature = _get_inquiry_signature(page, reference_date=reference_date)
             clicked, click_status = _click_day_in_iframe(page, target_date, timeout_ms=8000)
             if not clicked:
                 if verbose:
@@ -317,6 +380,17 @@ def fetch(
             if not synced:
                 if verbose:
                     print(f"[SZSE][{target_date}] 视图未同步到目标日期，跳过抓取。")
+                continue
+
+            inquiry_ready = _wait_inquiry_refreshed(
+                page,
+                reference_date=reference_date,
+                previous_signature=previous_inquiry_signature,
+                timeout_ms=INQUIRY_REFRESH_TIMEOUT_MS,
+            )
+            if not inquiry_ready:
+                if verbose:
+                    print(f"[SZSE][{target_date}] inquiry region did not finish refreshing")
                 continue
 
             _capture_and_log_for_date(
