@@ -31,6 +31,7 @@ RIGHT_BTN_XPATHS = [
 
 DRAFTING_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[2]/div[2]/span"
 INQUIRY_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[3]/div[2]/div/span"
+CALENDAR_CLICK_SETTLE_MS = 1500
 
 
 def _is_no_content_text(text: str) -> bool:
@@ -68,7 +69,7 @@ def _goto_target_date(page: Page, target_date: str, reference_date: str, max_ste
         visible_tabs = _visible_date_tabs(page, reference_date)
         if target_date in visible_tabs:
             visible_tabs[target_date].click()
-            page.wait_for_timeout(500)
+            page.wait_for_timeout(CALENDAR_CLICK_SETTLE_MS)
             return True
         if not visible_tabs:
             return False
@@ -86,7 +87,7 @@ def _goto_target_date(page: Page, target_date: str, reference_date: str, max_ste
             if right_btn is None:
                 return False
             right_btn.click()
-        page.wait_for_timeout(500)
+        page.wait_for_timeout(CALENDAR_CLICK_SETTLE_MS)
 
     return False
 

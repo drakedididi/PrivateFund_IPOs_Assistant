@@ -25,6 +25,8 @@ CALENDAR_TBODY_XPATH = "/html/body/div/div[3]/table/tbody"
 VIEW_DATE_XPATH = '//*[@id="app"]/div/div/div/div[2]/div[1]/div/div[1]/span'
 DRAFTING_ROWS_XPATH = "//div[text()='招股公告']/..//table//tr"
 INQUIRY_ROWS_XPATH = "//*[@id='app']/div/div/div/div[2]/div[1]/div/div[2]/div[2]/div[2]/table/tr"
+CALENDAR_CLICK_SETTLE_MS = 1500
+CALENDAR_SYNC_POLL_MS = 400
 
 
 def _onclick_token(date_key: str) -> str:
@@ -78,7 +80,7 @@ def _wait_iframe_calendar_ready(page: Page, timeout_ms: int = 10000) -> bool:
                 continue
             if tbody.first.locator("xpath=.//td[@onclick]").count() > 0:
                 return True
-        page.wait_for_timeout(200)
+        page.wait_for_timeout(CALENDAR_SYNC_POLL_MS)
     return False
 
 
@@ -133,13 +135,13 @@ def _wait_view_synced(page: Page, target_date: str, timeout_ms: int = 8000) -> b
     deadline = time.monotonic() + timeout_ms / 1000.0
     while time.monotonic() < deadline:
         if view.count() == 0:
-            page.wait_for_timeout(200)
+            page.wait_for_timeout(CALENDAR_SYNC_POLL_MS)
             continue
         raw = view.first.inner_text()
         parsed = _extract_date_from_view(raw, target_date=target_date)
         if parsed == target_date:
             return True
-        page.wait_for_timeout(200)
+        page.wait_for_timeout(CALENDAR_SYNC_POLL_MS)
     return False
 
 
@@ -282,8 +284,8 @@ def fetch(
             browser.close()
             return normalize_fetch_output(raw_data, date_list=date_list, reference_date=reference_date)
 
-        page.wait_for_timeout(500)
-        first_synced = _wait_view_synced(page, target_date=first_date, timeout_ms=8000)
+        page.wait_for_timeout(CALENDAR_CLICK_SETTLE_MS)
+        first_synced = _wait_view_synced(page, target_date=first_date, timeout_ms=12000)
         if not first_synced:
             if verbose:
                 print(f"[SZSE][{first_date}] 视图未同步到本周一，终止本轮抓取。")
@@ -310,8 +312,8 @@ def fetch(
                         print(f"[SZSE][{target_date}] 点击日期失败，状态={click_status}。")
                 continue
 
-            page.wait_for_timeout(500)
-            synced = _wait_view_synced(page, target_date=target_date, timeout_ms=8000)
+            page.wait_for_timeout(CALENDAR_CLICK_SETTLE_MS)
+            synced = _wait_view_synced(page, target_date=target_date, timeout_ms=12000)
             if not synced:
                 if verbose:
                     print(f"[SZSE][{target_date}] 视图未同步到目标日期，跳过抓取。")
