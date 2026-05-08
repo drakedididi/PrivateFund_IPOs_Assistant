@@ -29,7 +29,7 @@ RIGHT_BTN_XPATHS = [
     "/html/body/div[5]/div/div[1]/div[2]",
 ]
 
-DRAFTING_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[2]/div[2]/span"
+DRAFTING_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[2]/div[2]/div/span"
 INQUIRY_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[3]/div[2]/div/span"
 CALENDAR_CLICK_SETTLE_MS = 1500
 CONTENT_SYNC_POLL_MS = 400
