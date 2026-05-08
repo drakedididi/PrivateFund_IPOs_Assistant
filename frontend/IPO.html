@@ -653,8 +653,8 @@
     }
 
     .share-sheet {
-      width: 1180px;
-      padding: 10px 10px 0;
+      width: 1380px;
+      padding: 14px 14px 6px;
       background:
         radial-gradient(circle at top left, rgba(47, 94, 168, 0.08), transparent 32%),
         linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
@@ -664,28 +664,45 @@
     .share-sheet .share-meta {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 18px;
       flex-wrap: wrap;
-      padding: 0 0 10px;
+      padding: 0 2px 14px;
       color: var(--muted);
       font-size: 14px;
     }
 
     .share-sheet .panel-head {
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .share-sheet .calendar {
-      gap: 12px;
+      gap: 14px;
     }
 
     .share-sheet .week-row {
       grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-      gap: 10px;
+      gap: 14px;
     }
 
     .share-sheet .day-card {
-      min-height: 248px;
+      min-height: 220px;
+    }
+
+    .share-sheet .events {
+      padding: 10px 12px 14px;
+      gap: 10px;
+    }
+
+    .share-sheet .event-item {
+      gap: 10px;
+    }
+
+    .share-sheet .event-label {
+      min-width: 96px;
+    }
+
+    .share-sheet .market-closed {
+      padding: 12px 8px;
     }
 
     .share-sheet .weekday {
