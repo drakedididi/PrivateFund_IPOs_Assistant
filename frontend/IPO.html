@@ -158,6 +158,10 @@
       flex-wrap: wrap;
     }
 
+    .panel-head-a-share {
+      justify-content: flex-start;
+    }
+
     .panel-title {
       margin: 0;
       font-size: 18px;
@@ -169,6 +173,11 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+    }
+
+    .exchange-filters {
+      margin-left: auto;
+      gap: 10px;
     }
 
     .pill {
@@ -187,6 +196,75 @@
       background: var(--navy);
       border-color: var(--navy);
       color: #fff;
+    }
+
+    .exchange-filters .pill {
+      min-width: 94px;
+      min-height: 52px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
+      background: linear-gradient(180deg, #ffffff 0%, #edf4ff 100%);
+      border-color: #bfd0ea;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .exchange-filters .pill.active {
+      background: linear-gradient(180deg, #2f5ea8 0%, #4f7fcb 100%);
+      border-color: #2f5ea8;
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(47, 94, 168, 0.18);
+    }
+
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .share-trigger {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy-deep);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .share-trigger:hover:not(:disabled) {
+      border-color: var(--navy);
+      color: var(--navy);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(47, 94, 168, 0.12);
+    }
+
+    .share-trigger:disabled {
+      opacity: 0.68;
+      cursor: wait;
+    }
+
+    .share-trigger-a-share {
+      padding: 10px 18px;
+      border-radius: 14px;
+      border-color: #ffb36b;
+      background: linear-gradient(180deg, #ffcb89 0%, #ff9458 100%);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(255, 148, 88, 0.24);
+    }
+
+    .share-trigger-a-share:hover:not(:disabled) {
+      border-color: #ff9458;
+      color: #fff;
+      background: linear-gradient(180deg, #ffb870 0%, #ff7b47 100%);
+      box-shadow: 0 14px 28px rgba(255, 123, 71, 0.28);
     }
 
     .calendar {
@@ -438,6 +516,194 @@
       color: #fff;
     }
 
+    body.share-open {
+      overflow: hidden;
+    }
+
+    .share-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(17, 26, 43, 0.62);
+      backdrop-filter: blur(6px);
+    }
+
+    .share-modal[hidden] {
+      display: none;
+    }
+
+    .share-dialog {
+      width: min(960px, 100%);
+      max-height: calc(100vh - 36px);
+      overflow: hidden;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 28px 58px rgba(13, 24, 44, 0.28);
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .share-dialog-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .share-dialog-head h3 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--navy-deep);
+    }
+
+    .share-dialog-tip {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .share-close {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--navy-deep);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .share-preview-wrap {
+      overflow: auto;
+      max-height: calc(100vh - 220px);
+      background:
+        radial-gradient(circle at top left, rgba(47, 94, 168, 0.06), transparent 35%),
+        linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
+      border: 1px solid rgba(124, 156, 204, 0.22);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .share-preview-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 18px 36px rgba(30, 54, 101, 0.12);
+    }
+
+    .share-dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .share-download,
+    .share-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 112px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .share-download {
+      border: 1px solid var(--navy);
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .share-download:hover {
+      background: var(--navy-deep);
+      border-color: var(--navy-deep);
+    }
+
+    .share-secondary {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy-deep);
+      cursor: pointer;
+    }
+
+    .share-secondary:hover,
+    .share-close:hover {
+      border-color: var(--line-strong);
+      background: #f7faff;
+    }
+
+    .share-capture-root {
+      position: fixed;
+      left: -20000px;
+      top: 0;
+      opacity: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .share-sheet {
+      width: 1180px;
+      padding: 10px 10px 0;
+      background:
+        radial-gradient(circle at top left, rgba(47, 94, 168, 0.08), transparent 32%),
+        linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    .share-sheet .share-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .share-sheet .panel-head {
+      margin-bottom: 10px;
+    }
+
+    .share-sheet .calendar {
+      gap: 12px;
+    }
+
+    .share-sheet .week-row {
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 10px;
+    }
+
+    .share-sheet .day-card {
+      min-height: 248px;
+    }
+
+    .share-sheet .weekday {
+      font-size: 40px;
+    }
+
+    .share-sheet .date-line {
+      font-size: 42px;
+    }
+
+    .share-sheet .date-line small {
+      font-size: 24px;
+    }
+
+    .share-sheet .share-trigger {
+      display: none !important;
+    }
+
     @media (max-width: 1200px) {
       .weekday {
         font-size: 34px;
@@ -483,6 +749,29 @@
       .reserve-grid {
         grid-template-columns: 1fr;
       }
+
+      .share-dialog {
+        padding: 14px;
+        border-radius: 18px;
+      }
+
+      .share-dialog-head {
+        align-items: center;
+      }
+
+      .share-dialog-actions {
+        justify-content: stretch;
+      }
+
+      .share-download,
+      .share-secondary {
+        width: 100%;
+      }
+
+      .share-preview-wrap {
+        max-height: calc(100vh - 250px);
+        padding: 8px;
+      }
     }
   </style>
 </head>
@@ -509,9 +798,10 @@
       </div>
 
       <section class="view active" id="view-a_share">
-        <div class="panel-head">
+        <div class="panel-head panel-head-a-share">
           <h2 class="panel-title">A股日历</h2>
-          <div class="filters" id="exchangeFilters">
+          <button type="button" class="share-trigger share-trigger-a-share" data-share-view="a_share">分享图片</button>
+          <div class="filters exchange-filters" id="exchangeFilters">
             <button class="pill active" data-exchange="all">全部交易所</button>
             <button class="pill" data-exchange="hs">沪深交易所</button>
             <button class="pill" data-exchange="bj">北交所</button>
@@ -536,6 +826,9 @@
       <section class="view" id="view-bond">
         <div class="panel-head">
           <h2 class="panel-title">可转债日历</h2>
+          <div class="panel-actions">
+            <button type="button" class="share-trigger" data-share-view="bond">分享图片</button>
+          </div>
         </div>
         <main class="calendar">
           <div class="week-row" id="bondWeekCurrent"></div>
@@ -552,6 +845,9 @@
       <section class="view" id="view-h_share">
         <div class="panel-head">
           <h2 class="panel-title">H股日历</h2>
+          <div class="panel-actions">
+            <button type="button" class="share-trigger" data-share-view="h_share">分享图片</button>
+          </div>
         </div>
         <main class="calendar">
           <div class="week-row" id="hWeekCurrent"></div>
@@ -571,6 +867,27 @@
     </div>
   </div>
 
+  <div class="share-modal" id="shareModal" hidden>
+    <div class="share-dialog" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+      <div class="share-dialog-head">
+        <div>
+          <h3 id="shareModalTitle">保存分享图片</h3>
+          <p class="share-dialog-tip">可直接下载，手机端也可长按预览图保存。</p>
+        </div>
+        <button type="button" class="share-close" id="shareCloseBtn" aria-label="关闭">×</button>
+      </div>
+      <div class="share-preview-wrap">
+        <img id="sharePreview" alt="日历分享图片预览">
+      </div>
+      <div class="share-dialog-actions">
+        <a id="shareDownloadBtn" class="share-download" href="#" download="ipo-calendar.png">下载图片</a>
+        <button type="button" class="share-secondary" id="shareCancelBtn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-capture-root" id="shareCaptureRoot" aria-hidden="true"></div>
+
   <script src="./unlock_db.js"></script>
   <script>
     const WEEK_DAYS = ["周一", "周二", "周三", "周四", "周五"];
@@ -578,6 +895,11 @@
       a_share: "私募网下打新助手",
       bond: "私募网下打新助手",
       h_share: "私募网下打新助手"
+    };
+    const VIEW_LABELS = {
+      a_share: "A股日历",
+      bond: "可转债日历",
+      h_share: "H股日历"
     };
     const EXCHANGE_LABELS = {
       all: "全部交易所",
@@ -628,6 +950,13 @@
     const viewInfoEl = document.getElementById("viewInfo");
     const exchangeFiltersEl = document.getElementById("exchangeFilters");
     const aShareBoardEl = document.getElementById("aShareBoard");
+    const shareButtons = Array.from(document.querySelectorAll(".share-trigger"));
+    const shareModalEl = document.getElementById("shareModal");
+    const sharePreviewEl = document.getElementById("sharePreview");
+    const shareDownloadBtnEl = document.getElementById("shareDownloadBtn");
+    const shareCloseBtnEl = document.getElementById("shareCloseBtn");
+    const shareCancelBtnEl = document.getElementById("shareCancelBtn");
+    const shareCaptureRootEl = document.getElementById("shareCaptureRoot");
 
     const views = {
       a_share: document.getElementById("view-a_share"),
@@ -656,6 +985,9 @@
     const BOARD_MARKETS = new Set(["SH", "SZ"]);
     const boardCheckSet = loadBoardChecks();
     const unlockDb = initUnlockDb(window.UNLOCK_DB);
+    let html2CanvasLoader = null;
+    let sharePreviewUrl = "";
+    let shareInFlight = false;
 
     function pad(value) {
       return String(value).padStart(2, "0");
@@ -1391,7 +1723,7 @@
       if (activeTab === "a_share") {
         viewInfoEl.textContent = `当前视图：${EXCHANGE_LABELS[activeExchange]}`;
       } else {
-        viewInfoEl.textContent = `当前视图：${TAB_TITLES[activeTab]}`;
+        viewInfoEl.textContent = `当前视图：${VIEW_LABELS[activeTab]}`;
       }
     }
 
@@ -1405,6 +1737,220 @@
       });
       mainTitleEl.textContent = TAB_TITLES[tab];
       renderAll();
+    }
+
+    function safeFileNamePart(value) {
+      return String(value || "")
+        .trim()
+        .replace(/[\\/:*?"<>|]/g, "-")
+        .replace(/\s+/g, "");
+    }
+
+    function waitForNextPaint() {
+      return new Promise((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(resolve);
+        });
+      });
+    }
+
+    function ensureHtml2Canvas() {
+      if (window.html2canvas) {
+        return Promise.resolve(window.html2canvas);
+      }
+      if (html2CanvasLoader) {
+        return html2CanvasLoader;
+      }
+      html2CanvasLoader = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+        script.onload = () => resolve(window.html2canvas);
+        script.onerror = () => reject(new Error("html2canvas load failed"));
+        document.head.appendChild(script);
+      }).catch((error) => {
+        html2CanvasLoader = null;
+        throw error;
+      });
+      return html2CanvasLoader;
+    }
+
+    function dataUrlToBlob(dataUrl) {
+      const [header, body] = String(dataUrl || "").split(",");
+      const mimeMatch = /data:(.*?);base64/.exec(header || "");
+      const mime = mimeMatch ? mimeMatch[1] : "image/png";
+      const binary = atob(body || "");
+      const len = binary.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return new Blob([bytes], { type: mime });
+    }
+
+    function canvasToBlob(canvas) {
+      return new Promise((resolve, reject) => {
+        if (!canvas) {
+          reject(new Error("canvas missing"));
+          return;
+        }
+        if (typeof canvas.toBlob === "function") {
+          canvas.toBlob((blob) => {
+            if (blob) {
+              resolve(blob);
+              return;
+            }
+            reject(new Error("canvas blob missing"));
+          }, "image/png");
+          return;
+        }
+        try {
+          resolve(dataUrlToBlob(canvas.toDataURL("image/png")));
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
+    function revokeSharePreviewUrl() {
+      if (!sharePreviewUrl) {
+        return;
+      }
+      URL.revokeObjectURL(sharePreviewUrl);
+      sharePreviewUrl = "";
+    }
+
+    function closeShareModal() {
+      if (!shareModalEl || shareModalEl.hidden) {
+        return;
+      }
+      shareModalEl.hidden = true;
+      document.body.classList.remove("share-open");
+      sharePreviewEl.removeAttribute("src");
+      shareDownloadBtnEl.removeAttribute("href");
+      revokeSharePreviewUrl();
+    }
+
+    function buildShareFileName(viewKey) {
+      const rangeLabel = safeFileNamePart(String(dateRangeEl.textContent || "").replace(/\s*-\s*/g, "-"));
+      if (viewKey === "a_share") {
+        const scope = safeFileNamePart(EXCHANGE_LABELS[activeExchange]);
+        return `${safeFileNamePart(VIEW_LABELS[viewKey])}-${scope}-${rangeLabel}.png`;
+      }
+      return `${safeFileNamePart(VIEW_LABELS[viewKey])}-${rangeLabel}.png`;
+    }
+
+    function buildShareSheet(viewKey) {
+      const viewEl = views[viewKey];
+      if (!viewEl) {
+        return null;
+      }
+
+      const sheet = document.createElement("div");
+      sheet.className = "share-sheet";
+
+      const meta = document.createElement("div");
+      meta.className = "share-meta";
+
+      const range = document.createElement("span");
+      range.className = "range-strong";
+      range.textContent = dateRangeEl.textContent || "";
+      meta.appendChild(range);
+
+      const today = document.createElement("span");
+      today.textContent = todayInfoEl.textContent || "";
+      meta.appendChild(today);
+
+      const viewInfo = document.createElement("span");
+      viewInfo.textContent = viewInfoEl.textContent || "";
+      meta.appendChild(viewInfo);
+
+      sheet.appendChild(meta);
+
+      const panelHead = viewEl.querySelector(".panel-head");
+      if (panelHead) {
+        const headClone = panelHead.cloneNode(true);
+        headClone.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
+        headClone.querySelectorAll(".share-trigger").forEach((node) => node.remove());
+        const actions = headClone.querySelector(".panel-actions");
+        if (actions && !actions.children.length) {
+          actions.remove();
+        }
+        sheet.appendChild(headClone);
+      }
+
+      const calendar = viewEl.querySelector(".calendar");
+      if (calendar) {
+        const calendarClone = calendar.cloneNode(true);
+        calendarClone.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
+        sheet.appendChild(calendarClone);
+      }
+
+      return sheet;
+    }
+
+    async function createShareImage(viewKey) {
+      const html2canvas = await ensureHtml2Canvas();
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+
+      shareCaptureRootEl.innerHTML = "";
+      try {
+        const shareSheet = buildShareSheet(viewKey);
+        if (!shareSheet) {
+          throw new Error("share sheet missing");
+        }
+        shareCaptureRootEl.appendChild(shareSheet);
+        await waitForNextPaint();
+
+        const canvas = await html2canvas(shareSheet, {
+          backgroundColor: null,
+          scale: Math.max(2, Math.min(window.devicePixelRatio || 1, 3)),
+          useCORS: true,
+          logging: false
+        });
+
+        return canvasToBlob(canvas);
+      } finally {
+        shareCaptureRootEl.innerHTML = "";
+      }
+    }
+
+    function openShareModal(blobUrl, fileName) {
+      revokeSharePreviewUrl();
+      sharePreviewUrl = blobUrl;
+      sharePreviewEl.src = blobUrl;
+      shareDownloadBtnEl.href = blobUrl;
+      shareDownloadBtnEl.download = fileName;
+      shareModalEl.hidden = false;
+      document.body.classList.add("share-open");
+    }
+
+    async function handleShareClick(button) {
+      if (!button || shareInFlight) {
+        return;
+      }
+      const viewKey = button.dataset.shareView;
+      if (!viewKey) {
+        return;
+      }
+
+      const originalText = button.textContent;
+      shareInFlight = true;
+      button.disabled = true;
+      button.textContent = "生成中...";
+
+      try {
+        const blob = await createShareImage(viewKey);
+        const blobUrl = URL.createObjectURL(blob);
+        openShareModal(blobUrl, buildShareFileName(viewKey));
+      } catch (error) {
+        alert("分享图片生成失败，请刷新页面后重试。");
+      } finally {
+        shareInFlight = false;
+        button.disabled = false;
+        button.textContent = originalText;
+      }
     }
 
     async function loadCalendarData() {
@@ -1502,6 +2048,25 @@
         applyDoneBoxState(button, checked);
       });
     }
+
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        handleShareClick(button);
+      });
+    });
+
+    shareCloseBtnEl.addEventListener("click", closeShareModal);
+    shareCancelBtnEl.addEventListener("click", closeShareModal);
+    shareModalEl.addEventListener("click", (event) => {
+      if (event.target === shareModalEl) {
+        closeShareModal();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeShareModal();
+      }
+    });
 
     purgeExpiredUnlockDb(new Date());
     setTab("a_share");
