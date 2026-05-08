@@ -32,6 +32,9 @@ RIGHT_BTN_XPATHS = [
 DRAFTING_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[2]/div[2]/span"
 INQUIRY_XPATH = "/html/body/div[5]/div/div[2]/div/table/tbody/tr/td[3]/div[2]/div/span"
 CALENDAR_CLICK_SETTLE_MS = 1500
+CONTENT_SYNC_POLL_MS = 400
+CONTENT_REFRESH_TIMEOUT_MS = 12000
+CONTENT_STABLE_POLLS = 3
 
 
 def _is_no_content_text(text: str) -> bool:
@@ -88,6 +91,71 @@ def _goto_target_date(page: Page, target_date: str, reference_date: str, max_ste
                 return False
             right_btn.click()
         page.wait_for_timeout(CALENDAR_CLICK_SETTLE_MS)
+
+    return False
+
+
+def _get_section_signature(page: Page, xpath: str, reference_date: str) -> str:
+    spans = page.locator(f"xpath={xpath}")
+    if spans.count() == 0:
+        return "__missing__"
+
+    parts: list[str] = []
+    for i in range(spans.count()):
+        span = spans.nth(i)
+        cls = (span.get_attribute("class") or "").strip()
+        text = clean_data(span.inner_text(), reference_date=reference_date)
+        parts.append(f"{cls}::{text}")
+
+    return f"{spans.count()}::" + "||".join(parts)
+
+
+def _wait_sections_refreshed(
+    page: Page,
+    reference_date: str,
+    previous_drafting_signature: str | None,
+    previous_inquiry_signature: str | None,
+    timeout_ms: int = CONTENT_REFRESH_TIMEOUT_MS,
+) -> bool:
+    deadline = dt.datetime.now().timestamp() + timeout_ms / 1000.0
+    grace_deadline = dt.datetime.now().timestamp() + CALENDAR_CLICK_SETTLE_MS / 1000.0
+    stable_pair: tuple[str, str] | None = None
+    stable_count = 0
+    changed = previous_drafting_signature is None or previous_inquiry_signature is None
+
+    while dt.datetime.now().timestamp() < deadline:
+        drafting_signature = _get_section_signature(
+            page,
+            DRAFTING_XPATH,
+            reference_date=reference_date,
+        )
+        inquiry_signature = _get_section_signature(
+            page,
+            INQUIRY_XPATH,
+            reference_date=reference_date,
+        )
+        current_pair = (drafting_signature, inquiry_signature)
+
+        if (
+            previous_drafting_signature is None
+            or previous_inquiry_signature is None
+            or drafting_signature != previous_drafting_signature
+            or inquiry_signature != previous_inquiry_signature
+        ):
+            changed = True
+
+        if current_pair == stable_pair:
+            stable_count += 1
+        else:
+            stable_pair = current_pair
+            stable_count = 1
+
+        if stable_count >= CONTENT_STABLE_POLLS and (
+            changed or dt.datetime.now().timestamp() >= grace_deadline
+        ):
+            return True
+
+        page.wait_for_timeout(CONTENT_SYNC_POLL_MS)
 
     return False
 
@@ -158,10 +226,32 @@ def fetch(
         page.wait_for_selector(f"xpath={DATE_UL_XPATH}", timeout=timeout_ms)
 
         for target_date in date_list:
+            previous_drafting_signature = _get_section_signature(
+                page,
+                DRAFTING_XPATH,
+                reference_date=reference_date,
+            )
+            previous_inquiry_signature = _get_section_signature(
+                page,
+                INQUIRY_XPATH,
+                reference_date=reference_date,
+            )
             ok = _goto_target_date(page, target_date=target_date, reference_date=reference_date)
             if not ok:
                 if verbose:
                     print(f"[SSE][{target_date}] 日期标签未命中，跳过。")
+                continue
+
+            content_ready = _wait_sections_refreshed(
+                page,
+                reference_date=reference_date,
+                previous_drafting_signature=previous_drafting_signature,
+                previous_inquiry_signature=previous_inquiry_signature,
+                timeout_ms=CONTENT_REFRESH_TIMEOUT_MS,
+            )
+            if not content_ready:
+                if verbose:
+                    print(f"[SSE][{target_date}] drafting/inquiry regions did not finish refreshing")
                 continue
 
             drafting_spans = page.locator(f"xpath={DRAFTING_XPATH}")
