@@ -653,8 +653,8 @@
     }
 
     .share-sheet {
-      width: 1380px;
-      padding: 14px 14px 6px;
+      width: 1520px;
+      padding: 16px 16px 8px;
       background:
         radial-gradient(circle at top left, rgba(47, 94, 168, 0.08), transparent 32%),
         linear-gradient(180deg, #f7faff 0%, var(--bg) 100%);
@@ -664,24 +664,24 @@
     .share-sheet .share-meta {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 20px;
       flex-wrap: wrap;
-      padding: 0 2px 14px;
+      padding: 0 4px 16px;
       color: var(--muted);
       font-size: 14px;
     }
 
     .share-sheet .panel-head {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .share-sheet .calendar {
-      gap: 14px;
+      gap: 16px;
     }
 
     .share-sheet .week-row {
       grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-      gap: 14px;
+      gap: 16px;
     }
 
     .share-sheet .day-card {
@@ -844,7 +844,7 @@
         <div class="panel-head">
           <h2 class="panel-title">可转债日历</h2>
           <div class="panel-actions">
-            <button type="button" class="share-trigger" data-share-view="bond">分享图片</button>
+            <button type="button" class="share-trigger share-trigger-a-share" data-share-view="bond">分享图片</button>
           </div>
         </div>
         <main class="calendar">
@@ -863,7 +863,7 @@
         <div class="panel-head">
           <h2 class="panel-title">H股日历</h2>
           <div class="panel-actions">
-            <button type="button" class="share-trigger" data-share-view="h_share">分享图片</button>
+            <button type="button" class="share-trigger share-trigger-a-share" data-share-view="h_share">分享图片</button>
           </div>
         </div>
         <main class="calendar">
