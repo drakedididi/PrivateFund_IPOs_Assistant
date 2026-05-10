@@ -2,6 +2,8 @@ name: Daily Crawl
 
 on:
   schedule:
+    - cron: '0 20 * * *'
+    - cron: '0 21 * * *'
     - cron: '0 22 * * *'
     - cron: '30 22 * * *'
     - cron: '0 0 * * *'
