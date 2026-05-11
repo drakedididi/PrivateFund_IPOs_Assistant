@@ -125,6 +125,7 @@ def _parse_unlock_db(path: str | Path) -> list[dict[str, Any]]:
         r'\1"\2":',
         array_literal,
     )
+    json_text = re.sub(r",(\s*[\]}])", r"\1", json_text)
     records = json.loads(json_text)
     if not isinstance(records, list):
         raise RuntimeError(f"unlock db is not a list: {path_obj}")
@@ -176,9 +177,10 @@ def _write_unlock_db(path: str | Path, records: list[dict[str, Any]]) -> None:
     path_obj = Path(path)
     path_obj.parent.mkdir(parents=True, exist_ok=True)
     lines = ["window.UNLOCK_DB = ["]
-    for record in records:
+    for index, record in enumerate(records):
+        suffix = "," if index < len(records) - 1 else ""
         lines.append(
-            "  { code: %s, name: %s, market: %s, listing_date: %s, lock_months: %s, lock_day: %s },"
+            "  { code: %s, name: %s, market: %s, listing_date: %s, lock_months: %s, lock_day: %s }%s"
             % (
                 json.dumps(str(record.get("code", "")).strip(), ensure_ascii=False),
                 json.dumps(str(record.get("name", "")).strip(), ensure_ascii=False),
@@ -186,6 +188,7 @@ def _write_unlock_db(path: str | Path, records: list[dict[str, Any]]) -> None:
                 _format_js_nullable_string(record.get("listing_date")),
                 _format_js_nullable_number(record.get("lock_months")),
                 _format_js_nullable_number(record.get("lock_day")),
+                suffix,
             )
         )
     lines.append("];")
