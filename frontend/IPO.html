@@ -936,19 +936,8 @@
       { key: "subscribe", label: "申购" },
       { key: "listing", label: "上市" }
     ];
-    const VACATION_DATES = new Set([
-      "2026-05-01",
-      "2026-05-04",
-      "2026-05-05",
-      "2026-06-19",
-      "2026-09-25",
-      "2026-10-01",
-      "2026-10-02",
-      "2026-10-05",
-      "2026-10-06",
-      "2026-10-07"
-    ]);
     const UNLOCK_DEFAULT_LOCK_MONTHS = 6;
+    let vacationDates = new Set();
 
     let calendarData = {
       a_share: {
@@ -1012,6 +1001,13 @@
 
     function isIsoDateKey(value) {
       return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ""));
+    }
+
+    function applyTradingHolidays(payload) {
+      const values = Array.isArray(payload)
+        ? payload
+        : (payload && Array.isArray(payload.vacation_dates) ? payload.vacation_dates : []);
+      vacationDates = new Set(values.filter((item) => isIsoDateKey(item)));
     }
 
     function normalizeUnlockRecord(record) {
@@ -1195,7 +1191,7 @@
         return false;
       }
       const key = formatDateKey(date);
-      return !VACATION_DATES.has(key);
+      return !vacationDates.has(key);
     }
 
     function calculateUnlockTradeDate(listingDate, lockMonths, lockDay) {
@@ -1680,7 +1676,7 @@
       const events = document.createElement("div");
       events.className = "events";
       const dateKey = formatDateKey(date);
-      if (VACATION_DATES.has(dateKey)) {
+      if (vacationDates.has(dateKey)) {
         const closed = document.createElement("div");
         closed.className = "market-closed";
         closed.textContent = "不开市";
@@ -1986,10 +1982,14 @@
           }
         };
 
-        const ashareData = await tryFetchJson(`${DATA_BASE_URL}/Asharecalendar_data.json`);
-        const bondData = await tryFetchJson(`${DATA_BASE_URL}/bondcalendar_data.json`);
-        const hshareData = await tryFetchJson(`${DATA_BASE_URL}/Hsharecalendar_data.json`);
-        const fallbackData = await tryFetchJson(`${DATA_BASE_URL}/calendar_data.json`);
+        const [holidayData, ashareData, bondData, hshareData, fallbackData] = await Promise.all([
+          tryFetchJson("../data/trading_holidays.json"),
+          tryFetchJson(`${DATA_BASE_URL}/Asharecalendar_data.json`),
+          tryFetchJson(`${DATA_BASE_URL}/bondcalendar_data.json`),
+          tryFetchJson(`${DATA_BASE_URL}/Hsharecalendar_data.json`),
+          tryFetchJson(`${DATA_BASE_URL}/calendar_data.json`)
+        ]);
+        applyTradingHolidays(holidayData);
         const baseData = ashareData || fallbackData;
 
         if (!baseData && !bondData) {

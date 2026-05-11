@@ -31,6 +31,7 @@ R2_ENV_VARS = (
     "R2_SECRET_ACCESS_KEY",
     "R2_BUCKET_NAME",
 )
+TRADING_HOLIDAYS_FILE = ROOT_DIR / "data" / "trading_holidays.json"
 UNLOCK_DB_FILE = ROOT_DIR / "frontend" / "unlock_db.js"
 UNLOCK_DB_RE = re.compile(r"window\.UNLOCK_DB\s*=\s*(\[[\s\S]*\])\s*;?\s*$")
 UNLOCK_MARKETS = {"SH", "SZ"}
@@ -173,6 +174,104 @@ def _sort_unlock_records(records: list[dict[str, Any]]) -> None:
     )
 
 
+def _load_trading_holiday_keys(path: str | Path = TRADING_HOLIDAYS_FILE) -> set[str]:
+    path_obj = Path(path)
+    payload = json.loads(path_obj.read_text(encoding="utf-8"))
+    values = payload if isinstance(payload, list) else payload.get("vacation_dates", [])
+    if not isinstance(values, list):
+        raise RuntimeError(f"invalid trading holidays payload: {path_obj}")
+
+    return {
+        value.strip()
+        for value in values
+        if isinstance(value, str) and DATE_KEY_RE.fullmatch(value.strip())
+    }
+
+
+def _parse_non_negative_int(value: Any) -> int | None:
+    if value in (None, ""):
+        return None
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        return None
+    return number if number >= 0 else None
+
+
+def _add_months_safe(base_date: dt.date, months: int) -> dt.date:
+    target_month = base_date.month - 1 + months
+    year = base_date.year + target_month // 12
+    month = target_month % 12 + 1
+    month_start = dt.date(year, month, 1)
+    if month == 12:
+        next_month_start = dt.date(year + 1, 1, 1)
+    else:
+        next_month_start = dt.date(year, month + 1, 1)
+    max_day = (next_month_start - month_start).days
+    return dt.date(year, month, min(base_date.day, max_day))
+
+
+def _is_trading_date(value: dt.date, holiday_keys: set[str]) -> bool:
+    if value.weekday() >= 5:
+        return False
+    return value.strftime("%Y-%m-%d") not in holiday_keys
+
+
+def _calculate_unlock_trade_date(
+    listing_date: Any,
+    lock_months: Any,
+    lock_day: Any,
+    holiday_keys: set[str],
+) -> dt.date | None:
+    text = str(listing_date or "").strip()
+    if not DATE_KEY_RE.fullmatch(text):
+        return None
+    try:
+        base_date = dt.datetime.strptime(text, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+    day_num = _parse_non_negative_int(lock_day)
+    if day_num is not None:
+        trade_date = base_date + dt.timedelta(days=day_num)
+    else:
+        month_num = _parse_non_negative_int(lock_months)
+        if month_num is None or month_num <= 0:
+            return None
+        trade_date = _add_months_safe(base_date, month_num)
+
+    while not _is_trading_date(trade_date, holiday_keys):
+        trade_date += dt.timedelta(days=1)
+    return trade_date
+
+
+def _purge_expired_unlock_records(
+    records: list[dict[str, Any]],
+    reference_date: str,
+    holiday_keys: set[str],
+) -> int:
+    week_start = dt.datetime.strptime(reference_date, "%Y-%m-%d").date()
+    week_start -= dt.timedelta(days=week_start.weekday())
+
+    kept_records: list[dict[str, Any]] = []
+    removed = 0
+    for record in records:
+        unlock_date = _calculate_unlock_trade_date(
+            record.get("listing_date"),
+            record.get("lock_months"),
+            record.get("lock_day"),
+            holiday_keys,
+        )
+        if unlock_date and unlock_date < week_start:
+            removed += 1
+            continue
+        kept_records.append(record)
+
+    if removed:
+        records[:] = kept_records
+    return removed
+
+
 def _write_unlock_db(path: str | Path, records: list[dict[str, Any]]) -> None:
     path_obj = Path(path)
     path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -195,14 +294,21 @@ def _write_unlock_db(path: str | Path, records: list[dict[str, Any]]) -> None:
     path_obj.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _sync_unlock_db_from_ashare(source_data: Mapping[str, Any], path: str | Path = UNLOCK_DB_FILE) -> None:
+def _sync_unlock_db_from_calendar(
+    source_data: Mapping[str, Any],
+    path: str | Path = UNLOCK_DB_FILE,
+    reference_date: str = REFERENCE_DATE,
+) -> None:
     records = _parse_unlock_db(path)
-    seen_codes = {
-        str(record.get("code", "")).strip()
-        for record in records
-        if str(record.get("code", "")).strip()
-    }
+    record_by_code: dict[str, dict[str, Any]] = {}
+    for record in records:
+        code = str(record.get("code", "")).strip()
+        if code and code not in record_by_code:
+            record_by_code[code] = record
+
     added = 0
+    updated = 0
+    holiday_keys = _load_trading_holiday_keys()
 
     for date_key in sorted(source_data):
         if not DATE_KEY_RE.fullmatch(date_key):
@@ -216,28 +322,46 @@ def _sync_unlock_db_from_ashare(source_data: Mapping[str, Any], path: str | Path
             code = str(item.get("code", "")).strip()
             name = str(item.get("name", "")).strip()
             market = str(item.get("market", "")).strip().upper()
-            if not code or code in seen_codes or market not in UNLOCK_MARKETS:
+            if not code or market not in UNLOCK_MARKETS:
                 continue
-            records.append(
-                {
-                    "code": code,
-                    "name": name or code,
-                    "market": market,
-                    "listing_date": None,
-                    "lock_months": None if _is_reits_code(code) else 6,
-                    "lock_day": None,
-                }
-            )
-            seen_codes.add(code)
+
+            existing = record_by_code.get(code)
+            if existing:
+                changed = False
+                if not existing.get("listing_date"):
+                    existing["listing_date"] = date_key
+                    changed = True
+                if not str(existing.get("name", "")).strip() and name:
+                    existing["name"] = name
+                    changed = True
+                if not str(existing.get("market", "")).strip() and market:
+                    existing["market"] = market
+                    changed = True
+                if changed:
+                    updated += 1
+                continue
+
+            record = {
+                "code": code,
+                "name": name or code,
+                "market": market,
+                "listing_date": date_key,
+                "lock_months": None if _is_reits_code(code) else 6,
+                "lock_day": None,
+            }
+            records.append(record)
+            record_by_code[code] = record
             added += 1
 
-    if added == 0:
-        print("[SCRAMER][UNLOCK_DB] skipped: no new SH/SZ listings")
+    removed = _purge_expired_unlock_records(records, reference_date=reference_date, holiday_keys=holiday_keys)
+
+    if added == 0 and updated == 0 and removed == 0:
+        print("[SCRAMER][UNLOCK_DB] skipped: no listing-driven updates")
         return
 
     _sort_unlock_records(records)
     _write_unlock_db(path, records)
-    print(f"[SCRAMER][UNLOCK_DB] written: {path} (+{added})")
+    print(f"[SCRAMER][UNLOCK_DB] written: {path} (+{added}, ~{updated}, -{removed})")
 
 
 def _get_r2_config() -> dict[str, str] | None:
@@ -340,7 +464,10 @@ def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
 def main() -> None:
     payload = build_payload(reference_date=REFERENCE_DATE)
     _write_json(OUTPUT_FILE, payload)
-    _sync_unlock_db_from_ashare((payload.get("a_share") or {}).get("all") or {})
+    _sync_unlock_db_from_calendar(
+        payload.get("all") or {},
+        reference_date=str(payload.get("reference_date") or REFERENCE_DATE),
+    )
     print(f"[SCRAMER] written: {OUTPUT_FILE}")
     print(f"[SCRAMER] written: {ASHARE_FILE}, {BOND_FILE}, {HSHARE_FILE}")
     _upload_json_files_to_r2(
