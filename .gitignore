@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .env
-data/
+data/*
+!data/trading_holidays.json
 temp/
 *.tmp
