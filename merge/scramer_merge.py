@@ -176,10 +176,15 @@ def _sort_unlock_records(records: list[dict[str, Any]]) -> None:
 
 def _load_trading_holiday_keys(path: str | Path = TRADING_HOLIDAYS_FILE) -> set[str]:
     path_obj = Path(path)
+    if not path_obj.exists():
+        print(f"[SCRAMER][UNLOCK_DB] trading holidays file missing: {path_obj}")
+        return set()
+
     payload = json.loads(path_obj.read_text(encoding="utf-8"))
     values = payload if isinstance(payload, list) else payload.get("vacation_dates", [])
     if not isinstance(values, list):
-        raise RuntimeError(f"invalid trading holidays payload: {path_obj}")
+        print(f"[SCRAMER][UNLOCK_DB] invalid trading holidays payload: {path_obj}")
+        return set()
 
     return {
         value.strip()
@@ -364,6 +369,21 @@ def _sync_unlock_db_from_calendar(
     print(f"[SCRAMER][UNLOCK_DB] written: {path} (+{added}, ~{updated}, -{removed})")
 
 
+def sync_unlock_db_main(reference_date: str | None = None) -> None:
+    payload_path = OUTPUT_FILE if OUTPUT_FILE.exists() else ASHARE_FILE
+    if not payload_path.exists():
+        raise FileNotFoundError(f"calendar payload not found: {payload_path}")
+
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    source_data = (
+        payload.get("all")
+        or ((payload.get("a_share") or {}).get("all"))
+        or {}
+    )
+    reference = str(payload.get("reference_date") or reference_date or REFERENCE_DATE)
+    _sync_unlock_db_from_calendar(source_data, reference_date=reference)
+
+
 def _get_r2_config() -> dict[str, str] | None:
     config = {name: os.getenv(name, "").strip() for name in R2_ENV_VARS}
     missing = [name for name, value in config.items() if not value]
@@ -464,10 +484,6 @@ def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
 def main() -> None:
     payload = build_payload(reference_date=REFERENCE_DATE)
     _write_json(OUTPUT_FILE, payload)
-    _sync_unlock_db_from_calendar(
-        payload.get("all") or {},
-        reference_date=str(payload.get("reference_date") or REFERENCE_DATE),
-    )
     print(f"[SCRAMER] written: {OUTPUT_FILE}")
     print(f"[SCRAMER] written: {ASHARE_FILE}, {BOND_FILE}, {HSHARE_FILE}")
     _upload_json_files_to_r2(

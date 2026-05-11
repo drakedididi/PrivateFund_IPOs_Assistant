@@ -44,7 +44,13 @@ jobs:
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: python scramer_merge.py
 
+      - name: Sync unlock db
+        id: sync_unlock_db
+        continue-on-error: true
+        run: python sync_unlock_db.py
+
       - name: Commit unlock db changes
+        if: steps.sync_unlock_db.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
