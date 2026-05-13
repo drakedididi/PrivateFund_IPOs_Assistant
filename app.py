@@ -12,6 +12,8 @@ from werkzeug.utils import secure_filename
 from module_tools.invoice.invoice_organization_local import process_zip_file
 
 
+RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
+
 app = Flask(__name__)
 CORS(app)
 
@@ -19,7 +21,17 @@ CORS(app)
 @app.route("/", methods=["GET"])
 @app.route("/api/health", methods=["GET"])
 def health_check():
-    return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "ok", "service_url": RENDER_SERVICE_URL}), 200
+
+
+def get_render_port() -> int:
+    port = os.environ.get("PORT")
+    if not port:
+        raise RuntimeError(
+            "PORT environment variable is required. "
+            "On Render, use: gunicorn app:app --bind 0.0.0.0:$PORT"
+        )
+    return int(port)
 
 
 def developing():
@@ -82,5 +94,4 @@ def api_pcf_crawl():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", "5000"))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=get_render_port())
