@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import os
 import tempfile
 from pathlib import Path
 
@@ -13,6 +14,12 @@ from module_tools.invoice.invoice_organization_local import process_zip_file
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route("/", methods=["GET"])
+@app.route("/api/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
 
 
 def developing():
@@ -75,4 +82,5 @@ def api_pcf_crawl():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", "5000"))
+    app.run(host="0.0.0.0", port=port)

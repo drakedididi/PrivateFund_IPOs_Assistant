@@ -11,10 +11,6 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
-import tkinter as tk
-from tkinter import filedialog, messagebox
-
-
 LEGACY_SCRIPT = "Invoice Organization.py"
 DEFAULT_SUFFIX = "_classified.zip"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -201,6 +197,9 @@ def run_cli(input_zip: Path, output_zip: Path | None = None) -> int:
 
 
 def run_gui() -> None:
+    import tkinter as tk
+    from tkinter import filedialog, messagebox
+
     root = tk.Tk()
     root.title("PDF发票分类工具（本地版）")
     root.geometry("640x300")
