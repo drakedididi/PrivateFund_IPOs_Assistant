@@ -334,11 +334,7 @@
       }
 
       const defaultLabel = "拖拽 ZIP 文件到此处，或点击选择文件";
-      const isLocalBackendPage = (
-        (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
-        && window.location.port === "5000"
-      );
-      const apiBase = isLocalBackendPage ? window.location.origin : "http://127.0.0.1:5000";
+      const apiBase = "https://privatefund-ipos-assistant-km21.onrender.com";
       let selectedFile = null;
 
       function setActiveMenu(targetId) {
@@ -495,7 +491,7 @@
         } catch (error) {
           let message = error && error.message ? error.message : "未知错误";
           if (message === "Failed to fetch") {
-            message = "无法连接后端，请确认 app.py 已运行在 http://127.0.0.1:5000";
+            message = "无法连接后端，请确认 Render 服务可访问：https://privatefund-ipos-assistant-km21.onrender.com/api/health";
           }
           setStatus("处理失败：" + message, true);
         } finally {
