@@ -49,7 +49,7 @@ window.UNLOCK_DB = [
   { code: "301599", name: "理奇智能", market: "SZ", listing_date: "2026-04-30", lock_months: 6, lock_day: null },
   { code: "301531", name: "春光集团", market: "SZ", listing_date: "2026-05-11", lock_months: 6, lock_day: null },
   { code: "603407", name: "长裕集团", market: "SH", listing_date: "2026-05-11", lock_months: 6, lock_day: null },
+  { code: "001393", name: "维通利", market: "SZ", listing_date: "2026-05-15", lock_months: 6, lock_day: null },
   { code: "001365", name: "天海电子", market: "SZ", listing_date: null, lock_months: 6, lock_day: null },
-  { code: "001393", name: "维通利", market: "SZ", listing_date: null, lock_months: 6, lock_day: null },
   { code: "508093", name: "北投REIT", market: "SH", listing_date: null, lock_months: null, lock_day: null }
 ];
