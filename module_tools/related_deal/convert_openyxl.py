@@ -9,6 +9,19 @@ import openpyxl
 import xlrd
 from datetime import datetime, timedelta
 
+STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
+CONFIRMED_STATUS = '确认成功'
+
+
+def normalize_status(value):
+    if value is None:
+        return ''
+    text = str(value).strip()
+    if text in ['nan', 'None']:
+        return ''
+    return text
+
+
 def find_all_excel_files(root_dir='.'):
     """递归查找所有文件夹中的Excel文件，返回(文件路径, 文件夹名称)的元组列表"""
     excel_files = []
@@ -61,7 +74,8 @@ def read_xlsx_file(excel_file):
         'business_type': ['业务类型'],
         'confirm_share': ['确认份额'],
         'confirm_amount': ['确定金额', '确认金额'],
-        'apply_amount': ['申请申购金额', '申请金额']
+        'apply_amount': ['申请申购金额', '申请金额'],
+        'status': STATUS_COLUMN_NAMES
     }
     
     found_columns = {}
@@ -90,12 +104,20 @@ def read_xlsx_file(excel_file):
         # 跳过空行或无效行
         if not client_name or not product_name or not business_type:
             continue
+
+        status = CONFIRMED_STATUS
+        if 'status' in found_columns:
+            status_val = ws.cell(row=row, column=found_columns['status'] + 1).value
+            status = normalize_status(status_val)
+            if status != CONFIRMED_STATUS:
+                continue
         
         # 数据清洗
         result = {
             'client_name': str(client_name).strip(),
             'product_name': str(product_name).strip(),
-            'business_type': str(business_type).strip()
+            'business_type': str(business_type).strip(),
+            'status': status
         }
         
         # 处理申请日期 - 使用openpyxl正确处理
@@ -238,7 +260,8 @@ def read_xls_file(excel_file):
         'business_type': ['业务类型'],
         'confirm_share': ['确认份额'],
         'confirm_amount': ['确定金额', '确认金额'],
-        'apply_amount': ['申请申购金额', '申请金额']
+        'apply_amount': ['申请申购金额', '申请金额'],
+        'status': STATUS_COLUMN_NAMES
     }
     
     found_columns = {}
@@ -268,12 +291,20 @@ def read_xls_file(excel_file):
         # 跳过空行或无效行
         if not client_name or not product_name or not business_type:
             continue
+
+        status = CONFIRMED_STATUS
+        if 'status' in found_columns:
+            status_value = ws.cell_value(row, found_columns['status'])
+            status = normalize_status(status_value)
+            if status != CONFIRMED_STATUS:
+                continue
         
         # 数据清洗
         result = {
             'client_name': str(client_name).strip(),
             'product_name': str(product_name).strip(),
-            'business_type': str(business_type).strip()
+            'business_type': str(business_type).strip(),
+            'status': status
         }
         
         # 处理申请日期 - 使用xlrd正确处理

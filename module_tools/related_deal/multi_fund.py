@@ -9,6 +9,19 @@ import xlrd
 from datetime import datetime, timedelta
 from docx.oxml.ns import qn
 
+STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
+CONFIRMED_STATUS = '确认成功'
+
+
+def normalize_status(value):
+    if value is None:
+        return ''
+    text = str(value).strip()
+    if text in ['nan', 'None']:
+        return ''
+    return text
+
+
 # 客户名称和客户代码对应关系
 client_code_map = {
     '睿量智行1号私募证券投资基金': 'SXE629',
@@ -132,7 +145,7 @@ def extract_info(excel_file):
                         column_mapping = {
                             'client_name': ['客户名称', '投资者名称'],
                             'apply_date': ['申请日期'],
-                            'apply_statue': ['确认状态', '确认情况']
+                            'status': STATUS_COLUMN_NAMES
                         }
                         
                         # 遍历表头行，查找列名
@@ -198,16 +211,19 @@ def extract_info(excel_file):
                                 if not apply_date:
                                     continue
 
-                                # 处理确认状态（可选列，缺失时默认为空）
-                                apply_statue = ''
-                                if 'apply_statue' in found_columns:
-                                    status_cell = ws.cell(row=row, column=found_columns['apply_statue'] + 1)
-                                    apply_statue = str(status_cell.value).strip() if status_cell.value else ''
+                                # 处理确认状态（可选列，缺失时默认确认成功）
+                                status = CONFIRMED_STATUS
+                                if 'status' in found_columns:
+                                    status_cell = ws.cell(row=row, column=found_columns['status'] + 1)
+                                    status = normalize_status(status_cell.value)
+                                    if status != CONFIRMED_STATUS:
+                                        continue
 
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
-                                    'apply_statue': apply_statue
+                                    'status': status,
+                                    'apply_statue': status
                                 }
 
                                 all_records.append(record)
@@ -238,7 +254,7 @@ def extract_info(excel_file):
                         column_mapping = {
                             'client_name': ['客户名称', '投资者名称', '客户', '基金名称', '产品名称'],
                             'apply_date': ['申请日期', '日期', '交易日期', '确认日期'],
-                            'apply_statue': ['确认状态', '状态', '交易状态', '确认']
+                            'status': STATUS_COLUMN_NAMES
                         }
                         
                         # 遍历表头行，查找列名
@@ -303,16 +319,19 @@ def extract_info(excel_file):
                                 if not apply_date:
                                     continue
 
-                                # 处理确认状态（可选列，缺失时默认为空）
-                                apply_statue = ''
-                                if 'apply_statue' in found_columns:
-                                    status_value = ws.cell_value(row, found_columns['apply_statue'])
-                                    apply_statue = str(status_value).strip() if status_value else ''
+                                # 处理确认状态（可选列，缺失时默认确认成功）
+                                status = CONFIRMED_STATUS
+                                if 'status' in found_columns:
+                                    status_value = ws.cell_value(row, found_columns['status'])
+                                    status = normalize_status(status_value)
+                                    if status != CONFIRMED_STATUS:
+                                        continue
 
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
-                                    'apply_statue': apply_statue
+                                    'status': status,
+                                    'apply_statue': status
                                 }
 
                                 all_records.append(record)
@@ -345,7 +364,8 @@ def clean_data(records):
     
     for record in records:
         # 打印记录信息用于调试
-        print(f"处理记录: 客户={record['client_name']}, 状态={record['apply_statue']}, 日期={record['apply_date']}")
+        status = record.get('status') or record.get('apply_statue') or CONFIRMED_STATUS
+        print(f"处理记录: 客户={record['client_name']}, 状态={status}, 日期={record['apply_date']}")
         
         # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
         record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
@@ -354,14 +374,9 @@ def clean_data(records):
         if record['client_name'] == '上海睿量私募基金管理有限公司':
             continue
 
-        # 只保留apply_statue为'成功'或'确认成功'的记录（无状态列时不过滤）
-        if record['apply_statue']:
-            if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success']:
-                # 检查是否是日期格式，如果是，说明列名匹配错误
-                date_str = str(record['apply_statue']).strip()
-                if len(date_str) == 8 and date_str.isdigit():
-                    print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
-                continue
+        # 只保留确认成功记录；无状态列时，读取阶段会默认填入确认成功
+        if status != CONFIRMED_STATUS:
+            continue
         
         cleaned_records.append(record)
     
