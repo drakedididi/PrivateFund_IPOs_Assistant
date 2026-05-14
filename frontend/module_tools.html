@@ -141,9 +141,8 @@
 
     .upload-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: stretch;
-      flex-wrap: wrap;
     }
 
     .upload-area {
@@ -151,33 +150,35 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px dashed #97afd6;
-      border-radius: 12px;
-      background: #f8fbff;
+      flex: 1;
+      min-width: 0;
+      border: 2px dashed #97afd6;
+      border-radius: 10px;
+      background: #fcfdff;
       padding: 16px 12px;
-      min-height: 56px;
+      min-height: 64px;
       text-align: center;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.5;
       cursor: not-allowed;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     }
 
     .upload-area.enabled {
-      border-style: solid;
       cursor: pointer;
-      background: #ffffff;
     }
 
     .upload-area.dragging {
       border-color: var(--navy);
       background: #eef4ff;
+      box-shadow: 0 8px 18px rgba(47, 94, 168, 0.12);
     }
 
-    .upload-row .upload-area {
-      flex: 1 1 320px;
-      margin: 0;
+    .file-label {
+      display: block;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
 
     .upload-input {
@@ -194,32 +195,34 @@
     }
 
     .upload-btn {
-      margin-top: 10px;
-      border: 1px solid #b9c9e6;
-      border-radius: 8px;
-      padding: 8px 14px;
-      background: #e9f0fb;
-      color: #7b8aa6;
+      width: 160px;
+      border: 0;
+      border-radius: 10px;
+      padding: 0 16px;
+      background: #b9c9e6;
+      color: #fff;
       font-size: 14px;
       font-weight: 700;
       cursor: not-allowed;
       white-space: nowrap;
-    }
-
-    .upload-row .upload-btn {
-      margin-top: 0;
-      min-width: 128px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
     .upload-btn.enabled {
       background: var(--navy);
-      border-color: var(--navy);
-      color: #fff;
       cursor: pointer;
     }
 
+    .upload-btn.enabled:hover:not(:disabled) {
+      background: #234b8f;
+      box-shadow: 0 10px 22px rgba(47, 94, 168, 0.24);
+      transform: translateY(-1px);
+    }
+
     .upload-btn.enabled:disabled {
-      opacity: 0.72;
+      background: #b9c9e6;
+      box-shadow: none;
+      transform: none;
       cursor: wait;
     }
 
@@ -235,11 +238,17 @@
       min-height: 20px;
       color: #1f4a90;
       font-size: 13px;
+      line-height: 1.5;
       clear: both;
+      text-align: left;
     }
 
     .upload-status.error {
       color: var(--danger);
+    }
+
+    .upload-status.success {
+      color: #087443;
     }
 
     .secret-panel {
@@ -270,6 +279,17 @@
       color: var(--text);
       font-size: 14px;
     }
+
+    @media (max-width: 640px) {
+      .upload-row {
+        flex-direction: column;
+      }
+
+      .upload-btn {
+        width: 100%;
+        height: 48px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -288,7 +308,7 @@
 
     <div class="secret-panel">
       <label for="app-secret-token">APP_SECRET_TOKEN</label>
-      <input class="secret-input" id="app-secret-token" type="password" autocomplete="current-password" placeholder="输入 Render 环境变量中的 token">
+      <input class="secret-input" id="app-secret-token" type="password" autocomplete="current-password" placeholder="输入 APP_SECRET_TOKEN">
     </div>
 
     <section class="tool-card" id="invoice">
@@ -301,29 +321,33 @@
         </label>
         <button class="upload-btn enabled" type="button" id="invoice-upload-btn" data-api="/api/invoice" data-extensions=".zip" data-download-suffix="_classified.zip">上传并下载结果</button>
       </div>
-      <p class="upload-status" id="invoice-upload-status">请选择待处理 ZIP 文件</p>
+      <p class="upload-status" id="invoice-upload-status"></p>
     </section>
 
     <section class="tool-card" id="video">
       <h2>新股询价现场通讯工具上交登记表</h2>
       <p class="script-path">脚本：module_tools/inquiry_video/video.py</p>
-      <label class="upload-area">
-        <input class="upload-input" type="file" disabled>
-        拖拽文件到此处，或点击选择文件
-        <span class="coming-soon">即将上线</span>
-      </label>
-      <button class="upload-btn" type="button" disabled data-api="/api/video">上传</button>
+      <div class="upload-row">
+        <label class="upload-area">
+          <input class="upload-input" type="file" disabled>
+          <span class="file-label">拖拽文件到此处，或点击选择文件 <span class="coming-soon">即将上线</span></span>
+        </label>
+        <button class="upload-btn" type="button" disabled data-api="/api/video">上传</button>
+      </div>
+      <p class="upload-status"></p>
     </section>
 
     <section class="tool-card" id="redemption">
       <h2>触发巨额赎回的公告</h2>
       <p class="script-path">脚本：module_tools/big_redemption/redemption_word.py</p>
-      <label class="upload-area enabled">
-        <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
-        <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
-      </label>
-      <button class="upload-btn enabled" type="button" data-api="/api/redemption" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_redemption_docs.zip">上传并下载结果</button>
-      <p class="upload-status">请选择待处理 Excel 或 ZIP 文件</p>
+      <div class="upload-row">
+        <label class="upload-area enabled">
+          <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+          <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
+        </label>
+        <button class="upload-btn enabled" type="button" data-api="/api/redemption" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_redemption_docs.zip">上传并下载结果</button>
+      </div>
+      <p class="upload-status"></p>
     </section>
 
     <section class="tool-card" id="related-deal">
@@ -332,23 +356,27 @@
         <div class="sub-tool">
           <h3>关联交易决策机制</h3>
           <p class="script-path">脚本：module_tools/related_deal/convert_openyxl.py</p>
-          <label class="upload-area enabled">
-            <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
-            <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
-          </label>
-          <button class="upload-btn enabled" type="button" data-api="/api/excel" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_related_decision_docs.zip">上传并下载结果</button>
-          <p class="upload-status">请选择待处理 Excel 或 ZIP 文件</p>
+          <div class="upload-row">
+            <label class="upload-area enabled">
+              <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+              <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
+            </label>
+            <button class="upload-btn enabled" type="button" data-api="/api/excel" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_related_decision_docs.zip">上传并下载结果</button>
+          </div>
+          <p class="upload-status"></p>
         </div>
 
         <div class="sub-tool">
           <h3>触发关联交易的公告</h3>
           <p class="script-path">脚本：module_tools/related_deal/multi_fund.py</p>
-          <label class="upload-area enabled">
-            <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
-            <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
-          </label>
-          <button class="upload-btn enabled" type="button" data-api="/api/fund" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_related_notice_docs.zip">上传并下载结果</button>
-          <p class="upload-status">请选择待处理 Excel 或 ZIP 文件</p>
+          <div class="upload-row">
+            <label class="upload-area enabled">
+              <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+              <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
+            </label>
+            <button class="upload-btn enabled" type="button" data-api="/api/fund" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_related_notice_docs.zip">上传并下载结果</button>
+          </div>
+          <p class="upload-status"></p>
         </div>
       </div>
     </section>
@@ -401,22 +429,6 @@
           focusSection(targetId);
         });
       });
-
-      function setStatus(text, isError) {
-        statusEl.textContent = text;
-        statusEl.classList.toggle("error", Boolean(isError));
-      }
-
-      function setLoading(loading) {
-        uploadButton.disabled = loading;
-        fileInput.disabled = loading;
-        uploadButton.textContent = loading ? "处理中..." : "上传并下载结果";
-      }
-
-      function setSelectedFile(file) {
-        selectedFile = file || null;
-        fileLabel.textContent = selectedFile ? ("已选择：" + selectedFile.name) : defaultLabel;
-      }
 
       function inferDownloadName(response, fallbackName) {
         const disposition = response.headers.get("Content-Disposition") || "";
@@ -479,9 +491,10 @@
         const defaultButtonText = button.textContent;
         let selectedFile = null;
 
-        function setStatus(text, isError) {
+        function setStatus(text, state) {
           statusEl.textContent = text;
-          statusEl.classList.toggle("error", Boolean(isError));
+          statusEl.classList.toggle("error", state === "error");
+          statusEl.classList.toggle("success", state === "success");
         }
 
         function setLoading(loading) {
@@ -513,26 +526,26 @@
             return;
           }
           setSelectedFile(files[0]);
-          setStatus("文件已就绪，可点击上传。", false);
+          setStatus("文件已就绪，可点击上传。", "success");
         });
 
         fileInput.addEventListener("change", function () {
           const file = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
           setSelectedFile(file);
           if (file) {
-            setStatus("文件已就绪，可点击上传。", false);
+            setStatus("文件已就绪，可点击上传。", "success");
           }
         });
 
         button.addEventListener("click", async function () {
           if (!selectedFile) {
-            setStatus("请先选择文件。", true);
+            setStatus("请先选择文件。", "error");
             return;
           }
 
           const extensions = allowedExtensions(button);
           if (!extensions.includes(fileExtension(selectedFile.name))) {
-            setStatus("仅支持 " + extensions.join("、") + " 文件上传。", true);
+            setStatus("仅支持 " + extensions.join("、") + " 文件上传。", "error");
             return;
           }
 
@@ -540,7 +553,7 @@
           if (button.dataset.private === "true") {
             const token = tokenInput ? tokenInput.value.trim() : "";
             if (!token) {
-              setStatus("请输入 APP_SECRET_TOKEN。", true);
+              setStatus("请输入 APP_SECRET_TOKEN。", "error");
               return;
             }
             headers["X-App-Secret-Token"] = token;
@@ -550,7 +563,7 @@
           formData.append("file", selectedFile, selectedFile.name);
 
           setLoading(true);
-          setStatus("文件处理中，请稍候...", false);
+          setStatus("文件处理中，请稍候...");
 
           try {
             const response = await fetch(resolveApiUrl(button.dataset.api), {
@@ -583,13 +596,13 @@
             link.remove();
             URL.revokeObjectURL(objectUrl);
 
-            setStatus("处理完成，结果已开始下载。", false);
+            setStatus("处理完成，结果已开始下载。", "success");
           } catch (error) {
             let message = error && error.message ? error.message : "未知错误";
             if (message === "Failed to fetch") {
               message = "无法连接后端，请确认 Render 服务可访问：https://privatefund-ipos-assistant-km21.onrender.com/api/health";
             }
-            setStatus("处理失败：" + message, true);
+            setStatus("处理失败：" + message, "error");
           } finally {
             setLoading(false);
           }
