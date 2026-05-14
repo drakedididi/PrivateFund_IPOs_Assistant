@@ -411,6 +411,14 @@ def extract_info(excel_file):
     """从Excel文件中提取信息，根据文件类型选择合适的库处理日期格式"""
     return read_excel_file(excel_file)
 
+def get_effective_amount(record):
+    """获取有效金额，优先确认金额，无确认金额时回退到申请金额"""
+    amount = record.get('confirm_amount')
+    if amount is None:
+        amount = record.get('apply_amount')
+    return amount
+
+
 def clean_data(records):
     """数据清洗，过滤掉不符合条件的记录"""
     cleaned_records = []
@@ -418,29 +426,35 @@ def clean_data(records):
         # 过滤掉客户名称为"总计"的记录
         if record['client_name'] == '总计':
             continue
-        # 过滤掉确定金额小于等于1000000的记录
-        if isinstance(record['confirm_amount'], (int, float)) and record['confirm_amount'] <= 1000000:
+
+        # 过滤掉金额小于1000000（100万）或无金额的记录
+        # 优先使用确认金额，无确认金额时回退到申请金额
+        effective_amount = get_effective_amount(record)
+        if isinstance(effective_amount, (int, float)):
+            if effective_amount < 1000000:
+                continue
+        elif effective_amount is None:
             continue
-        if record.get('confirm_amount') is None:
-            continue    
+        # 非数值类型（如字符串）保留，维持原有行为
+
         # 过滤掉申请日期为空的记录
         if not record['apply_date']:
             continue
         cleaned_records.append(record)
     return cleaned_records
 
-def process_normal_business(records, folder_name):
+def process_normal_business(records, folder_name, output_dir=None):
     """处理普通业务类（申购、赎回）"""
     processed_count = 0
     for record in records:
         try:
-            doc_name = create_word_document(record, folder_name)
+            doc_name = create_word_document(record, folder_name, output_dir=output_dir)
             processed_count += 1
         except Exception as e:
             continue
     return processed_count
 
-def process_special_business(conversion_out_records, conversion_in_records, folder_name):
+def process_special_business(conversion_out_records, conversion_in_records, folder_name, output_dir=None):
     """处理特殊业务类（基金转换）"""
     processed_count = 0
     paired_indices = set()
@@ -456,9 +470,9 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
             # 配对条件：客户名称相同且确定金额相近
             client_name_match = out_record['client_name'] == in_record['client_name']
             
-            # 处理金额比较，确保类型一致
-            out_amount = out_record['confirm_amount']
-            in_amount = in_record['confirm_amount']
+            # 处理金额比较，确保类型一致（优先确认金额，回退到申请金额）
+            out_amount = get_effective_amount(out_record)
+            in_amount = get_effective_amount(in_record)
             
             # 尝试将金额转换为数字进行比较
             try:
@@ -489,7 +503,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
                 }
                 
                 try:
-                    doc_name = create_word_document(conversion_record, folder_name)
+                    doc_name = create_word_document(conversion_record, folder_name, output_dir=output_dir)
                     processed_count += 1
                     
                     # 标记为已配对
@@ -502,7 +516,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
     
     return processed_count
 
-def create_word_document(info, folder_name):
+def create_word_document(info, folder_name, output_dir=None):
     """创建Word文档，保存在脚本所在目录"""
     doc = Document()
     
@@ -574,10 +588,10 @@ def create_word_document(info, folder_name):
     
     # 处理拟投资定价
     if info['business_type'] == '申购' or info['business_type'] == '申购确认':
-        content += f'4. 拟投资定价：申购 {info["confirm_amount"]} 元\n\n'
+        content += f'4. 拟投资定价：申购 {get_effective_amount(info)} 元\n\n'
     elif info['business_type'] == '赎回' or info['business_type'] == '赎回确认':
         content += f'4. 拟投资定价：赎回 {info["confirm_share"]} 份\n\n'
-    elif '基金转换' in info['business_type']:
+    elif '转换' in info['business_type']:
         content += f'4. 拟投资定价：基金转换 {info["confirm_share"]} 份\n\n'
     
     # 添加决策依据
@@ -666,15 +680,89 @@ def create_word_document(info, folder_name):
         safe_product = "".join(c for c in info['product_name'] if c.isalnum() or c in (' ', '-', '_')).rstrip()
         safe_client = "".join(c for c in info['client_name'] if c.isalnum() or c in (' ', '-', '_')).rstrip()
         if info['business_type'] in ['申购', '申购确认']:
-            doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-申购{info['confirm_amount']}元.docx"
+            doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-申购{get_effective_amount(info)}元.docx"
         elif info['business_type'] in ['赎回', '赎回确认']:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-赎回{info.get('confirm_share', info.get('apply_share'))}份.docx"
         else:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-{info['business_type']}.docx"
     
-    # 保存文档（保存在脚本所在目录）
-    doc.save(doc_name)
-    return doc_name
+    # 保存文档（本地脚本默认保存在当前目录，Web API 可指定临时输出目录）
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        doc_path = os.path.join(output_dir, doc_name)
+    else:
+        doc_path = doc_name
+    doc.save(doc_path)
+    return doc_path
+
+
+def process_excel_files(input_dir, output_dir):
+    """处理指定目录内的 Excel 文件，并把生成的 Word 文档写入 output_dir。"""
+    os.makedirs(output_dir, exist_ok=True)
+    excel_files = find_all_excel_files(input_dir)
+
+    stats = {
+        "excel_total": len(excel_files),
+        "excel_processed": 0,
+        "generated_total": 0,
+        "normal_total": 0,
+        "special_total": 0,
+        "generated_files": [],
+        "errors": [],
+    }
+
+    for excel_file, folder_name in excel_files:
+        try:
+            before_files = set(os.listdir(output_dir))
+            records = extract_info(excel_file)
+            cleaned_records = clean_data(records)
+            if not cleaned_records:
+                continue
+
+            conversion_in_records = []
+            conversion_out_records = []
+            normal_records = []
+
+            for record in cleaned_records:
+                biz = record['business_type']
+                if '转换' in biz:
+                    if '入' in biz:
+                        conversion_in_records.append(record)
+                    elif '出' in biz:
+                        conversion_out_records.append(record)
+                    else:
+                        conversion_out_records.append(record)
+                else:
+                    normal_records.append(record)
+
+            normal_count = process_normal_business(normal_records, folder_name, output_dir=output_dir)
+            special_count = process_special_business(
+                conversion_out_records,
+                conversion_in_records,
+                folder_name,
+                output_dir=output_dir,
+            )
+
+            after_files = set(os.listdir(output_dir))
+            new_files = [
+                os.path.join(output_dir, name)
+                for name in sorted(after_files - before_files)
+                if name.lower().endswith(".docx")
+            ]
+
+            stats["excel_processed"] += 1
+            stats["normal_total"] += normal_count
+            stats["special_total"] += special_count
+            stats["generated_total"] += normal_count + special_count
+            stats["generated_files"].extend(new_files)
+        except Exception as exc:
+            stats["errors"].append(f"{os.path.basename(excel_file)}: {exc}")
+
+    if stats["generated_total"] == 0:
+        details = "; ".join(stats["errors"][:5]) if stats["errors"] else "未生成任何 Word 文档"
+        raise RuntimeError(details)
+
+    return stats
 
 def main():
     try:
@@ -722,11 +810,16 @@ def main():
                 normal_records = []
                 
                 for record in cleaned_records:
-                    # 支持中英文括号
-                    if '基金转换（入）' in record['business_type'] or '基金转换(入)' in record['business_type']:
-                        conversion_in_records.append(record)
-                    elif '基金转换（出）' in record['business_type'] or '基金转换(出)' in record['business_type']:
-                        conversion_out_records.append(record)
+                    biz = record['business_type']
+                    # 识别各种转换类型的业务（基金转换、份额转换等）
+                    if '转换' in biz:
+                        if '入' in biz:
+                            conversion_in_records.append(record)
+                        elif '出' in biz:
+                            conversion_out_records.append(record)
+                        else:
+                            # 无明确方向的转换，默认为转出
+                            conversion_out_records.append(record)
                     else:
                         normal_records.append(record)
                 

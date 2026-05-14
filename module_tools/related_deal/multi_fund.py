@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 from docx import Document
 from docx.shared import Pt
@@ -145,23 +146,24 @@ def extract_info(excel_file):
                                         if header in possible_names:
                                             found_columns[key] = col - 1  # 转换为0-based索引
                         
-                        if all(key in found_columns for key in column_mapping):
+                        required_columns = ['client_name', 'apply_date']
+                        if all(key in found_columns for key in required_columns):
                             print(f"找到所有列名: {found_columns}")
-                            
+
                             # 处理数据行
                             for row in range(header_row + 1, ws.max_row + 1):
                                 # 处理客户名称
                                 client_cell = ws.cell(row=row, column=found_columns['client_name'] + 1)
                                 client_name = str(client_cell.value).strip() if client_cell.value else ''
-                                
+
                                 if not client_name or client_name in ['nan', 'None']:
                                     continue
-                                
+
                                 # 处理申请日期
                                 date_cell = ws.cell(row=row, column=found_columns['apply_date'] + 1)
                                 date_val = date_cell.value
                                 apply_date = None
-                                
+
                                 if date_val:
                                     try:
                                         # 处理Excel日期对象
@@ -192,22 +194,24 @@ def extract_info(excel_file):
                                                         continue
                                     except Exception:
                                         apply_date = str(date_val).strip()
-                                
+
                                 if not apply_date:
                                     continue
-                                
-                                # 处理确认状态
-                                status_cell = ws.cell(row=row, column=found_columns['apply_statue'] + 1)
-                                apply_statue = str(status_cell.value).strip() if status_cell.value else ''
-                                
+
+                                # 处理确认状态（可选列，缺失时默认为空）
+                                apply_statue = ''
+                                if 'apply_statue' in found_columns:
+                                    status_cell = ws.cell(row=row, column=found_columns['apply_statue'] + 1)
+                                    apply_statue = str(status_cell.value).strip() if status_cell.value else ''
+
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
                                     'apply_statue': apply_statue
                                 }
-                                
+
                                 all_records.append(record)
-                            
+
                             # 找到有效数据后，跳出循环
                             break
                         else:
@@ -248,22 +252,23 @@ def extract_info(excel_file):
                                         if header in possible_names:
                                             found_columns[key] = col
                         
-                        if all(key in found_columns for key in column_mapping):
+                        required_columns = ['client_name', 'apply_date']
+                        if all(key in found_columns for key in required_columns):
                             print(f"找到所有列名: {found_columns}")
-                            
+
                             # 处理数据行
                             for row in range(header_row + 1, ws.nrows):
                                 # 处理客户名称
                                 client_value = ws.cell_value(row, found_columns['client_name'])
                                 client_name = str(client_value).strip() if client_value else ''
-                                
+
                                 if not client_name or client_name in ['nan', 'None']:
                                     continue
-                                
+
                                 # 处理申请日期
                                 date_value = ws.cell_value(row, found_columns['apply_date'])
                                 apply_date = None
-                                
+
                                 if date_value:
                                     try:
                                         # 处理Excel日期序列号
@@ -294,22 +299,24 @@ def extract_info(excel_file):
                                                         continue
                                     except Exception:
                                         apply_date = str(date_value).strip()
-                                
+
                                 if not apply_date:
                                     continue
-                                
-                                # 处理确认状态
-                                status_value = ws.cell_value(row, found_columns['apply_statue'])
-                                apply_statue = str(status_value).strip() if status_value else ''
-                                
+
+                                # 处理确认状态（可选列，缺失时默认为空）
+                                apply_statue = ''
+                                if 'apply_statue' in found_columns:
+                                    status_value = ws.cell_value(row, found_columns['apply_statue'])
+                                    apply_statue = str(status_value).strip() if status_value else ''
+
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
                                     'apply_statue': apply_statue
                                 }
-                                
+
                                 all_records.append(record)
-                            
+
                             # 找到有效数据后，跳出循环
                             break
                         else:
@@ -340,17 +347,21 @@ def clean_data(records):
         # 打印记录信息用于调试
         print(f"处理记录: 客户={record['client_name']}, 状态={record['apply_statue']}, 日期={record['apply_date']}")
         
+        # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
+        record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
+
         # 删除client_name是上海睿量私募基金管理有限公司的记录
         if record['client_name'] == '上海睿量私募基金管理有限公司':
             continue
-        
-        # 只保留apply_statue为'成功'或'确认成功'的记录
-        if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success']:
-            # 检查是否是日期格式，如果是，说明列名匹配错误
-            date_str = str(record['apply_statue']).strip()
-            if len(date_str) == 8 and date_str.isdigit():
-                print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
-            continue
+
+        # 只保留apply_statue为'成功'或'确认成功'的记录（无状态列时不过滤）
+        if record['apply_statue']:
+            if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success']:
+                # 检查是否是日期格式，如果是，说明列名匹配错误
+                date_str = str(record['apply_statue']).strip()
+                if len(date_str) == 8 and date_str.isdigit():
+                    print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
+                continue
         
         cleaned_records.append(record)
     
@@ -460,6 +471,65 @@ def create_word_document(client_name, apply_dates, client_code):
     
     return doc
 
+
+def process_excel_files(input_dir, output_dir):
+    """处理指定目录内的 Excel 文件，并把生成的 Word 文档写入 output_dir。"""
+    os.makedirs(output_dir, exist_ok=True)
+    excel_files = find_all_excel_files(input_dir)
+
+    stats = {
+        "excel_total": len(excel_files),
+        "excel_processed": 0,
+        "records_total": 0,
+        "fund_total": 0,
+        "generated_total": 0,
+        "missing_code": [],
+        "generated_files": [],
+        "errors": [],
+    }
+
+    all_records = []
+    for excel_file in excel_files:
+        try:
+            records = extract_info(excel_file)
+            all_records.extend(records)
+            stats["excel_processed"] += 1
+            stats["records_total"] += len(records)
+        except Exception as exc:
+            stats["errors"].append(f"{os.path.basename(excel_file)}: {exc}")
+
+    cleaned_records = clean_data(all_records)
+    data_dict = organize_data(cleaned_records)
+    stats["fund_total"] = len(data_dict)
+
+    for client_name, apply_dates in data_dict.items():
+        client_code = client_code_map.get(client_name)
+        if not client_code:
+            stats["missing_code"].append(client_name)
+            continue
+
+        try:
+            doc = create_word_document(client_name, apply_dates, client_code)
+            safe_client_name = "".join(c for c in client_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+            latest_date = apply_dates[-1] if apply_dates else ''
+            date_str = "".join(c for c in latest_date if c.isdigit())
+            doc_name = f"{safe_client_name}关联交易公告函-{date_str}.docx"
+            doc_path = os.path.join(output_dir, doc_name)
+            doc.save(doc_path)
+            stats["generated_files"].append(doc_path)
+            stats["generated_total"] += 1
+        except Exception as exc:
+            stats["errors"].append(f"{client_name}: {exc}")
+
+    if stats["generated_total"] == 0:
+        details = "; ".join(stats["errors"][:5]) if stats["errors"] else "未生成任何 Word 文档"
+        if stats["missing_code"]:
+            details = f"{details}; 缺少备案编码: {', '.join(stats['missing_code'][:5])}"
+        raise RuntimeError(details)
+
+    return stats
+
+
 def main():
     try:
         # 切换到脚本所在目录
@@ -501,6 +571,7 @@ def main():
         print(f"开始生成Word文档，共 {len(data_dict)} 个基金")
         generated_count = 0
         missing_code_count = 0
+        missing_code_names = []
         
         for client_name, apply_dates in data_dict.items():
             print(f"处理基金: {client_name}")
@@ -530,11 +601,14 @@ def main():
             else:
                 print(f"  未找到 {client_name} 的基金备案编码")
                 missing_code_count += 1
+                missing_code_names.append(client_name)
         
         print(f"\n生成文档统计:")
         print(f"  总基金数: {len(data_dict)}")
         print(f"  成功生成: {generated_count}")
         print(f"  缺少编码: {missing_code_count}")
+        if missing_code_names:
+            print(f"  缺少编码的产品: {', '.join(missing_code_names)}")
         
         print("\n" + "=" * 50)
         print("处理完成！")

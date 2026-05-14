@@ -241,6 +241,35 @@
     .upload-status.error {
       color: var(--danger);
     }
+
+    .secret-panel {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(47, 94, 168, 0.1);
+    }
+
+    .secret-panel label {
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .secret-input {
+      flex: 1 1 260px;
+      min-width: 0;
+      border: 1px solid #b9c9e6;
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -257,15 +286,20 @@
       <a href="#related-deal" data-target="related-deal">关联交易</a>
     </div>
 
+    <div class="secret-panel">
+      <label for="app-secret-token">APP_SECRET_TOKEN</label>
+      <input class="secret-input" id="app-secret-token" type="password" autocomplete="current-password" placeholder="输入 Render 环境变量中的 token">
+    </div>
+
     <section class="tool-card" id="invoice">
       <h2>妥妥递发票托管分类</h2>
       <p class="script-path">脚本：module_tools/invoice/Invoice_organization_local.py</p>
       <div class="upload-row">
         <label class="upload-area enabled" id="invoice-upload-area">
           <input class="upload-input enabled" type="file" id="invoice-file-input" accept=".zip,application/zip">
-          <span id="invoice-file-label">拖拽 ZIP 文件到此处，或点击选择文件</span>
+          <span class="file-label" id="invoice-file-label">拖拽 ZIP 文件到此处，或点击选择文件</span>
         </label>
-        <button class="upload-btn enabled" type="button" id="invoice-upload-btn" data-api="/api/invoice">上传并下载结果</button>
+        <button class="upload-btn enabled" type="button" id="invoice-upload-btn" data-api="/api/invoice" data-extensions=".zip" data-download-suffix="_classified.zip">上传并下载结果</button>
       </div>
       <p class="upload-status" id="invoice-upload-status">请选择待处理 ZIP 文件</p>
     </section>
@@ -283,13 +317,13 @@
 
     <section class="tool-card" id="redemption">
       <h2>触发巨额赎回的公告</h2>
-      <p class="script-path">脚本：module_tools/big_redemption/multi_fund.py</p>
-      <label class="upload-area">
-        <input class="upload-input" type="file" disabled>
-        拖拽文件到此处，或点击选择文件
-        <span class="coming-soon">即将上线</span>
+      <p class="script-path">脚本：module_tools/big_redemption/redemption_word.py</p>
+      <label class="upload-area enabled">
+        <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+        <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
       </label>
-      <button class="upload-btn" type="button" disabled data-api="/api/redemption">上传</button>
+      <button class="upload-btn enabled" type="button" data-api="/api/redemption" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_redemption_docs.zip">上传并下载结果</button>
+      <p class="upload-status">请选择待处理 Excel 或 ZIP 文件</p>
     </section>
 
     <section class="tool-card" id="related-deal">
@@ -298,23 +332,23 @@
         <div class="sub-tool">
           <h3>关联交易决策机制</h3>
           <p class="script-path">脚本：module_tools/related_deal/convert_openyxl.py</p>
-          <label class="upload-area">
-            <input class="upload-input" type="file" disabled>
-            拖拽文件到此处，或点击选择文件
-            <span class="coming-soon">即将上线</span>
+          <label class="upload-area enabled">
+            <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+            <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
           </label>
-          <button class="upload-btn" type="button" disabled data-api="/api/excel">上传</button>
+          <button class="upload-btn enabled" type="button" data-api="/api/excel" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_related_decision_docs.zip">上传并下载结果</button>
+          <p class="upload-status">请选择待处理 Excel 或 ZIP 文件</p>
         </div>
 
         <div class="sub-tool">
           <h3>触发关联交易的公告</h3>
           <p class="script-path">脚本：module_tools/related_deal/multi_fund.py</p>
-          <label class="upload-area">
-            <input class="upload-input" type="file" disabled>
-            拖拽文件到此处，或点击选择文件
-            <span class="coming-soon">即将上线</span>
+          <label class="upload-area enabled">
+            <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+            <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
           </label>
-          <button class="upload-btn" type="button" disabled data-api="/api/fund">上传</button>
+          <button class="upload-btn enabled" type="button" data-api="/api/fund" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_related_notice_docs.zip">上传并下载结果</button>
+          <p class="upload-status">请选择待处理 Excel 或 ZIP 文件</p>
         </div>
       </div>
     </section>
@@ -322,20 +356,21 @@
 
   <script>
     (function () {
-      const uploadArea = document.getElementById("invoice-upload-area");
-      const fileInput = document.getElementById("invoice-file-input");
-      const fileLabel = document.getElementById("invoice-file-label");
-      const uploadButton = document.getElementById("invoice-upload-btn");
-      const statusEl = document.getElementById("invoice-upload-status");
       const menuLinks = Array.from(document.querySelectorAll("#module-menu a[data-target]"));
+      const tokenInput = document.getElementById("app-secret-token");
+      const uploadButtons = Array.from(document.querySelectorAll(".upload-btn.enabled[data-api]"));
 
-      if (!uploadArea || !fileInput || !fileLabel || !uploadButton || !statusEl) {
-        return;
+      if (tokenInput) {
+        try {
+          tokenInput.value = sessionStorage.getItem("appSecretToken") || "";
+          tokenInput.addEventListener("input", function () {
+            sessionStorage.setItem("appSecretToken", tokenInput.value);
+          });
+        } catch (e) {
+        }
       }
 
-      const defaultLabel = "拖拽 ZIP 文件到此处，或点击选择文件";
       const apiBase = "https://privatefund-ipos-assistant-km21.onrender.com";
-      let selectedFile = null;
 
       function setActiveMenu(targetId) {
         menuLinks.forEach(function (link) {
@@ -405,98 +440,164 @@
         return new URL(path || "/api/invoice", apiBase).toString();
       }
 
-      function handleDragState(event, dragging) {
+      function fileExtension(fileName) {
+        const dotIndex = fileName.lastIndexOf(".");
+        return dotIndex >= 0 ? fileName.slice(dotIndex).toLowerCase() : "";
+      }
+
+      function allowedExtensions(button) {
+        return (button.dataset.extensions || ".zip")
+          .split(",")
+          .map(function (item) { return item.trim().toLowerCase(); })
+          .filter(Boolean);
+      }
+
+      function stemName(fileName) {
+        return fileName.replace(/\.[^/.]+$/i, "");
+      }
+
+      function handleDragState(event, uploadArea, dragging) {
         event.preventDefault();
         event.stopPropagation();
         uploadArea.classList.toggle("dragging", dragging);
       }
 
-      ["dragenter", "dragover"].forEach(function (eventName) {
-        uploadArea.addEventListener(eventName, function (event) {
-          handleDragState(event, true);
-        });
-      });
-
-      ["dragleave", "dragend", "drop"].forEach(function (eventName) {
-        uploadArea.addEventListener(eventName, function (event) {
-          handleDragState(event, false);
-        });
-      });
-
-      uploadArea.addEventListener("drop", function (event) {
-        const files = event.dataTransfer ? event.dataTransfer.files : null;
-        if (!files || files.length === 0) {
+      function initUploadTool(button) {
+        const container = button.closest(".tool-card, .sub-tool");
+        if (!container) {
           return;
         }
-        setSelectedFile(files[0]);
-        setStatus("文件已就绪，可点击上传。", false);
-      });
-
-      fileInput.addEventListener("change", function () {
-        const file = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
-        setSelectedFile(file);
-        if (file) {
-          setStatus("文件已就绪，可点击上传。", false);
-        }
-      });
-
-      uploadButton.addEventListener("click", async function () {
-        if (!selectedFile) {
-          setStatus("请先选择 ZIP 文件。", true);
+        const uploadArea = container.querySelector(".upload-area.enabled");
+        const fileInput = container.querySelector(".upload-input.enabled");
+        const fileLabel = container.querySelector(".file-label");
+        const statusEl = container.querySelector(".upload-status");
+        if (!uploadArea || !fileInput || !fileLabel || !statusEl) {
           return;
         }
 
-        if (!selectedFile.name.toLowerCase().endsWith(".zip")) {
-          setStatus("仅支持 ZIP 文件上传。", true);
-          return;
+        const defaultLabel = fileLabel.textContent;
+        const defaultButtonText = button.textContent;
+        let selectedFile = null;
+
+        function setStatus(text, isError) {
+          statusEl.textContent = text;
+          statusEl.classList.toggle("error", Boolean(isError));
         }
 
-        const formData = new FormData();
-        formData.append("file", selectedFile, selectedFile.name);
+        function setLoading(loading) {
+          button.disabled = loading;
+          fileInput.disabled = loading;
+          button.textContent = loading ? "处理中..." : defaultButtonText;
+        }
 
-        setLoading(true);
-        setStatus("文件处理中，请稍候...", false);
+        function setSelectedFile(file) {
+          selectedFile = file || null;
+          fileLabel.textContent = selectedFile ? ("已选择：" + selectedFile.name) : defaultLabel;
+        }
 
-        try {
-          const response = await fetch(resolveApiUrl(uploadButton.dataset.api), {
-            method: "POST",
-            body: formData
+        ["dragenter", "dragover"].forEach(function (eventName) {
+          uploadArea.addEventListener(eventName, function (event) {
+            handleDragState(event, uploadArea, true);
           });
+        });
 
-          if (!response.ok) {
-            let errorMessage = "请求失败（" + response.status + "）";
-            try {
-              const errorBody = await response.json();
-              if (errorBody && errorBody.error) {
-                errorMessage = errorBody.error;
-              }
-            } catch (e) {
+        ["dragleave", "dragend", "drop"].forEach(function (eventName) {
+          uploadArea.addEventListener(eventName, function (event) {
+            handleDragState(event, uploadArea, false);
+          });
+        });
+
+        uploadArea.addEventListener("drop", function (event) {
+          const files = event.dataTransfer ? event.dataTransfer.files : null;
+          if (!files || files.length === 0) {
+            return;
+          }
+          setSelectedFile(files[0]);
+          setStatus("文件已就绪，可点击上传。", false);
+        });
+
+        fileInput.addEventListener("change", function () {
+          const file = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
+          setSelectedFile(file);
+          if (file) {
+            setStatus("文件已就绪，可点击上传。", false);
+          }
+        });
+
+        button.addEventListener("click", async function () {
+          if (!selectedFile) {
+            setStatus("请先选择文件。", true);
+            return;
+          }
+
+          const extensions = allowedExtensions(button);
+          if (!extensions.includes(fileExtension(selectedFile.name))) {
+            setStatus("仅支持 " + extensions.join("、") + " 文件上传。", true);
+            return;
+          }
+
+          const headers = {};
+          if (button.dataset.private === "true") {
+            const token = tokenInput ? tokenInput.value.trim() : "";
+            if (!token) {
+              setStatus("请输入 APP_SECRET_TOKEN。", true);
+              return;
             }
-            throw new Error(errorMessage);
+            headers["X-App-Secret-Token"] = token;
           }
 
-          const outputBlob = await response.blob();
-          const fallbackName = selectedFile.name.replace(/\.zip$/i, "") + "_classified.zip";
-          const downloadName = inferDownloadName(response, fallbackName);
-          const objectUrl = URL.createObjectURL(outputBlob);
-          const link = document.createElement("a");
-          link.href = objectUrl;
-          link.download = downloadName;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(objectUrl);
+          const formData = new FormData();
+          formData.append("file", selectedFile, selectedFile.name);
 
-          setStatus("处理完成，结果已开始下载。", false);
-        } catch (error) {
-          let message = error && error.message ? error.message : "未知错误";
-          if (message === "Failed to fetch") {
-            message = "无法连接后端，请确认 Render 服务可访问：https://privatefund-ipos-assistant-km21.onrender.com/api/health";
+          setLoading(true);
+          setStatus("文件处理中，请稍候...", false);
+
+          try {
+            const response = await fetch(resolveApiUrl(button.dataset.api), {
+              method: "POST",
+              headers: headers,
+              body: formData
+            });
+
+            if (!response.ok) {
+              let errorMessage = "请求失败（" + response.status + "）";
+              try {
+                const errorBody = await response.json();
+                if (errorBody && errorBody.error) {
+                  errorMessage = errorBody.error;
+                }
+              } catch (e) {
+              }
+              throw new Error(errorMessage);
+            }
+
+            const outputBlob = await response.blob();
+            const fallbackName = stemName(selectedFile.name) + (button.dataset.downloadSuffix || "_result.zip");
+            const downloadName = inferDownloadName(response, fallbackName);
+            const objectUrl = URL.createObjectURL(outputBlob);
+            const link = document.createElement("a");
+            link.href = objectUrl;
+            link.download = downloadName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+
+            setStatus("处理完成，结果已开始下载。", false);
+          } catch (error) {
+            let message = error && error.message ? error.message : "未知错误";
+            if (message === "Failed to fetch") {
+              message = "无法连接后端，请确认 Render 服务可访问：https://privatefund-ipos-assistant-km21.onrender.com/api/health";
+            }
+            setStatus("处理失败：" + message, true);
+          } finally {
+            setLoading(false);
           }
-          setStatus("处理失败：" + message, true);
-        } finally {
-          setLoading(false);
-        }
+        });
+      }
+
+      uploadButtons.forEach(function (button) {
+        initUploadTool(button);
       });
     })();
   </script>
