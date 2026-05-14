@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from docx.oxml.ns import qn
 
 STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
-CONFIRMED_STATUS = '确认成功'
+CONFIRMED_STATUS = ['确认成功','已确认']
 
 
 def normalize_status(value):
