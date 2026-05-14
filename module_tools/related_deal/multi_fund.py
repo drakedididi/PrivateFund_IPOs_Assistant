@@ -10,7 +10,14 @@ from datetime import datetime, timedelta
 from docx.oxml.ns import qn
 
 STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
-CONFIRMED_STATUS = ['确认成功','已确认']
+CONFIRMED_STATUS = ['确认成功', '已确认']
+DEFAULT_CONFIRMED_STATUS = '确认成功'
+
+
+def normalize_column_name(value):
+    if value is None:
+        return ''
+    return re.sub(r'[\s:：]+', '', str(value).strip())
 
 
 def normalize_status(value):
@@ -20,6 +27,10 @@ def normalize_status(value):
     if text in ['nan', 'None']:
         return ''
     return text
+
+
+def is_confirmed_status(value):
+    return normalize_status(value) in CONFIRMED_STATUS
 
 
 # 客户名称和客户代码对应关系
@@ -152,11 +163,11 @@ def extract_info(excel_file):
                         for col in range(1, ws.max_column + 1):
                             cell_value = ws.cell(row=header_row, column=col).value
                             if cell_value:
-                                header = str(cell_value).strip()
+                                header = normalize_column_name(cell_value)
                                 for key, possible_names in column_mapping.items():
                                     if key not in found_columns:
                                         # 只使用精确匹配，避免将日期列错误识别为状态列
-                                        if header in possible_names:
+                                        if header in [normalize_column_name(name) for name in possible_names]:
                                             found_columns[key] = col - 1  # 转换为0-based索引
                         
                         required_columns = ['client_name', 'apply_date']
@@ -212,11 +223,11 @@ def extract_info(excel_file):
                                     continue
 
                                 # 处理确认状态（可选列，缺失时默认确认成功）
-                                status = CONFIRMED_STATUS
+                                status = DEFAULT_CONFIRMED_STATUS
                                 if 'status' in found_columns:
                                     status_cell = ws.cell(row=row, column=found_columns['status'] + 1)
                                     status = normalize_status(status_cell.value)
-                                    if status != CONFIRMED_STATUS:
+                                    if not is_confirmed_status(status):
                                         continue
 
                                 record = {
@@ -261,11 +272,11 @@ def extract_info(excel_file):
                         for col in range(0, ws.ncols):
                             cell_value = ws.cell_value(header_row, col)
                             if cell_value:
-                                header = str(cell_value).strip()
+                                header = normalize_column_name(cell_value)
                                 for key, possible_names in column_mapping.items():
                                     if key not in found_columns:
                                         # 只使用精确匹配，避免将日期列错误识别为状态列
-                                        if header in possible_names:
+                                        if header in [normalize_column_name(name) for name in possible_names]:
                                             found_columns[key] = col
                         
                         required_columns = ['client_name', 'apply_date']
@@ -320,11 +331,11 @@ def extract_info(excel_file):
                                     continue
 
                                 # 处理确认状态（可选列，缺失时默认确认成功）
-                                status = CONFIRMED_STATUS
+                                status = DEFAULT_CONFIRMED_STATUS
                                 if 'status' in found_columns:
                                     status_value = ws.cell_value(row, found_columns['status'])
                                     status = normalize_status(status_value)
-                                    if status != CONFIRMED_STATUS:
+                                    if not is_confirmed_status(status):
                                         continue
 
                                 record = {
@@ -364,7 +375,7 @@ def clean_data(records):
     
     for record in records:
         # 打印记录信息用于调试
-        status = record.get('status') or record.get('apply_statue') or CONFIRMED_STATUS
+        status = record.get('status') or record.get('apply_statue') or DEFAULT_CONFIRMED_STATUS
         print(f"处理记录: 客户={record['client_name']}, 状态={status}, 日期={record['apply_date']}")
         
         # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
@@ -375,7 +386,7 @@ def clean_data(records):
             continue
 
         # 只保留确认成功记录；无状态列时，读取阶段会默认填入确认成功
-        if status != CONFIRMED_STATUS:
+        if not is_confirmed_status(status):
             continue
         
         cleaned_records.append(record)

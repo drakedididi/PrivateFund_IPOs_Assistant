@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 import random
 from docx import Document
@@ -10,7 +11,14 @@ import xlrd
 from datetime import datetime, timedelta
 
 STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
-CONFIRMED_STATUS = ['确认成功','已确认']
+CONFIRMED_STATUS = ['确认成功', '已确认']
+DEFAULT_CONFIRMED_STATUS = '确认成功'
+
+
+def normalize_column_name(value):
+    if value is None:
+        return ''
+    return re.sub(r'[\s:：]+', '', str(value).strip())
 
 
 def normalize_status(value):
@@ -20,6 +28,27 @@ def normalize_status(value):
     if text in ['nan', 'None']:
         return ''
     return text
+
+
+def is_confirmed_status(value):
+    return normalize_status(value) in CONFIRMED_STATUS
+
+
+def is_blank_value(value):
+    return value is None or (isinstance(value, str) and value.strip() == '')
+
+
+def parse_amount_value(value):
+    if is_blank_value(value):
+        return None
+    try:
+        return float(value)
+    except Exception:
+        try:
+            amount_str = str(value).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
+            return float(amount_str)
+        except Exception:
+            return value
 
 
 def find_all_excel_files(root_dir='.'):
@@ -81,9 +110,9 @@ def read_xlsx_file(excel_file):
     found_columns = {}
     for col_idx, cell in enumerate(ws[header_row]):
         if cell.value:
-            cell_value = str(cell.value).strip()
+            cell_value = normalize_column_name(cell.value)
             for target_col, possible_names in column_mapping.items():
-                if cell_value in possible_names:
+                if cell_value in [normalize_column_name(name) for name in possible_names]:
                     found_columns[target_col] = col_idx
                     break
     
@@ -105,11 +134,11 @@ def read_xlsx_file(excel_file):
         if not client_name or not product_name or not business_type:
             continue
 
-        status = CONFIRMED_STATUS
+        status = DEFAULT_CONFIRMED_STATUS
         if 'status' in found_columns:
             status_val = ws.cell(row=row, column=found_columns['status'] + 1).value
             status = normalize_status(status_val)
-            if status != CONFIRMED_STATUS:
+            if not is_confirmed_status(status):
                 continue
         
         # 数据清洗
@@ -190,40 +219,14 @@ def read_xlsx_file(excel_file):
         # 处理确定金额 - 支持多种格式
         if 'confirm_amount' in found_columns:
             amount_val = ws.cell(row=row, column=found_columns['confirm_amount'] + 1).value
-            if amount_val:
-                try:
-                    # 尝试直接转换
-                    result['confirm_amount'] = float(amount_val)
-                except Exception:
-                    # 处理字符串格式的金额
-                    try:
-                        # 去除非数字字符
-                        amount_str = str(amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
-                        result['confirm_amount'] = float(amount_str)
-                    except Exception:
-                        result['confirm_amount'] = amount_val
-            else:
-                result['confirm_amount'] = None
+            result['confirm_amount'] = parse_amount_value(amount_val)
         else:
             result['confirm_amount'] = None
         
         # 处理申请金额 - 支持多种格式
         if 'apply_amount' in found_columns:
             apply_amount_val = ws.cell(row=row, column=found_columns['apply_amount'] + 1).value
-            if apply_amount_val:
-                try:
-                    # 尝试直接转换
-                    result['apply_amount'] = float(apply_amount_val)
-                except Exception:
-                    # 处理字符串格式的金额
-                    try:
-                        # 去除非数字字符
-                        apply_amount_str = str(apply_amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
-                        result['apply_amount'] = float(apply_amount_str)
-                    except Exception:
-                        result['apply_amount'] = apply_amount_val
-            else:
-                result['apply_amount'] = None
+            result['apply_amount'] = parse_amount_value(apply_amount_val)
         else:
             result['apply_amount'] = None
         
@@ -268,9 +271,9 @@ def read_xls_file(excel_file):
     header_values = ws.row_values(header_row)
     for col_idx, cell_value in enumerate(header_values):
         if cell_value:
-            cell_value_str = str(cell_value).strip()
+            cell_value_str = normalize_column_name(cell_value)
             for target_col, possible_names in column_mapping.items():
-                if cell_value_str in possible_names:
+                if cell_value_str in [normalize_column_name(name) for name in possible_names]:
                     found_columns[target_col] = col_idx
                     break
     
@@ -292,11 +295,11 @@ def read_xls_file(excel_file):
         if not client_name or not product_name or not business_type:
             continue
 
-        status = CONFIRMED_STATUS
+        status = DEFAULT_CONFIRMED_STATUS
         if 'status' in found_columns:
             status_value = ws.cell_value(row, found_columns['status'])
             status = normalize_status(status_value)
-            if status != CONFIRMED_STATUS:
+            if not is_confirmed_status(status):
                 continue
         
         # 数据清洗
@@ -392,40 +395,14 @@ def read_xls_file(excel_file):
         # 处理确定金额 - 支持多种格式
         if 'confirm_amount' in found_columns:
             amount_val = ws.cell_value(row, found_columns['confirm_amount'])
-            if amount_val:
-                try:
-                    # 尝试直接转换
-                    result['confirm_amount'] = float(amount_val)
-                except Exception:
-                    # 处理字符串格式的金额
-                    try:
-                        # 去除非数字字符
-                        amount_str = str(amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
-                        result['confirm_amount'] = float(amount_str)
-                    except Exception:
-                        result['confirm_amount'] = amount_val
-            else:
-                result['confirm_amount'] = None
+            result['confirm_amount'] = parse_amount_value(amount_val)
         else:
             result['confirm_amount'] = None
         
         # 处理申请金额 - 支持多种格式
         if 'apply_amount' in found_columns:
             apply_amount_val = ws.cell_value(row, found_columns['apply_amount'])
-            if apply_amount_val:
-                try:
-                    # 尝试直接转换
-                    result['apply_amount'] = float(apply_amount_val)
-                except Exception:
-                    # 处理字符串格式的金额
-                    try:
-                        # 去除非数字字符
-                        apply_amount_str = str(apply_amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
-                        result['apply_amount'] = float(apply_amount_str)
-                    except Exception:
-                        result['apply_amount'] = apply_amount_val
-            else:
-                result['apply_amount'] = None
+            result['apply_amount'] = parse_amount_value(apply_amount_val)
         else:
             result['apply_amount'] = None
         
