@@ -328,11 +328,11 @@
       <h2>新股询价现场通讯工具上交登记表</h2>
       <p class="script-path">脚本：module_tools/inquiry_video/video.py</p>
       <div class="upload-row">
-        <label class="upload-area">
-          <input class="upload-input" type="file" disabled>
-          <span class="file-label">拖拽文件到此处，或点击选择文件 <span class="coming-soon">即将上线</span></span>
+        <label class="upload-area enabled">
+          <input class="upload-input enabled" type="file" accept=".zip,.xlsx,.xls,application/zip">
+          <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
         </label>
-        <button class="upload-btn" type="button" disabled data-api="/api/video">上传</button>
+        <button class="upload-btn enabled" type="button" data-api="/api/video" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_inquiry_video_docs.zip">上传并下载结果</button>
       </div>
       <p class="upload-status"></p>
     </section>

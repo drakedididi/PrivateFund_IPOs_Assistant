@@ -14,6 +14,7 @@ from werkzeug.utils import secure_filename
 
 from module_tools.big_redemption.redemption_word import process_excel_files as process_redemption_files
 from module_tools.invoice.invoice_organization_local import process_zip_file
+from module_tools.inquiry_video.video import process_excel_files as process_inquiry_video_files
 from module_tools.related_deal.convert_openyxl import process_excel_files as process_related_decision_files
 from module_tools.related_deal.multi_fund import process_excel_files as process_related_notice_files
 
@@ -207,7 +208,7 @@ def api_invoice():
 
 @app.route("/api/video", methods=["POST"])
 def api_video():
-    return developing()
+    return run_document_tool(process_inquiry_video_files, "_inquiry_video_docs.zip")
 
 
 @app.route("/api/redemption", methods=["POST"])
