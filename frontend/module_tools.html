@@ -251,17 +251,51 @@
       color: #087443;
     }
 
-    .metric-field {
-      margin: 8px 0 0;
-      color: #405673;
-      font-size: 13px;
-      line-height: 1.6;
+    .metrics-board {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background-color: #f8f9fc;
+      border: 1px solid #e4e7ec;
+      border-radius: 10px;
+      padding: 16px 24px;
+      margin-top: 14px;
+      max-width: 100%;
     }
 
-    .metric-field strong {
-      color: var(--navy);
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: #475467;
+      font-weight: 500;
+    }
+
+    .metric-value {
+      font-size: 22px;
       font-weight: 800;
-      white-space: pre-line;
+      color: #101828;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.2;
+    }
+
+    .metric-value small {
+      font-size: 13px;
+      font-weight: 500;
+      color: #667085;
+      margin-left: 2px;
+    }
+
+    .metric-divider {
+      width: 1px;
+      height: 28px;
+      background-color: #d0d5dd;
     }
 
     .secret-panel {
@@ -301,6 +335,23 @@
       .upload-btn {
         width: 100%;
         height: 48px;
+      }
+
+      .metrics-board {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .metric-divider {
+        display: none;
+      }
+
+      .metric-item {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding: 4px 0;
       }
     }
   </style>
@@ -362,7 +413,22 @@
         <button class="upload-btn enabled" type="button" data-api="/api/extra-revenue" data-extensions=".xlsx,.xls" data-download-suffix="_extra_revenue.zip" data-result-header="X-Recovery-Periods" data-frequency-header="X-Extra-Revenue-Frequency">上传并下载结果</button>
       </div>
       <p class="upload-status"></p>
-      <p class="metric-field">回撤修复最大周期：<strong class="metric-value">-</strong></p>
+      <div class="metrics-board" aria-label="回撤修复周期">
+        <div class="metric-item" data-metric-key="arithmetic">
+          <span class="metric-label">算术超额</span>
+          <span class="metric-value">-</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item" data-metric-key="geometric">
+          <span class="metric-label">几何超额</span>
+          <span class="metric-value">-</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item" data-metric-key="compounded">
+          <span class="metric-label">累加超额</span>
+          <span class="metric-value">-</span>
+        </div>
+      </div>
     </section>
 
     <section class="tool-card" id="redemption">
@@ -513,6 +579,83 @@
         uploadArea.classList.toggle("dragging", dragging);
       }
 
+      function normalizeMetricLabel(label) {
+        const text = (label || "")
+          .replace(/^\s*\d+\s*/, "")
+          .replace(/\s+/g, "")
+          .trim();
+        if (text === "算数超额" || text === "算术超额") {
+          return "arithmetic";
+        }
+        if (text === "几何超额") {
+          return "geometric";
+        }
+        if (text === "累加超额") {
+          return "compounded";
+        }
+        return "";
+      }
+
+      function setMetricDisplay(valueEl, rawValue) {
+        if (!valueEl) {
+          return;
+        }
+        valueEl.replaceChildren();
+        const value = (rawValue || "").trim();
+        if (!value) {
+          valueEl.textContent = "-";
+          return;
+        }
+
+        const valueMatch = value.match(/^([\d.]+)\s*([^\d.\s]+)?$/);
+        if (!valueMatch) {
+          valueEl.textContent = value;
+          return;
+        }
+
+        valueEl.appendChild(document.createTextNode(valueMatch[1]));
+        if (valueMatch[2]) {
+          const unit = document.createElement("small");
+          unit.textContent = valueMatch[2];
+          valueEl.appendChild(unit);
+        }
+      }
+
+      function resetMetricsBoard(metricsBoard) {
+        if (!metricsBoard) {
+          return;
+        }
+        metricsBoard.querySelectorAll(".metric-value").forEach(function (valueEl) {
+          setMetricDisplay(valueEl, "");
+        });
+      }
+
+      function updateMetricsBoard(metricsBoard, resultText) {
+        if (!metricsBoard) {
+          return;
+        }
+        resetMetricsBoard(metricsBoard);
+        if (!resultText) {
+          return;
+        }
+
+        resultText.split(/\r?\n/).forEach(function (line) {
+          const metricMatch = line.match(/^\s*\d*\s*([^：:]+)[：:]\s*(.+?)\s*$/);
+          if (!metricMatch) {
+            return;
+          }
+          const key = normalizeMetricLabel(metricMatch[1]);
+          if (!key) {
+            return;
+          }
+          const metricItem = metricsBoard.querySelector('[data-metric-key="' + key + '"]');
+          if (!metricItem) {
+            return;
+          }
+          setMetricDisplay(metricItem.querySelector(".metric-value"), metricMatch[2]);
+        });
+      }
+
       function initUploadTool(button) {
         const container = button.closest(".tool-card, .sub-tool");
         if (!container) {
@@ -522,7 +665,7 @@
         const fileInput = container.querySelector(".upload-input.enabled");
         const fileLabel = container.querySelector(".file-label");
         const statusEl = container.querySelector(".upload-status");
-        const metricValue = container.querySelector(".metric-value");
+        const metricsBoard = container.querySelector(".metrics-board");
         if (!uploadArea || !fileInput || !fileLabel || !statusEl) {
           return;
         }
@@ -546,9 +689,7 @@
         function setSelectedFile(file) {
           selectedFile = file || null;
           fileLabel.textContent = selectedFile ? ("已选择：" + selectedFile.name) : defaultLabel;
-          if (metricValue) {
-            metricValue.textContent = "-";
-          }
+          resetMetricsBoard(metricsBoard);
         }
 
         ["dragenter", "dragover"].forEach(function (eventName) {
@@ -607,9 +748,7 @@
 
           setLoading(true);
           setStatus("文件处理中，请稍候...");
-          if (metricValue) {
-            metricValue.textContent = "-";
-          }
+          resetMetricsBoard(metricsBoard);
 
           try {
             const response = await fetch(resolveApiUrl(button.dataset.api), {
@@ -646,9 +785,7 @@
             link.remove();
             URL.revokeObjectURL(objectUrl);
 
-            if (metricValue && resultValue) {
-              metricValue.textContent = resultValue;
-            }
+            updateMetricsBoard(metricsBoard, resultValue);
 
             let successMessage = "处理完成，结果已开始下载。";
             if (frequencyValue) {
