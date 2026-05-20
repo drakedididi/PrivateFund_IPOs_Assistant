@@ -5,3 +5,5 @@ data/*
 !data/trading_holidays.json
 temp/
 *.tmp
+项目说明.md
+开发日志.md
