@@ -251,6 +251,18 @@
       color: #087443;
     }
 
+    .metric-field {
+      margin: 8px 0 0;
+      color: #405673;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .metric-field strong {
+      color: var(--navy);
+      font-weight: 800;
+    }
+
     .secret-panel {
       display: flex;
       gap: 10px;
@@ -302,6 +314,7 @@
     <div class="menu" id="module-menu">
       <a href="#invoice" data-target="invoice" class="active">发票分类</a>
       <a href="#video" data-target="video">询价视频</a>
+      <a href="#extra-revenue" data-target="extra-revenue">超额收益</a>
       <a href="#redemption" data-target="redemption">巨额赎回</a>
       <a href="#related-deal" data-target="related-deal">关联交易</a>
     </div>
@@ -335,6 +348,20 @@
         <button class="upload-btn enabled" type="button" data-api="/api/video" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_inquiry_video_docs.zip">上传并下载结果</button>
       </div>
       <p class="upload-status"></p>
+    </section>
+
+    <section class="tool-card" id="extra-revenue">
+      <h2>产品 vs 指数超额收益</h2>
+      <p class="script-path">脚本：module_tools/extra_revenue/extra_revenue.py</p>
+      <div class="upload-row">
+        <label class="upload-area enabled">
+          <input class="upload-input enabled" type="file" accept=".xlsx,.xls">
+          <span class="file-label">拖拽 Excel 文件到此处，或点击选择文件</span>
+        </label>
+        <button class="upload-btn enabled" type="button" data-api="/api/extra-revenue" data-extensions=".xlsx,.xls" data-download-suffix="_extra_revenue.zip" data-result-header="X-Max-Recovery-Period" data-result-label="回撤修复最大周期" data-frequency-header="X-Extra-Revenue-Frequency">上传并下载结果</button>
+      </div>
+      <p class="upload-status"></p>
+      <p class="metric-field">回撤修复最大周期：<strong class="metric-value">-</strong></p>
     </section>
 
     <section class="tool-card" id="redemption">
@@ -448,6 +475,17 @@
         return fallbackName;
       }
 
+      function decodeHeaderValue(value) {
+        if (!value) {
+          return "";
+        }
+        try {
+          return decodeURIComponent(value);
+        } catch (e) {
+          return value;
+        }
+      }
+
       function resolveApiUrl(path) {
         return new URL(path || "/api/invoice", apiBase).toString();
       }
@@ -483,6 +521,7 @@
         const fileInput = container.querySelector(".upload-input.enabled");
         const fileLabel = container.querySelector(".file-label");
         const statusEl = container.querySelector(".upload-status");
+        const metricValue = container.querySelector(".metric-value");
         if (!uploadArea || !fileInput || !fileLabel || !statusEl) {
           return;
         }
@@ -506,6 +545,9 @@
         function setSelectedFile(file) {
           selectedFile = file || null;
           fileLabel.textContent = selectedFile ? ("已选择：" + selectedFile.name) : defaultLabel;
+          if (metricValue) {
+            metricValue.textContent = "-";
+          }
         }
 
         ["dragenter", "dragover"].forEach(function (eventName) {
@@ -564,6 +606,9 @@
 
           setLoading(true);
           setStatus("文件处理中，请稍候...");
+          if (metricValue) {
+            metricValue.textContent = "-";
+          }
 
           try {
             const response = await fetch(resolveApiUrl(button.dataset.api), {
@@ -587,6 +632,11 @@
             const outputBlob = await response.blob();
             const fallbackName = stemName(selectedFile.name) + (button.dataset.downloadSuffix || "_result.zip");
             const downloadName = inferDownloadName(response, fallbackName);
+            const resultHeader = button.dataset.resultHeader;
+            const resultLabel = button.dataset.resultLabel || "结果";
+            const resultValue = resultHeader ? decodeHeaderValue(response.headers.get(resultHeader)) : "";
+            const frequencyHeader = button.dataset.frequencyHeader;
+            const frequencyValue = frequencyHeader ? decodeHeaderValue(response.headers.get(frequencyHeader)) : "";
             const objectUrl = URL.createObjectURL(outputBlob);
             const link = document.createElement("a");
             link.href = objectUrl;
@@ -596,7 +646,18 @@
             link.remove();
             URL.revokeObjectURL(objectUrl);
 
-            setStatus("处理完成，结果已开始下载。", "success");
+            if (metricValue && resultValue) {
+              metricValue.textContent = resultValue;
+            }
+
+            let successMessage = "处理完成，结果已开始下载。";
+            if (frequencyValue) {
+              successMessage += " 数据频率：" + frequencyValue + "。";
+            }
+            if (resultValue) {
+              successMessage += " " + resultLabel + "：" + resultValue + "。";
+            }
+            setStatus(successMessage, "success");
           } catch (error) {
             let message = error && error.message ? error.message : "未知错误";
             if (message === "Failed to fetch") {

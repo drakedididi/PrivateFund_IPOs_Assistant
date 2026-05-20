@@ -7,12 +7,14 @@ import shutil
 import tempfile
 import zipfile
 from pathlib import Path
+from urllib.parse import quote
 
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 from module_tools.big_redemption.redemption_word import process_excel_files as process_redemption_files
+from module_tools.extra_revenue.extra_revenue import analyze_extra_revenue_excel
 from module_tools.invoice.invoice_organization_local import process_zip_file
 from module_tools.inquiry_video.video import process_excel_files as process_inquiry_video_files
 from module_tools.related_deal.convert_openyxl import process_excel_files as process_related_decision_files
@@ -22,7 +24,14 @@ from module_tools.related_deal.multi_fund import process_excel_files as process_
 RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
 
 app = Flask(__name__)
-CORS(app)
+CORS(
+    app,
+    expose_headers=[
+        "Content-Disposition",
+        "X-Extra-Revenue-Frequency",
+        "X-Max-Recovery-Period",
+    ],
+)
 
 
 @app.route("/", methods=["GET"])
@@ -176,6 +185,45 @@ def run_document_tool(processor, download_suffix: str):
         return jsonify({"error": f"处理失败: {exc}"}), 500
 
 
+def run_extra_revenue_tool():
+    uploaded_file = request.files.get("file")
+    if uploaded_file is None or not uploaded_file.filename:
+        return jsonify({"error": "请上传文件"}), 400
+
+    filename, suffix = safe_upload_filename(uploaded_file.filename, "extra_revenue_input")
+    if suffix not in {".xlsx", ".xls"}:
+        return jsonify({"error": "仅支持 XLSX 或 XLS 文件"}), 400
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="extra_revenue_api_") as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            input_path = tmp_path / filename
+            output_dir = tmp_path / "output"
+            uploaded_file.save(str(input_path))
+
+            result = analyze_extra_revenue_excel(input_path, output_dir)
+            output_zip = tmp_path / f"{result['download_stem']}.zip"
+            zip_output_dir(output_dir, output_zip)
+            result_bytes = output_zip.read_bytes()
+
+        response = send_file(
+            io.BytesIO(result_bytes),
+            mimetype="application/zip",
+            as_attachment=True,
+            download_name=output_zip.name,
+        )
+        response.headers["X-Extra-Revenue-Frequency"] = quote(str(result["frequency"]), safe="")
+        response.headers["X-Max-Recovery-Period"] = quote(
+            str(result["max_recovery_period"]),
+            safe="",
+        )
+        return response
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"error": f"处理失败: {exc}"}), 500
+
+
 @app.route("/api/invoice", methods=["POST"])
 def api_invoice():
     uploaded_file = request.files.get("file")
@@ -209,6 +257,11 @@ def api_invoice():
 @app.route("/api/video", methods=["POST"])
 def api_video():
     return run_document_tool(process_inquiry_video_files, "_inquiry_video_docs.zip")
+
+
+@app.route("/api/extra-revenue", methods=["POST"])
+def api_extra_revenue():
+    return run_extra_revenue_tool()
 
 
 @app.route("/api/redemption", methods=["POST"])
