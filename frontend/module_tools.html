@@ -261,6 +261,7 @@
     .metric-field strong {
       color: var(--navy);
       font-weight: 800;
+      white-space: pre-line;
     }
 
     .secret-panel {
@@ -358,7 +359,7 @@
           <input class="upload-input enabled" type="file" accept=".xlsx,.xls">
           <span class="file-label">拖拽 Excel 文件到此处，或点击选择文件</span>
         </label>
-        <button class="upload-btn enabled" type="button" data-api="/api/extra-revenue" data-extensions=".xlsx,.xls" data-download-suffix="_extra_revenue.zip" data-result-header="X-Max-Recovery-Period" data-result-label="回撤修复最大周期" data-frequency-header="X-Extra-Revenue-Frequency">上传并下载结果</button>
+        <button class="upload-btn enabled" type="button" data-api="/api/extra-revenue" data-extensions=".xlsx,.xls" data-download-suffix="_extra_revenue.zip" data-result-header="X-Recovery-Periods" data-frequency-header="X-Extra-Revenue-Frequency">上传并下载结果</button>
       </div>
       <p class="upload-status"></p>
       <p class="metric-field">回撤修复最大周期：<strong class="metric-value">-</strong></p>
@@ -633,7 +634,6 @@
             const fallbackName = stemName(selectedFile.name) + (button.dataset.downloadSuffix || "_result.zip");
             const downloadName = inferDownloadName(response, fallbackName);
             const resultHeader = button.dataset.resultHeader;
-            const resultLabel = button.dataset.resultLabel || "结果";
             const resultValue = resultHeader ? decodeHeaderValue(response.headers.get(resultHeader)) : "";
             const frequencyHeader = button.dataset.frequencyHeader;
             const frequencyValue = frequencyHeader ? decodeHeaderValue(response.headers.get(frequencyHeader)) : "";
@@ -653,9 +653,6 @@
             let successMessage = "处理完成，结果已开始下载。";
             if (frequencyValue) {
               successMessage += " 数据频率：" + frequencyValue + "。";
-            }
-            if (resultValue) {
-              successMessage += " " + resultLabel + "：" + resultValue + "。";
             }
             setStatus(successMessage, "success");
           } catch (error) {

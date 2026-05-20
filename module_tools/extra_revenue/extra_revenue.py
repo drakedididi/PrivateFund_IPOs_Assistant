@@ -20,6 +20,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 INVALID_FILENAME_CHARS = r'<>:"/\|?*'
+BUNDLED_FONT = Path(__file__).resolve().parent / "fonts" / "NotoSansSC-Regular.otf"
 
 
 @dataclass
@@ -53,7 +54,15 @@ class NavData:
 
 def configure_matplotlib() -> None:
     plt.style.use("seaborn-v0_8-whitegrid")
+    if BUNDLED_FONT.exists():
+        fm.fontManager.addfont(str(BUNDLED_FONT))
+        bundled_name = fm.FontProperties(fname=str(BUNDLED_FONT)).get_name()
+    else:
+        bundled_name = ""
+
     font_candidates = [
+        bundled_name,
+        "Noto Sans SC",
         "Microsoft YaHei",
         "SimHei",
         "Noto Sans CJK SC",
@@ -62,7 +71,7 @@ def configure_matplotlib() -> None:
     ]
     available_fonts = {font.name for font in fm.fontManager.ttflist}
     for font_name in font_candidates:
-        if font_name in available_fonts:
+        if font_name and font_name in available_fonts:
             plt.rcParams["font.sans-serif"] = [font_name]
             break
     plt.rcParams["axes.unicode_minus"] = False
@@ -392,19 +401,22 @@ def plot_drawdown_panel(ax: plt.Axes, result: DrawdownResult, color: str) -> Non
     style_axis(ax, percent=True)
 
 
-def build_drawdown_results(df: pd.DataFrame) -> list[tuple[DrawdownResult, str]]:
+def build_drawdown_results(df: pd.DataFrame) -> list[tuple[str, DrawdownResult, str]]:
     specs = [
-        ("超额净值：算术超额直接累计", "excess_nav", "#c47a00"),
-        ("超额净值2：产品净值 / 指数净值", "excess_nav2", "#1f5fbf"),
-        ("超额净值3：算术超额复利累乘", "excess_nav3", "#0f8b6d"),
+        ("算数超额", "超额净值：算术超额直接累计", "excess_nav", "#c47a00"),
+        ("几何超额", "超额净值2：产品净值 / 指数净值", "excess_nav2", "#1f5fbf"),
+        ("累加超额", "超额净值3：算术超额复利累乘", "excess_nav3", "#0f8b6d"),
     ]
-    return [(analyze_drawdown(name, df[column]), color) for name, column, color in specs]
+    return [
+        (label, analyze_drawdown(name, df[column]), color)
+        for label, name, column, color in specs
+    ]
 
 
-def summarize_max_recovery_period(results: list[tuple[DrawdownResult, str]]) -> str:
+def summarize_max_recovery_period(results: list[tuple[str, DrawdownResult, str]]) -> str:
     candidates = [
         result
-        for result, _ in results
+        for _, result, _ in results
         if result.longest_cycle is not None
     ]
     if not candidates:
@@ -416,13 +428,24 @@ def summarize_max_recovery_period(results: list[tuple[DrawdownResult, str]]) -> 
     return f"{format_week_count(cycle.cycle_weeks)} 周（{longest_result.name}，{status}）"
 
 
+def summarize_recovery_periods(results: list[tuple[str, DrawdownResult, str]]) -> str:
+    lines: list[str] = []
+    for index, (label, result, _) in enumerate(results, start=1):
+        if result.longest_cycle is None:
+            weeks = "暂无"
+        else:
+            weeks = f"{format_week_count(result.longest_cycle.cycle_weeks)}周"
+        lines.append(f"{index} {label}：{weeks}")
+    return "\n".join(lines)
+
+
 def plot_three_drawdown_analysis(
     df: pd.DataFrame,
     period_label: str,
     product_name: str,
     benchmark_name: str,
     output_path: Path,
-) -> tuple[Path, str]:
+) -> tuple[Path, str, str]:
     results = build_drawdown_results(df)
 
     fig = plt.figure(figsize=(18, 13.5))
@@ -435,7 +458,7 @@ def plot_three_drawdown_analysis(
         wspace=0.18,
     )
 
-    for row, (result, color) in enumerate(results):
+    for row, (_, result, color) in enumerate(results):
         nav_ax = fig.add_subplot(grid[row, 0])
         dd_ax = fig.add_subplot(grid[row, 1], sharex=nav_ax)
         plot_nav_panel(nav_ax, result, color)
@@ -445,7 +468,7 @@ def plot_three_drawdown_analysis(
     fig.subplots_adjust(left=0.06, right=0.98, bottom=0.06, top=0.93)
     saved_path = save_figure_with_fallback(fig, output_path)
     plt.close(fig)
-    return saved_path, summarize_max_recovery_period(results)
+    return saved_path, summarize_max_recovery_period(results), summarize_recovery_periods(results)
 
 
 def analyze_extra_revenue_excel(
@@ -461,7 +484,7 @@ def analyze_extra_revenue_excel(
     enriched = compute_excess_navs(nav_data.df)
     title = f"{nav_data.product_name} vs {nav_data.benchmark_name}"
     safe_title = safe_filename_part(title)
-    chart_path, max_recovery_period = plot_three_drawdown_analysis(
+    chart_path, max_recovery_period, recovery_periods_text = plot_three_drawdown_analysis(
         enriched,
         nav_data.frequency,
         nav_data.product_name,
@@ -474,6 +497,7 @@ def analyze_extra_revenue_excel(
         "download_stem": safe_title,
         "frequency": nav_data.frequency,
         "max_recovery_period": max_recovery_period,
+        "recovery_periods_text": recovery_periods_text,
         "chart_path": str(chart_path),
     }
 

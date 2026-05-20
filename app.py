@@ -30,6 +30,7 @@ CORS(
         "Content-Disposition",
         "X-Extra-Revenue-Frequency",
         "X-Max-Recovery-Period",
+        "X-Recovery-Periods",
     ],
 )
 
@@ -215,6 +216,10 @@ def run_extra_revenue_tool():
         response.headers["X-Extra-Revenue-Frequency"] = quote(str(result["frequency"]), safe="")
         response.headers["X-Max-Recovery-Period"] = quote(
             str(result["max_recovery_period"]),
+            safe="",
+        )
+        response.headers["X-Recovery-Periods"] = quote(
+            str(result["recovery_periods_text"]),
             safe="",
         )
         return response
