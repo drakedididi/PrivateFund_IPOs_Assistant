@@ -22,23 +22,38 @@ from module_tools.related_deal.multi_fund import process_excel_files as process_
 
 
 RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
+APP_VERSION = "extra-revenue-v3-2026-05-20"
+EXPOSED_HEADERS = [
+    "Content-Disposition",
+    "X-App-Version",
+    "X-Extra-Revenue-Frequency",
+    "X-Max-Recovery-Period",
+    "X-Recovery-Periods",
+]
 
 app = Flask(__name__)
-CORS(
-    app,
-    expose_headers=[
-        "Content-Disposition",
-        "X-Extra-Revenue-Frequency",
-        "X-Max-Recovery-Period",
-        "X-Recovery-Periods",
-    ],
-)
+CORS(app, expose_headers=EXPOSED_HEADERS)
+
+
+@app.after_request
+def add_app_headers(response):
+    response.headers["X-App-Version"] = APP_VERSION
+    exposed_headers = [
+        header.strip()
+        for header in response.headers.get("Access-Control-Expose-Headers", "").split(",")
+        if header.strip()
+    ]
+    for header in EXPOSED_HEADERS:
+        if header not in exposed_headers:
+            exposed_headers.append(header)
+    response.headers["Access-Control-Expose-Headers"] = ", ".join(exposed_headers)
+    return response
 
 
 @app.route("/", methods=["GET"])
 @app.route("/api/health", methods=["GET"])
 def health_check():
-    return jsonify({"status": "ok", "service_url": RENDER_SERVICE_URL}), 200
+    return jsonify({"status": "ok", "service_url": RENDER_SERVICE_URL, "version": APP_VERSION}), 200
 
 
 def get_render_port() -> int:

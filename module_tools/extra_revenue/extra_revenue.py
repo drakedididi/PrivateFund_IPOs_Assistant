@@ -95,6 +95,19 @@ def safe_filename_part(value: Any) -> str:
     return cleaned or "未命名"
 
 
+def has_non_ascii(value: Any) -> bool:
+    return any(ord(char) > 127 for char in clean_text(value))
+
+
+def chart_name(value: Any, fallback: str) -> str:
+    text = clean_text(value)
+    return text if text and not has_non_ascii(text) else fallback
+
+
+def chart_frequency_label(value: str) -> str:
+    return {"周频": "Weekly", "日频": "Daily"}.get(value, value or "Unknown")
+
+
 def column_has_data(series: pd.Series) -> bool:
     for value in series:
         if value is None or pd.isna(value):
@@ -336,10 +349,10 @@ def annotate_drawdown_event(ax: plt.Axes, result: DrawdownResult, color: str) ->
         return
 
     ax.axvspan(cycle.peak_date, cycle.recovery_date, color=color, alpha=0.08)
-    end_label = "创新高" if cycle.is_recovered else "区间终点"
+    end_label = "New high" if cycle.is_recovered else "Period end"
     points = [
-        ("周期起点", cycle.peak_date, cycle.peak_value, -70, 18, "right"),
-        ("周期谷值", cycle.trough_date, cycle.trough_value, 12, -38, "left"),
+        ("Cycle start", cycle.peak_date, cycle.peak_value, -70, 18, "right"),
+        ("Trough", cycle.trough_date, cycle.trough_value, 12, -38, "left"),
         (end_label, cycle.recovery_date, cycle.recovery_value, 12, 18, "left"),
     ]
 
@@ -364,16 +377,16 @@ def plot_nav_panel(ax: plt.Axes, result: DrawdownResult, color: str) -> None:
     cycle_weeks = (
         format_week_count(result.longest_cycle.cycle_weeks)
         if result.longest_cycle is not None
-        else "暂无"
+        else "N/A"
     )
     ax.plot(result.wealth.index, result.wealth, color=color, linewidth=2.1)
     ax.axhline(1, color="#777777", linewidth=0.9, alpha=0.75)
     ax.set_title(
-        f"{result.name} | 最大回撤 {result.max_drawdown:.2%} | 最长回撤修复周期 {cycle_weeks} 周",
+        f"{result.name} | Max drawdown {result.max_drawdown:.2%} | Longest recovery {cycle_weeks} weeks",
         fontsize=11.5,
         pad=12,
     )
-    ax.set_ylabel("超额净值")
+    ax.set_ylabel("Excess NAV")
     style_axis(ax)
     annotate_drawdown_event(ax, result, color)
 
@@ -396,16 +409,16 @@ def plot_drawdown_panel(ax: plt.Axes, result: DrawdownResult, color: str) -> Non
         )
         ax.axvspan(cycle.peak_date, cycle.recovery_date, color=color, alpha=0.07)
 
-    ax.set_title("回撤区间", fontsize=12, pad=10)
-    ax.set_ylabel("回撤")
+    ax.set_title("Drawdown window", fontsize=12, pad=10)
+    ax.set_ylabel("Drawdown")
     style_axis(ax, percent=True)
 
 
 def build_drawdown_results(df: pd.DataFrame) -> list[tuple[str, DrawdownResult, str]]:
     specs = [
-        ("算数超额", "超额净值：算术超额直接累计", "excess_nav", "#c47a00"),
-        ("几何超额", "超额净值2：产品净值 / 指数净值", "excess_nav2", "#1f5fbf"),
-        ("累加超额", "超额净值3：算术超额复利累乘", "excess_nav3", "#0f8b6d"),
+        ("算数超额", "Arithmetic excess NAV", "excess_nav", "#c47a00"),
+        ("几何超额", "Geometric excess NAV", "excess_nav2", "#1f5fbf"),
+        ("累加超额", "Compounded arithmetic excess NAV", "excess_nav3", "#0f8b6d"),
     ]
     return [
         (label, analyze_drawdown(name, df[column]), color)
@@ -422,10 +435,13 @@ def summarize_max_recovery_period(results: list[tuple[str, DrawdownResult, str]]
     if not candidates:
         return "暂无"
 
-    longest_result = max(candidates, key=lambda item: item.longest_cycle.cycle_weeks)
+    longest_label, longest_result, _ = max(
+        results,
+        key=lambda item: item[1].longest_cycle.cycle_weeks if item[1].longest_cycle is not None else -1,
+    )
     cycle = longest_result.longest_cycle
     status = "已修复" if cycle.is_recovered else "未修复"
-    return f"{format_week_count(cycle.cycle_weeks)} 周（{longest_result.name}，{status}）"
+    return f"{format_week_count(cycle.cycle_weeks)} 周（{longest_label}，{status}）"
 
 
 def summarize_recovery_periods(results: list[tuple[str, DrawdownResult, str]]) -> str:
@@ -464,7 +480,13 @@ def plot_three_drawdown_analysis(
         plot_nav_panel(nav_ax, result, color)
         plot_drawdown_panel(dd_ax, result, color)
 
-    fig.suptitle(f"{product_name} vs {benchmark_name}（{period_label}）", fontsize=20, y=0.975)
+    fig.suptitle(
+        f"{chart_name(product_name, 'Product')} vs "
+        f"{chart_name(benchmark_name, 'Benchmark')} "
+        f"({chart_frequency_label(period_label)})",
+        fontsize=20,
+        y=0.975,
+    )
     fig.subplots_adjust(left=0.06, right=0.98, bottom=0.06, top=0.93)
     saved_path = save_figure_with_fallback(fig, output_path)
     plt.close(fig)
