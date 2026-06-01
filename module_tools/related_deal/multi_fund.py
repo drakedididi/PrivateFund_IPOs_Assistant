@@ -9,30 +9,6 @@ import xlrd
 from datetime import datetime, timedelta
 from docx.oxml.ns import qn
 
-STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
-CONFIRMED_STATUS = ['确认成功', '已确认']
-DEFAULT_CONFIRMED_STATUS = '确认成功'
-
-
-def normalize_column_name(value):
-    if value is None:
-        return ''
-    return re.sub(r'[\s:：]+', '', str(value).strip())
-
-
-def normalize_status(value):
-    if value is None:
-        return ''
-    text = str(value).strip()
-    if text in ['nan', 'None']:
-        return ''
-    return text
-
-
-def is_confirmed_status(value):
-    return normalize_status(value) in CONFIRMED_STATUS
-
-
 # 客户名称和客户代码对应关系
 client_code_map = {
     '睿量智行1号私募证券投资基金': 'SXE629',
@@ -156,18 +132,18 @@ def extract_info(excel_file):
                         column_mapping = {
                             'client_name': ['客户名称', '投资者名称'],
                             'apply_date': ['申请日期'],
-                            'status': STATUS_COLUMN_NAMES
+                            'apply_statue': ['确认状态', '确认情况']
                         }
                         
                         # 遍历表头行，查找列名
                         for col in range(1, ws.max_column + 1):
                             cell_value = ws.cell(row=header_row, column=col).value
                             if cell_value:
-                                header = normalize_column_name(cell_value)
+                                header = str(cell_value).strip()
                                 for key, possible_names in column_mapping.items():
                                     if key not in found_columns:
                                         # 只使用精确匹配，避免将日期列错误识别为状态列
-                                        if header in [normalize_column_name(name) for name in possible_names]:
+                                        if header in possible_names:
                                             found_columns[key] = col - 1  # 转换为0-based索引
                         
                         required_columns = ['client_name', 'apply_date']
@@ -222,19 +198,16 @@ def extract_info(excel_file):
                                 if not apply_date:
                                     continue
 
-                                # 处理确认状态（可选列，缺失时默认确认成功）
-                                status = DEFAULT_CONFIRMED_STATUS
-                                if 'status' in found_columns:
-                                    status_cell = ws.cell(row=row, column=found_columns['status'] + 1)
-                                    status = normalize_status(status_cell.value)
-                                    if not is_confirmed_status(status):
-                                        continue
+                                # 处理确认状态（可选列，缺失时默认为空）
+                                apply_statue = ''
+                                if 'apply_statue' in found_columns:
+                                    status_cell = ws.cell(row=row, column=found_columns['apply_statue'] + 1)
+                                    apply_statue = str(status_cell.value).strip() if status_cell.value else ''
 
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
-                                    'status': status,
-                                    'apply_statue': status
+                                    'apply_statue': apply_statue
                                 }
 
                                 all_records.append(record)
@@ -265,18 +238,18 @@ def extract_info(excel_file):
                         column_mapping = {
                             'client_name': ['客户名称', '投资者名称', '客户', '基金名称', '产品名称'],
                             'apply_date': ['申请日期', '日期', '交易日期', '确认日期'],
-                            'status': STATUS_COLUMN_NAMES
+                            'apply_statue': ['确认状态', '状态', '交易状态', '确认']
                         }
                         
                         # 遍历表头行，查找列名
                         for col in range(0, ws.ncols):
                             cell_value = ws.cell_value(header_row, col)
                             if cell_value:
-                                header = normalize_column_name(cell_value)
+                                header = str(cell_value).strip()
                                 for key, possible_names in column_mapping.items():
                                     if key not in found_columns:
                                         # 只使用精确匹配，避免将日期列错误识别为状态列
-                                        if header in [normalize_column_name(name) for name in possible_names]:
+                                        if header in possible_names:
                                             found_columns[key] = col
                         
                         required_columns = ['client_name', 'apply_date']
@@ -330,19 +303,16 @@ def extract_info(excel_file):
                                 if not apply_date:
                                     continue
 
-                                # 处理确认状态（可选列，缺失时默认确认成功）
-                                status = DEFAULT_CONFIRMED_STATUS
-                                if 'status' in found_columns:
-                                    status_value = ws.cell_value(row, found_columns['status'])
-                                    status = normalize_status(status_value)
-                                    if not is_confirmed_status(status):
-                                        continue
+                                # 处理确认状态（可选列，缺失时默认为空）
+                                apply_statue = ''
+                                if 'apply_statue' in found_columns:
+                                    status_value = ws.cell_value(row, found_columns['apply_statue'])
+                                    apply_statue = str(status_value).strip() if status_value else ''
 
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
-                                    'status': status,
-                                    'apply_statue': status
+                                    'apply_statue': apply_statue
                                 }
 
                                 all_records.append(record)
@@ -375,8 +345,7 @@ def clean_data(records):
     
     for record in records:
         # 打印记录信息用于调试
-        status = record.get('status') or record.get('apply_statue') or DEFAULT_CONFIRMED_STATUS
-        print(f"处理记录: 客户={record['client_name']}, 状态={status}, 日期={record['apply_date']}")
+        print(f"处理记录: 客户={record['client_name']}, 状态={record['apply_statue']}, 日期={record['apply_date']}")
         
         # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
         record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
@@ -385,9 +354,14 @@ def clean_data(records):
         if record['client_name'] == '上海睿量私募基金管理有限公司':
             continue
 
-        # 只保留确认成功记录；无状态列时，读取阶段会默认填入确认成功
-        if not is_confirmed_status(status):
-            continue
+        # 只保留apply_statue为'成功'或'确认成功'的记录（无状态列时不过滤）
+        if record['apply_statue']:
+            if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success']:
+                # 检查是否是日期格式，如果是，说明列名匹配错误
+                date_str = str(record['apply_statue']).strip()
+                if len(date_str) == 8 and date_str.isdigit():
+                    print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
+                continue
         
         cleaned_records.append(record)
     
@@ -496,65 +470,6 @@ def create_word_document(client_name, apply_dates, client_code):
     para7.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     
     return doc
-
-
-def process_excel_files(input_dir, output_dir):
-    """处理指定目录内的 Excel 文件，并把生成的 Word 文档写入 output_dir。"""
-    os.makedirs(output_dir, exist_ok=True)
-    excel_files = find_all_excel_files(input_dir)
-
-    stats = {
-        "excel_total": len(excel_files),
-        "excel_processed": 0,
-        "records_total": 0,
-        "fund_total": 0,
-        "generated_total": 0,
-        "missing_code": [],
-        "generated_files": [],
-        "errors": [],
-    }
-
-    all_records = []
-    for excel_file in excel_files:
-        try:
-            records = extract_info(excel_file)
-            all_records.extend(records)
-            stats["excel_processed"] += 1
-            stats["records_total"] += len(records)
-        except Exception as exc:
-            stats["errors"].append(f"{os.path.basename(excel_file)}: {exc}")
-
-    cleaned_records = clean_data(all_records)
-    data_dict = organize_data(cleaned_records)
-    stats["fund_total"] = len(data_dict)
-
-    for client_name, apply_dates in data_dict.items():
-        client_code = client_code_map.get(client_name)
-        if not client_code:
-            stats["missing_code"].append(client_name)
-            continue
-
-        try:
-            doc = create_word_document(client_name, apply_dates, client_code)
-            safe_client_name = "".join(c for c in client_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
-            latest_date = apply_dates[-1] if apply_dates else ''
-            date_str = "".join(c for c in latest_date if c.isdigit())
-            doc_name = f"{safe_client_name}关联交易公告函-{date_str}.docx"
-            doc_path = os.path.join(output_dir, doc_name)
-            doc.save(doc_path)
-            stats["generated_files"].append(doc_path)
-            stats["generated_total"] += 1
-        except Exception as exc:
-            stats["errors"].append(f"{client_name}: {exc}")
-
-    if stats["generated_total"] == 0:
-        details = "; ".join(stats["errors"][:5]) if stats["errors"] else "未生成任何 Word 文档"
-        if stats["missing_code"]:
-            details = f"{details}; 缺少备案编码: {', '.join(stats['missing_code'][:5])}"
-        raise RuntimeError(details)
-
-    return stats
-
 
 def main():
     try:

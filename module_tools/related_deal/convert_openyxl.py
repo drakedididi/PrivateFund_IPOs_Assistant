@@ -1,5 +1,4 @@
 import os
-import re
 import pandas as pd
 import random
 from docx import Document
@@ -9,47 +8,6 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 import openpyxl
 import xlrd
 from datetime import datetime, timedelta
-
-STATUS_COLUMN_NAMES = ['确认情况', '确认状态', '确认结果']
-CONFIRMED_STATUS = ['确认成功', '已确认']
-DEFAULT_CONFIRMED_STATUS = '确认成功'
-
-
-def normalize_column_name(value):
-    if value is None:
-        return ''
-    return re.sub(r'[\s:：]+', '', str(value).strip())
-
-
-def normalize_status(value):
-    if value is None:
-        return ''
-    text = str(value).strip()
-    if text in ['nan', 'None']:
-        return ''
-    return text
-
-
-def is_confirmed_status(value):
-    return normalize_status(value) in CONFIRMED_STATUS
-
-
-def is_blank_value(value):
-    return value is None or (isinstance(value, str) and value.strip() == '')
-
-
-def parse_amount_value(value):
-    if is_blank_value(value):
-        return None
-    try:
-        return float(value)
-    except Exception:
-        try:
-            amount_str = str(value).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
-            return float(amount_str)
-        except Exception:
-            return value
-
 
 def find_all_excel_files(root_dir='.'):
     """递归查找所有文件夹中的Excel文件，返回(文件路径, 文件夹名称)的元组列表"""
@@ -101,18 +59,17 @@ def read_xlsx_file(excel_file):
         'product_name': ['产品名称', '基金名称'],
         'apply_date': ['申请日期'],
         'business_type': ['业务类型'],
-        'confirm_share': ['确认份额'],
+        'confirm_share': ['确认份额', '申请份额'],
         'confirm_amount': ['确定金额', '确认金额'],
-        'apply_amount': ['申请申购金额', '申请金额'],
-        'status': STATUS_COLUMN_NAMES
+        'apply_amount': ['申请申购金额', '申请金额']
     }
     
     found_columns = {}
     for col_idx, cell in enumerate(ws[header_row]):
         if cell.value:
-            cell_value = normalize_column_name(cell.value)
+            cell_value = str(cell.value).strip()
             for target_col, possible_names in column_mapping.items():
-                if cell_value in [normalize_column_name(name) for name in possible_names]:
+                if cell_value in possible_names:
                     found_columns[target_col] = col_idx
                     break
     
@@ -133,20 +90,12 @@ def read_xlsx_file(excel_file):
         # 跳过空行或无效行
         if not client_name or not product_name or not business_type:
             continue
-
-        status = DEFAULT_CONFIRMED_STATUS
-        if 'status' in found_columns:
-            status_val = ws.cell(row=row, column=found_columns['status'] + 1).value
-            status = normalize_status(status_val)
-            if not is_confirmed_status(status):
-                continue
         
         # 数据清洗
         result = {
             'client_name': str(client_name).strip(),
             'product_name': str(product_name).strip(),
-            'business_type': str(business_type).strip(),
-            'status': status
+            'business_type': str(business_type).strip()
         }
         
         # 处理申请日期 - 使用openpyxl正确处理
@@ -219,14 +168,40 @@ def read_xlsx_file(excel_file):
         # 处理确定金额 - 支持多种格式
         if 'confirm_amount' in found_columns:
             amount_val = ws.cell(row=row, column=found_columns['confirm_amount'] + 1).value
-            result['confirm_amount'] = parse_amount_value(amount_val)
+            if amount_val:
+                try:
+                    # 尝试直接转换
+                    result['confirm_amount'] = float(amount_val)
+                except Exception:
+                    # 处理字符串格式的金额
+                    try:
+                        # 去除非数字字符
+                        amount_str = str(amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
+                        result['confirm_amount'] = float(amount_str)
+                    except Exception:
+                        result['confirm_amount'] = amount_val
+            else:
+                result['confirm_amount'] = None
         else:
             result['confirm_amount'] = None
         
         # 处理申请金额 - 支持多种格式
         if 'apply_amount' in found_columns:
             apply_amount_val = ws.cell(row=row, column=found_columns['apply_amount'] + 1).value
-            result['apply_amount'] = parse_amount_value(apply_amount_val)
+            if apply_amount_val:
+                try:
+                    # 尝试直接转换
+                    result['apply_amount'] = float(apply_amount_val)
+                except Exception:
+                    # 处理字符串格式的金额
+                    try:
+                        # 去除非数字字符
+                        apply_amount_str = str(apply_amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
+                        result['apply_amount'] = float(apply_amount_str)
+                    except Exception:
+                        result['apply_amount'] = apply_amount_val
+            else:
+                result['apply_amount'] = None
         else:
             result['apply_amount'] = None
         
@@ -261,19 +236,18 @@ def read_xls_file(excel_file):
         'product_name': ['产品名称', '基金名称'],
         'apply_date': ['申请日期'],
         'business_type': ['业务类型'],
-        'confirm_share': ['确认份额'],
+        'confirm_share': ['确认份额', '申请份额'],
         'confirm_amount': ['确定金额', '确认金额'],
-        'apply_amount': ['申请申购金额', '申请金额'],
-        'status': STATUS_COLUMN_NAMES
+        'apply_amount': ['申请申购金额', '申请金额']
     }
     
     found_columns = {}
     header_values = ws.row_values(header_row)
     for col_idx, cell_value in enumerate(header_values):
         if cell_value:
-            cell_value_str = normalize_column_name(cell_value)
+            cell_value_str = str(cell_value).strip()
             for target_col, possible_names in column_mapping.items():
-                if cell_value_str in [normalize_column_name(name) for name in possible_names]:
+                if cell_value_str in possible_names:
                     found_columns[target_col] = col_idx
                     break
     
@@ -294,20 +268,12 @@ def read_xls_file(excel_file):
         # 跳过空行或无效行
         if not client_name or not product_name or not business_type:
             continue
-
-        status = DEFAULT_CONFIRMED_STATUS
-        if 'status' in found_columns:
-            status_value = ws.cell_value(row, found_columns['status'])
-            status = normalize_status(status_value)
-            if not is_confirmed_status(status):
-                continue
         
         # 数据清洗
         result = {
             'client_name': str(client_name).strip(),
             'product_name': str(product_name).strip(),
-            'business_type': str(business_type).strip(),
-            'status': status
+            'business_type': str(business_type).strip()
         }
         
         # 处理申请日期 - 使用xlrd正确处理
@@ -395,14 +361,40 @@ def read_xls_file(excel_file):
         # 处理确定金额 - 支持多种格式
         if 'confirm_amount' in found_columns:
             amount_val = ws.cell_value(row, found_columns['confirm_amount'])
-            result['confirm_amount'] = parse_amount_value(amount_val)
+            if amount_val:
+                try:
+                    # 尝试直接转换
+                    result['confirm_amount'] = float(amount_val)
+                except Exception:
+                    # 处理字符串格式的金额
+                    try:
+                        # 去除非数字字符
+                        amount_str = str(amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
+                        result['confirm_amount'] = float(amount_str)
+                    except Exception:
+                        result['confirm_amount'] = amount_val
+            else:
+                result['confirm_amount'] = None
         else:
             result['confirm_amount'] = None
         
         # 处理申请金额 - 支持多种格式
         if 'apply_amount' in found_columns:
             apply_amount_val = ws.cell_value(row, found_columns['apply_amount'])
-            result['apply_amount'] = parse_amount_value(apply_amount_val)
+            if apply_amount_val:
+                try:
+                    # 尝试直接转换
+                    result['apply_amount'] = float(apply_amount_val)
+                except Exception:
+                    # 处理字符串格式的金额
+                    try:
+                        # 去除非数字字符
+                        apply_amount_str = str(apply_amount_val).strip().replace(',', '').replace(' ', '').replace('元', '').replace('¥', '').replace('￥', '')
+                        result['apply_amount'] = float(apply_amount_str)
+                    except Exception:
+                        result['apply_amount'] = apply_amount_val
+            else:
+                result['apply_amount'] = None
         else:
             result['apply_amount'] = None
         
@@ -438,12 +430,22 @@ def clean_data(records):
         # 过滤掉金额小于1000000（100万）或无金额的记录
         # 优先使用确认金额，无确认金额时回退到申请金额
         effective_amount = get_effective_amount(record)
+        amount_ok = False
         if isinstance(effective_amount, (int, float)):
-            if effective_amount < 1000000:
-                continue
-        elif effective_amount is None:
+            if effective_amount >= 1000000:
+                amount_ok = True
+        elif effective_amount is not None:
+            # 非数值类型（如字符串）保留，维持原有行为
+            amount_ok = True
+
+        # 对于赎回类业务，申请金额可能为0，改用确认份额判断
+        if not amount_ok and '赎回' in record.get('business_type', ''):
+            share = record.get('confirm_share')
+            if isinstance(share, (int, float)) and share >= 1000000:
+                amount_ok = True
+
+        if not amount_ok:
             continue
-        # 非数值类型（如字符串）保留，维持原有行为
 
         # 过滤掉申请日期为空的记录
         if not record['apply_date']:
@@ -451,18 +453,18 @@ def clean_data(records):
         cleaned_records.append(record)
     return cleaned_records
 
-def process_normal_business(records, folder_name, output_dir=None):
+def process_normal_business(records, folder_name):
     """处理普通业务类（申购、赎回）"""
     processed_count = 0
     for record in records:
         try:
-            doc_name = create_word_document(record, folder_name, output_dir=output_dir)
+            doc_name = create_word_document(record, folder_name)
             processed_count += 1
         except Exception as e:
             continue
     return processed_count
 
-def process_special_business(conversion_out_records, conversion_in_records, folder_name, output_dir=None):
+def process_special_business(conversion_out_records, conversion_in_records, folder_name):
     """处理特殊业务类（基金转换）"""
     processed_count = 0
     paired_indices = set()
@@ -511,7 +513,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
                 }
                 
                 try:
-                    doc_name = create_word_document(conversion_record, folder_name, output_dir=output_dir)
+                    doc_name = create_word_document(conversion_record, folder_name)
                     processed_count += 1
                     
                     # 标记为已配对
@@ -524,7 +526,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
     
     return processed_count
 
-def create_word_document(info, folder_name, output_dir=None):
+def create_word_document(info, folder_name):
     """创建Word文档，保存在脚本所在目录"""
     doc = Document()
     
@@ -599,6 +601,8 @@ def create_word_document(info, folder_name, output_dir=None):
         content += f'4. 拟投资定价：申购 {get_effective_amount(info)} 元\n\n'
     elif info['business_type'] == '赎回' or info['business_type'] == '赎回确认':
         content += f'4. 拟投资定价：赎回 {info["confirm_share"]} 份\n\n'
+    elif info['business_type'] == '金额赎回':
+        content += f'4. 拟投资定价：赎回 {get_effective_amount(info)} 元\n\n'
     elif '转换' in info['business_type']:
         content += f'4. 拟投资定价：基金转换 {info["confirm_share"]} 份\n\n'
     
@@ -691,86 +695,14 @@ def create_word_document(info, folder_name, output_dir=None):
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-申购{get_effective_amount(info)}元.docx"
         elif info['business_type'] in ['赎回', '赎回确认']:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-赎回{info.get('confirm_share', info.get('apply_share'))}份.docx"
+        elif info['business_type'] == '金额赎回':
+            doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-赎回{get_effective_amount(info)}元.docx"
         else:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-{info['business_type']}.docx"
     
-    # 保存文档（本地脚本默认保存在当前目录，Web API 可指定临时输出目录）
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-        doc_path = os.path.join(output_dir, doc_name)
-    else:
-        doc_path = doc_name
-    doc.save(doc_path)
-    return doc_path
-
-
-def process_excel_files(input_dir, output_dir):
-    """处理指定目录内的 Excel 文件，并把生成的 Word 文档写入 output_dir。"""
-    os.makedirs(output_dir, exist_ok=True)
-    excel_files = find_all_excel_files(input_dir)
-
-    stats = {
-        "excel_total": len(excel_files),
-        "excel_processed": 0,
-        "generated_total": 0,
-        "normal_total": 0,
-        "special_total": 0,
-        "generated_files": [],
-        "errors": [],
-    }
-
-    for excel_file, folder_name in excel_files:
-        try:
-            before_files = set(os.listdir(output_dir))
-            records = extract_info(excel_file)
-            cleaned_records = clean_data(records)
-            if not cleaned_records:
-                continue
-
-            conversion_in_records = []
-            conversion_out_records = []
-            normal_records = []
-
-            for record in cleaned_records:
-                biz = record['business_type']
-                if '转换' in biz:
-                    if '入' in biz:
-                        conversion_in_records.append(record)
-                    elif '出' in biz:
-                        conversion_out_records.append(record)
-                    else:
-                        conversion_out_records.append(record)
-                else:
-                    normal_records.append(record)
-
-            normal_count = process_normal_business(normal_records, folder_name, output_dir=output_dir)
-            special_count = process_special_business(
-                conversion_out_records,
-                conversion_in_records,
-                folder_name,
-                output_dir=output_dir,
-            )
-
-            after_files = set(os.listdir(output_dir))
-            new_files = [
-                os.path.join(output_dir, name)
-                for name in sorted(after_files - before_files)
-                if name.lower().endswith(".docx")
-            ]
-
-            stats["excel_processed"] += 1
-            stats["normal_total"] += normal_count
-            stats["special_total"] += special_count
-            stats["generated_total"] += normal_count + special_count
-            stats["generated_files"].extend(new_files)
-        except Exception as exc:
-            stats["errors"].append(f"{os.path.basename(excel_file)}: {exc}")
-
-    if stats["generated_total"] == 0:
-        details = "; ".join(stats["errors"][:5]) if stats["errors"] else "未生成任何 Word 文档"
-        raise RuntimeError(details)
-
-    return stats
+    # 保存文档（保存在脚本所在目录）
+    doc.save(doc_name)
+    return doc_name
 
 def main():
     try:

@@ -198,9 +198,12 @@ def create_word_document(info, output_dir=None):
     # 处理赎回比例显示格式 - 统一保留两位小数
     redemption_ratio = info.get('redemption_ratio', '')
 
-    if isinstance(redemption_ratio, (int, float)):
-        # 如果是数字，直接格式化
-        redemption_ratio_str = f"{redemption_ratio:.2f}%"
+    if isinstance(redemption_ratio, (int, float, np.integer, np.floating)):
+        # Excel 百分比单元格会被 pandas 读成小数，如 21.4872% -> 0.214872
+        ratio_float = float(redemption_ratio)
+        if abs(ratio_float) <= 1:
+            ratio_float *= 100
+        redemption_ratio_str = f"{ratio_float:.2f}%"
     else:
         # 如果是字符串，先处理再格式化
         ratio_str = str(redemption_ratio).strip()
