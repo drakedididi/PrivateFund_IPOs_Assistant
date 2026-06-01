@@ -1,9 +1,23 @@
 import os
+import json
+import numpy as np
 import pandas as pd
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
+
+
+def load_special_dates():
+    """从项目 data 目录读取节假日日期。"""
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    holidays_path = os.path.join(project_root, 'data', 'trading_holidays.json')
+    with open(holidays_path, 'r', encoding='utf-8') as f:
+        return set(json.load(f).get('vacation_dates', []))
+
+
+SPECIAL_DATES = load_special_dates()
+
 
 # 修改现有的find_excel_file函数，或者添加新函数
 def find_all_excel_files(root_dir='.'):
@@ -40,19 +54,18 @@ def extract_info(excel_file):
             # 动态查找列名
             column_mapping = {
                 'product_name': ['产品名称', 'product name', '产品名'],
-                'product_code': ['ta代码', '产品代码', 'product code', 'ta code', '产品代码 '],
-                'date': ['确认日期', '日期', '申请日期', '开放日','date'],
-                'redemption_ratio': ['巨额赎回确认比例', '赎回比例', '实际净赎回比例', '巨额赎回实际比例', '巨额赎回发生比例','redemption ratio']
+                'product_code': ['ta代码', '产品代码', 'product code', 'ta code', '产品代码'],
+                'date': ['确认日期', '日期', '申请日期', '开放日','date','业务申请日期','交易申请日期'],
+                'redemption_ratio': ['巨额赎回确认比例', '赎回比例', '实际净赎回比例', '巨额赎回实际比例', '巨额赎回发生比例','redemption ratio','净赎回比例','实际赎回确认比例']
             }
 
             found_columns = {}
             date_type = None  # 记录日期类型：确认日期或申请日期
             for target_col, possible_names in column_mapping.items():
-                for col in df.columns:
-                    col_str = str(col).strip()
-                    col_lower = col_str.lower()
-                    # 优先匹配完整列名
-                    for name in possible_names:
+                for name in possible_names:
+                    for col in df.columns:
+                        col_str = str(col).strip()
+                        col_lower = col_str.lower()
                         if col_str == name or name.lower() == col_lower:
                             found_columns[target_col] = col
                             # 记录日期类型
@@ -98,6 +111,12 @@ def extract_info(excel_file):
         # 处理日期 - 支持自定义格式
         date_val = data.get(found_columns.get('date', ''))
 
+        # 处理YYYYMMDD格式的整数/浮点数（如20260518.0 → 2026-05-18）
+        if isinstance(date_val, (int, float, np.integer, np.floating)) and not pd.isna(date_val):
+            date_str = str(int(date_val))
+            if len(date_str) == 8 and date_str.isdigit():
+                date_val = f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}"
+
         if pd.isna(date_val):
             result['date'] = None
         else:
@@ -105,19 +124,8 @@ def extract_info(excel_file):
                 # 尝试直接转换日期
                 date_obj = pd.to_datetime(date_val)
 
-                # 定义需要特殊处理的日期列表
-                special_dates = [
-                    '2026-01-01', '2026-01-02',
-                    '2026-02-16', '2026-02-17', '2026-02-18', '2026-02-19', '2026-02-20', '2026-02-23',
-                    '2026-04-06',
-                    '2026-05-01', '2026-05-04', '2026-05-05',
-                    '2026-06-19',
-                    '2026-09-25',
-                    '2026-10-01', '2026-10-02', '2026-10-05', '2026-10-06', '2026-10-07'
-                ]
-
                 # 检查是否需要减1天
-                if date_type == '确认日期' or date_obj.strftime('%Y-%m-%d') in special_dates:
+                if date_type == '确认日期' or date_obj.strftime('%Y-%m-%d') in SPECIAL_DATES:
                     date_obj = date_obj - pd.Timedelta(days=1)
 
                 result['date'] = date_obj.strftime('%Y-%m-%d')
@@ -136,19 +144,8 @@ def extract_info(excel_file):
                             continue
 
                     if date_obj:
-                        # 定义需要特殊处理的日期列表
-                        special_dates = [
-                            '2026-01-01', '2026-01-02',
-                            '2026-02-16', '2026-02-17', '2026-02-18', '2026-02-19', '2026-02-20', '2026-02-23',
-                            '2026-04-06',
-                            '2026-05-01', '2026-05-04', '2026-05-05',
-                            '2026-06-19',
-                            '2026-09-25',
-                            '2026-10-01', '2026-10-02', '2026-10-05', '2026-10-06', '2026-10-07'
-                        ]
-
                         # 检查是否需要减1天
-                        if date_type == '确认日期' or date_obj.strftime('%Y-%m-%d') in special_dates:
+                        if date_type == '确认日期' or date_obj.strftime('%Y-%m-%d') in SPECIAL_DATES:
                             date_obj = date_obj - pd.Timedelta(days=1)
 
                         result['date'] = date_obj.strftime('%Y-%m-%d')
@@ -338,18 +335,18 @@ def main():
                 for i, record in enumerate(records):
                     try:
                         doc_name = create_word_document(record)
-                        print(f"✓ 记录 {i+1}: {record['product_name']} -> 已生成Word文档")
+                        print(f"[OK] 记录 {i+1}: {record['product_name']} -> 已生成Word文档")
                         print(f"  文件名: {doc_name}")
                         total_records += 1
 
                     except Exception as e:
-                        print(f"✗ 记录 {i+1}: 生成Word文档失败 - {e}")
+                        print(f"[FAIL] 记录 {i+1}: 生成Word文档失败 - {e}")
                         continue
 
                 total_processed += 1
 
             except Exception as e:
-                print(f"✗ 处理文件失败: {e}")
+                print(f"[FAIL] 处理文件失败: {e}")
                 continue
 
         print("\n" + "=" * 50)
