@@ -4,7 +4,6 @@ window.UNLOCK_DB = [
   { code: "508091", name: "凯德商业", market: "SH", listing_date: "2025-09-29", lock_months: null, lock_day: null },
   { code: "180607", name: "华夏中海商业REIT", market: "SZ", listing_date: "2025-10-31", lock_months: null, lock_day: null },
   { code: "508029", name: "沈软REIT", market: "SH", listing_date: "2025-11-06", lock_months: null, lock_day: null },
-  { code: "001233", name: "海安集团", market: "SZ", listing_date: "2025-11-25", lock_months: 6, lock_day: null },
   { code: "001280", name: "中国铀业", market: "SZ", listing_date: "2025-12-03", lock_months: 6, lock_day: null },
   { code: "688795", name: "摩尔线程-U", market: "SH", listing_date: "2025-12-05", lock_months: 6, lock_day: null },
   { code: "688796", name: "百奥赛图", market: "SH", listing_date: "2025-12-10", lock_months: 6, lock_day: null },
@@ -51,5 +50,8 @@ window.UNLOCK_DB = [
   { code: "603407", name: "长裕集团", market: "SH", listing_date: "2026-05-11", lock_months: 6, lock_day: null },
   { code: "001393", name: "维通利", market: "SZ", listing_date: "2026-05-15", lock_months: 6, lock_day: null },
   { code: "001365", name: "天海电子", market: "SZ", listing_date: "2026-05-18", lock_months: 6, lock_day: null },
+  { code: "001237", name: "惠康科技", market: "SZ", listing_date: "2026-05-22", lock_months: 6, lock_day: null },
+  { code: "603435", name: "嘉德利", market: "SH", listing_date: "2026-05-22", lock_months: 6, lock_day: null },
+  { code: "688635", name: "长进光子", market: "SH", listing_date: "2026-05-27", lock_months: 6, lock_day: null },
   { code: "508093", name: "北投REIT", market: "SH", listing_date: null, lock_months: null, lock_day: null }
 ];
