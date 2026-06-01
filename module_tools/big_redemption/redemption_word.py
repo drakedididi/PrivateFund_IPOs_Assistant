@@ -204,9 +204,10 @@ def create_word_document(info, output_dir=None):
     else:
         # 如果是字符串，先处理再格式化
         ratio_str = str(redemption_ratio).strip()
-        # 去除百分号
-        if '%' in ratio_str:
-            ratio_str = ratio_str.replace('%', '')
+        has_percent = '%' in ratio_str or '％' in ratio_str
+        # 已带百分号的值本身就是百分比，只去除符号后保留两位小数
+        if has_percent:
+            ratio_str = ratio_str.replace('%', '').replace('％', '').strip()
 
         # 尝试转换为浮点数并保留两位小数
         try:
