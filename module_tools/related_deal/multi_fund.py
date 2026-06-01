@@ -354,9 +354,9 @@ def clean_data(records):
         if record['client_name'] == '上海睿量私募基金管理有限公司':
             continue
 
-        # 只保留apply_statue为'成功'或'确认成功'的记录（无状态列时不过滤）
+        # 排除确认失败即可
         if record['apply_statue']:
-            if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success']:
+            if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success','未确认']:
                 # 检查是否是日期格式，如果是，说明列名匹配错误
                 date_str = str(record['apply_statue']).strip()
                 if len(date_str) == 8 and date_str.isdigit():
