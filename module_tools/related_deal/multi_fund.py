@@ -560,5 +560,9 @@ def main():
         import traceback
         traceback.print_exc()
 
+def process_excel_files():
+    """Entry point for web app — processes all Excel files and generates Word docs."""
+    return main()
+
 if __name__ == "__main__":
     main()
