@@ -704,19 +704,31 @@ def create_word_document(info, folder_name):
     doc.save(doc_name)
     return doc_name
 
-def main():
+def process_excel_files(base_dir=None):
+    """
+    处理所有Excel文件并生成Word文档。
+
+    Args:
+        base_dir: Excel文件所在的根目录。如果为None，则使用脚本所在目录（本地运行）。
+    """
     try:
-        # 切换到脚本所在目录
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(script_dir)
-        
+        if base_dir is None:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # 切换到工作目录，确保生成的Word文档保存在该目录
+        os.chdir(base_dir)
+
         print("开始查找并处理所有Excel文件...")
         print("=" * 50)
-        
+
         # 查找所有Excel文件
-        excel_files = find_all_excel_files(script_dir)
+        excel_files = find_all_excel_files(base_dir)
         print(f"共找到 {len(excel_files)} 个Excel文件")
-        
+
+        if not excel_files:
+            print("未找到任何Excel文件，请检查上传的文件。")
+            return {"success": False, "message": "未找到Excel文件", "count": 0}
+
         # 统计文件夹数量和名称
         folders = set()
         for _, folder_name in excel_files:
@@ -724,31 +736,31 @@ def main():
         print(f"共涉及 {len(folders)} 个文件夹")
         print(f"文件夹名称：{', '.join(folders)}")
         print("=" * 50)
-        
+
         total_processed = 0
         total_normal_records = 0
         total_special_records = 0
-        
+
         for excel_file, folder_name in excel_files:
             try:
                 print(f"处理文件夹: {folder_name}")
                 print(f"处理文件: {os.path.basename(excel_file)}")
-                
+
                 # 提取信息
                 records = extract_info(excel_file)
-                
+
                 # 数据清洗
                 cleaned_records = clean_data(records)
-                
+
                 if not cleaned_records:
                     print("无有效记录，跳过")
                     continue
-                
+
                 # 分类记录
                 conversion_in_records = []
                 conversion_out_records = []
                 normal_records = []
-                
+
                 for record in cleaned_records:
                     biz = record['business_type']
                     # 识别各种转换类型的业务（基金转换、份额转换等）
@@ -762,45 +774,54 @@ def main():
                             conversion_out_records.append(record)
                     else:
                         normal_records.append(record)
-                
+
                 # 打印基金转换记录数量
                 print(f'基金转换(入)记录: {len(conversion_in_records)}')
                 print(f'基金转换(出)记录: {len(conversion_out_records)}')
-                
+
                 # 处理普通业务
                 normal_count = process_normal_business(normal_records, folder_name)
                 total_normal_records += normal_count
-                
+
                 # 处理特殊业务
                 special_count = process_special_business(conversion_out_records, conversion_in_records, folder_name)
                 total_special_records += special_count
-                
+
                 total_processed += 1
                 print(f"处理完成，生成 {normal_count + special_count} 个Word文档")
                 print("-" * 30)
-                
+
             except Exception as e:
                 print(f"处理失败: {e}")
                 print("-" * 30)
                 continue
-        
+
         print("\n" + "=" * 50)
         print("处理完成！")
         print(f"成功处理 {total_processed}/{len(excel_files)} 个Excel文件")
         print(f"共生成 {total_normal_records + total_special_records} 个Word文档")
         print(f"其中：普通业务 {total_normal_records} 个，特殊业务（基金转换） {total_special_records} 个")
-        
+
         if total_processed > 0:
-            print(f"\nWord文档保存在脚本所在目录: {script_dir}")
-        
+            print(f"\nWord文档保存在目录: {base_dir}")
+
+        return {
+            "success": True,
+            "message": f"成功处理 {total_processed} 个文件，生成 {total_normal_records + total_special_records} 个文档",
+            "count": total_normal_records + total_special_records,
+            "normal": total_normal_records,
+            "special": total_special_records
+        }
+
     except Exception as e:
         print(f"程序执行错误: {e}")
         import traceback
         traceback.print_exc()
+        return {"success": False, "message": str(e), "count": 0}
 
-def process_excel_files():
-    """Entry point for web app — processes all Excel files and generates Word docs."""
-    return main()
+def main():
+    """本地运行入口"""
+    return process_excel_files()
 
 if __name__ == "__main__":
     main()

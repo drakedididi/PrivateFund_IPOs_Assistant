@@ -471,26 +471,38 @@ def create_word_document(client_name, apply_dates, client_code):
     
     return doc
 
-def main():
+def process_excel_files(base_dir=None):
+    """
+    处理所有Excel文件并生成关联交易公告函Word文档。
+
+    Args:
+        base_dir: Excel文件所在的根目录。如果为None，则使用脚本所在目录（本地运行）。
+    """
     try:
-        # 切换到脚本所在目录
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(script_dir)
-        
+        if base_dir is None:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # 切换到工作目录
+        os.chdir(base_dir)
+
         # 创建关联交易文件夹
-        output_dir = os.path.join(script_dir, '关联交易')
+        output_dir = os.path.join(base_dir, '关联交易')
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        
+
         print("开始查找并处理所有Excel文件...")
         print("=" * 50)
-        
+
         # 查找所有Excel文件
-        excel_files = find_all_excel_files(script_dir)
+        excel_files = find_all_excel_files(base_dir)
         print(f"共找到 {len(excel_files)} 个Excel文件")
-        
+
+        if not excel_files:
+            print("未找到任何Excel文件，请检查上传的文件。")
+            return {"success": False, "message": "未找到Excel文件", "count": 0}
+
         all_records = []
-        
+
         for excel_file in excel_files:
             try:
                 print(f"处理文件: {os.path.basename(excel_file)}")
@@ -499,25 +511,25 @@ def main():
             except Exception as e:
                 print(f"处理文件 {excel_file} 失败: {e}")
                 continue
-        
+
         # 数据清洗
         cleaned_records = clean_data(all_records)
         print(f"清洗后共得到 {len(cleaned_records)} 条有效记录")
-        
+
         # 整理数据
         data_dict = organize_data(cleaned_records)
         print(f"共整理出 {len(data_dict)} 个基金的关联交易记录")
-        
+
         # 生成Word文档
         print(f"开始生成Word文档，共 {len(data_dict)} 个基金")
         generated_count = 0
         missing_code_count = 0
         missing_code_names = []
-        
+
         for client_name, apply_dates in data_dict.items():
             print(f"处理基金: {client_name}")
             print(f"  交易日期: {apply_dates}")
-            
+
             if client_name in client_code_map:
                 client_code = client_code_map[client_name]
                 print(f"  基金备案编码: {client_code}")
@@ -543,26 +555,36 @@ def main():
                 print(f"  未找到 {client_name} 的基金备案编码")
                 missing_code_count += 1
                 missing_code_names.append(client_name)
-        
+
         print(f"\n生成文档统计:")
         print(f"  总基金数: {len(data_dict)}")
         print(f"  成功生成: {generated_count}")
         print(f"  缺少编码: {missing_code_count}")
         if missing_code_names:
             print(f"  缺少编码的产品: {', '.join(missing_code_names)}")
-        
+
         print("\n" + "=" * 50)
         print("处理完成！")
         print(f"Word文档保存在: {output_dir}")
-        
+
+        return {
+            "success": True,
+            "message": f"成功生成 {generated_count} 个文档",
+            "count": generated_count,
+            "total_funds": len(data_dict),
+            "missing_codes": missing_code_count,
+            "missing_code_names": missing_code_names
+        }
+
     except Exception as e:
         print(f"程序执行错误: {e}")
         import traceback
         traceback.print_exc()
+        return {"success": False, "message": str(e), "count": 0}
 
-def process_excel_files():
-    """Entry point for web app — processes all Excel files and generates Word docs."""
-    return main()
+def main():
+    """本地运行入口"""
+    return process_excel_files()
 
 if __name__ == "__main__":
     main()
