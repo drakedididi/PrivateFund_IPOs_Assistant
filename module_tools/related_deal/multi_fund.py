@@ -471,22 +471,23 @@ def create_word_document(client_name, apply_dates, client_code):
     
     return doc
 
-def process_excel_files(base_dir=None):
+def process_excel_files(base_dir=None, output_dir=None):
     """
     处理所有Excel文件并生成关联交易公告函Word文档。
 
     Args:
         base_dir: Excel文件所在的根目录。如果为None，则使用脚本所在目录（本地运行）。
     """
+    original_cwd = os.getcwd()
     try:
         if base_dir is None:
             base_dir = os.path.dirname(os.path.abspath(__file__))
+        if output_dir is None:
+            output_dir = os.path.join(base_dir, '关联交易')
 
         # 切换到工作目录
         os.chdir(base_dir)
 
-        # 创建关联交易文件夹
-        output_dir = os.path.join(base_dir, '关联交易')
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -581,6 +582,8 @@ def process_excel_files(base_dir=None):
         import traceback
         traceback.print_exc()
         return {"success": False, "message": str(e), "count": 0}
+    finally:
+        os.chdir(original_cwd)
 
 def main():
     """本地运行入口"""

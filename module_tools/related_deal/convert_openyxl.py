@@ -453,18 +453,18 @@ def clean_data(records):
         cleaned_records.append(record)
     return cleaned_records
 
-def process_normal_business(records, folder_name):
+def process_normal_business(records, folder_name, output_dir=None):
     """处理普通业务类（申购、赎回）"""
     processed_count = 0
     for record in records:
         try:
-            doc_name = create_word_document(record, folder_name)
+            doc_name = create_word_document(record, folder_name, output_dir)
             processed_count += 1
         except Exception as e:
             continue
     return processed_count
 
-def process_special_business(conversion_out_records, conversion_in_records, folder_name):
+def process_special_business(conversion_out_records, conversion_in_records, folder_name, output_dir=None):
     """处理特殊业务类（基金转换）"""
     processed_count = 0
     paired_indices = set()
@@ -513,7 +513,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
                 }
                 
                 try:
-                    doc_name = create_word_document(conversion_record, folder_name)
+                    doc_name = create_word_document(conversion_record, folder_name, output_dir)
                     processed_count += 1
                     
                     # 标记为已配对
@@ -526,7 +526,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
     
     return processed_count
 
-def create_word_document(info, folder_name):
+def create_word_document(info, folder_name, output_dir=None):
     """创建Word文档，保存在脚本所在目录"""
     doc = Document()
     
@@ -700,20 +700,24 @@ def create_word_document(info, folder_name):
         else:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-{info['business_type']}.docx"
     
-    # 保存文档（保存在脚本所在目录）
-    doc.save(doc_name)
-    return doc_name
+    # 保存文档
+    doc_path = os.path.join(output_dir, doc_name) if output_dir else doc_name
+    doc.save(doc_path)
+    return doc_path
 
-def process_excel_files(base_dir=None):
+def process_excel_files(base_dir=None, output_dir=None):
     """
     处理所有Excel文件并生成Word文档。
 
     Args:
         base_dir: Excel文件所在的根目录。如果为None，则使用脚本所在目录（本地运行）。
     """
+    original_cwd = os.getcwd()
     try:
         if base_dir is None:
             base_dir = os.path.dirname(os.path.abspath(__file__))
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
 
         # 切换到工作目录，确保生成的Word文档保存在该目录
         os.chdir(base_dir)
@@ -780,11 +784,11 @@ def process_excel_files(base_dir=None):
                 print(f'基金转换(出)记录: {len(conversion_out_records)}')
 
                 # 处理普通业务
-                normal_count = process_normal_business(normal_records, folder_name)
+                normal_count = process_normal_business(normal_records, folder_name, output_dir)
                 total_normal_records += normal_count
 
                 # 处理特殊业务
-                special_count = process_special_business(conversion_out_records, conversion_in_records, folder_name)
+                special_count = process_special_business(conversion_out_records, conversion_in_records, folder_name, output_dir)
                 total_special_records += special_count
 
                 total_processed += 1
@@ -818,6 +822,8 @@ def process_excel_files(base_dir=None):
         import traceback
         traceback.print_exc()
         return {"success": False, "message": str(e), "count": 0}
+    finally:
+        os.chdir(original_cwd)
 
 def main():
     """本地运行入口"""
