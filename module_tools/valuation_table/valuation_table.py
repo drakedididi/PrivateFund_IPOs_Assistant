@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+import time
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -22,6 +23,10 @@ DISPLAY_NAME_OVERRIDES = {
 }
 MONEY_RE = re.compile(r"-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?")
 FUND_NAME_RE = re.compile(r"(睿量[^\\/_\s]*?基金)")
+
+
+def debug_log(message: str) -> None:
+    print(f"[valuation_table] {message}", flush=True)
 
 
 @dataclass
@@ -192,8 +197,12 @@ def iter_pdf_files(input_dir: Path) -> Iterable[Path]:
 def collect_valuation_results(input_dir: Path) -> tuple[list[ValuationResult], list[tuple[Path, str]]]:
     results: list[ValuationResult] = []
     errors: list[tuple[Path, str]] = []
+    pdf_files = list(iter_pdf_files(input_dir))
+    debug_log(f"pdf scan: input_dir={input_dir}, pdf_count={len(pdf_files)}")
 
-    for pdf_path in iter_pdf_files(input_dir):
+    for index, pdf_path in enumerate(pdf_files, start=1):
+        started_at = time.perf_counter()
+        debug_log(f"pdf start: {index}/{len(pdf_files)} {pdf_path.name}")
         try:
             fund_name = extract_fund_name(pdf_path, input_dir)
             total_assets = extract_total_assets(pdf_path)
@@ -204,8 +213,16 @@ def collect_valuation_results(input_dir: Path) -> tuple[list[ValuationResult], l
                     pdf_name=pdf_path.name,
                 )
             )
+            debug_log(
+                f"pdf ok: {index}/{len(pdf_files)} {pdf_path.name}, "
+                f"fund={fund_name}, assets={total_assets}, seconds={time.perf_counter() - started_at:.2f}"
+            )
         except Exception as exc:  # noqa: BLE001 - keep processing other PDFs.
             errors.append((pdf_path, str(exc)))
+            debug_log(
+                f"pdf failed: {index}/{len(pdf_files)} {pdf_path.name}, "
+                f"seconds={time.perf_counter() - started_at:.2f}, error={exc}"
+            )
 
     results.sort(key=lambda item: item.fund_name)
     return results, errors
@@ -256,6 +273,7 @@ def write_excel(results: Sequence[ValuationResult], output_path: Path) -> None:
 
 def process_excel_files(input_dir: Path, output_dir: Path) -> dict[str, object]:
     """处理指定目录内的估值表 PDF，并把生成的 Excel 写入 output_dir。"""
+    debug_log(f"processor started: input_dir={input_dir}, output_dir={output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     results, errors = collect_valuation_results(input_dir)
     if not results:
@@ -264,6 +282,7 @@ def process_excel_files(input_dir: Path, output_dir: Path) -> dict[str, object]:
 
     output_path = output_dir / "打新产品总资产.xlsx"
     write_excel(results, output_path)
+    debug_log(f"excel written: path={output_path}, rows={len(results)}, errors={len(errors)}")
     return {
         "pdf_total": len(results) + len(errors),
         "pdf_processed": len(results),

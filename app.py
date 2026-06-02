@@ -5,6 +5,7 @@ import hmac
 import os
 import shutil
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 from urllib.parse import quote
@@ -34,6 +35,10 @@ EXPOSED_HEADERS = [
 
 app = Flask(__name__)
 CORS(app, expose_headers=EXPOSED_HEADERS)
+
+
+def debug_log(message: str) -> None:
+    print(f"[valuation_table] {message}", flush=True)
 
 
 @app.after_request
@@ -166,6 +171,7 @@ def prepare_uploaded_pdf_input(uploaded_file, input_dir: Path) -> str:
         raise ValueError("请上传文件")
 
     filename, suffix = safe_upload_filename(uploaded_file.filename, "valuation_input")
+    debug_log(f"upload received: filename={filename}, suffix={suffix}")
     if suffix not in {".zip", ".pdf"}:
         raise ValueError("仅支持 ZIP 或 PDF 文件")
 
@@ -173,9 +179,12 @@ def prepare_uploaded_pdf_input(uploaded_file, input_dir: Path) -> str:
         input_dir.mkdir(parents=True, exist_ok=True)
         saved_path = input_dir / filename
         uploaded_file.save(str(saved_path))
+        debug_log(f"zip saved: path={saved_path}, size={saved_path.stat().st_size}")
         extract_dir = input_dir / "_unzipped"
         extract_dir.mkdir(parents=True, exist_ok=True)
-        extract_uploaded_zip(saved_path, extract_dir)
+        extracted_count = extract_uploaded_zip(saved_path, extract_dir)
+        pdf_count = sum(1 for p in extract_dir.rglob("*") if p.is_file() and p.suffix.lower() == ".pdf")
+        debug_log(f"zip extracted: files={extracted_count}, pdf_count={pdf_count}, dir={extract_dir}")
         saved_path.unlink(missing_ok=True)
         return Path(filename).stem
 
@@ -183,6 +192,7 @@ def prepare_uploaded_pdf_input(uploaded_file, input_dir: Path) -> str:
     file_dir.mkdir(parents=True, exist_ok=True)
     saved_path = file_dir / filename
     uploaded_file.save(str(saved_path))
+    debug_log(f"pdf saved: path={saved_path}, size={saved_path.stat().st_size}")
     return Path(filename).stem
 
 
@@ -233,6 +243,8 @@ def run_pdf_document_tool(processor, download_suffix: str):
         return auth_error
 
     uploaded_file = request.files.get("file")
+    started_at = time.perf_counter()
+    debug_log("request started")
     try:
         with tempfile.TemporaryDirectory(prefix="private_tool_api_") as tmp_dir:
             tmp_path = Path(tmp_dir)
@@ -240,12 +252,16 @@ def run_pdf_document_tool(processor, download_suffix: str):
             output_dir = tmp_path / "output"
             upload_stem = prepare_uploaded_pdf_input(uploaded_file, input_dir)
 
+            process_started_at = time.perf_counter()
             processor(input_dir, output_dir)
+            debug_log(f"processor finished: seconds={time.perf_counter() - process_started_at:.2f}")
 
             output_zip = tmp_path / f"{upload_stem}{download_suffix}"
             zip_output_dir(output_dir, output_zip)
+            debug_log(f"output zipped: path={output_zip}, size={output_zip.stat().st_size}")
             result_bytes = output_zip.read_bytes()
 
+        debug_log(f"request finished: seconds={time.perf_counter() - started_at:.2f}")
         return send_file(
             io.BytesIO(result_bytes),
             mimetype="application/zip",
@@ -253,8 +269,10 @@ def run_pdf_document_tool(processor, download_suffix: str):
             download_name=output_zip.name,
         )
     except ValueError as exc:
+        debug_log(f"request value error: {exc}")
         return jsonify({"error": str(exc)}), 400
     except Exception as exc:
+        debug_log(f"request failed: {exc}")
         return jsonify({"error": f"处理失败: {exc}"}), 500
 
 
