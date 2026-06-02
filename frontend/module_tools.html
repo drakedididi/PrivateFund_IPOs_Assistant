@@ -368,6 +368,7 @@
       <a href="#video" data-target="video">询价视频</a>
       <a href="#extra-revenue" data-target="extra-revenue">超额收益</a>
       <a href="#redemption" data-target="redemption">巨额赎回</a>
+      <a href="#valuation-table" data-target="valuation-table">资产爬取</a>
       <a href="#related-deal" data-target="related-deal">关联交易</a>
     </div>
 
@@ -440,6 +441,19 @@
           <span class="file-label">拖拽 Excel/ZIP 文件到此处，或点击选择文件</span>
         </label>
         <button class="upload-btn enabled" type="button" data-api="/api/redemption" data-private="true" data-extensions=".zip,.xlsx,.xls" data-download-suffix="_redemption_docs.zip">上传并下载结果</button>
+      </div>
+      <p class="upload-status"></p>
+    </section>
+
+    <section class="tool-card" id="valuation-table">
+      <h2>打新产品总资产估值表爬取</h2>
+      <p class="script-path">脚本：module_tools/valuation_table/valuation_table.py</p>
+      <div class="upload-row">
+        <label class="upload-area enabled">
+          <input class="upload-input enabled" type="file" accept=".zip,.pdf,application/zip,application/pdf">
+          <span class="file-label">拖拽 PDF/ZIP 文件到此处，或点击选择文件</span>
+        </label>
+        <button class="upload-btn enabled" type="button" data-api="/api/valuation-table" data-private="true" data-extensions=".zip,.pdf" data-download-suffix="_valuation_table.zip">上传并下载结果</button>
       </div>
       <p class="upload-status"></p>
     </section>

@@ -19,6 +19,23 @@ def load_special_dates():
 SPECIAL_DATES = load_special_dates()
 
 
+def is_non_trading_day(date_obj):
+    return date_obj.weekday() >= 5 or date_obj.strftime('%Y-%m-%d') in SPECIAL_DATES
+
+
+def previous_trading_day(date_obj):
+    date_obj = date_obj - pd.Timedelta(days=1)
+    while is_non_trading_day(date_obj):
+        date_obj = date_obj - pd.Timedelta(days=1)
+    return date_obj
+
+
+def normalize_product_name(product_name):
+    product_name = str(product_name).strip()
+    suffix = '私募证券投资基金'
+    return product_name if product_name.endswith(suffix) else product_name + suffix
+
+
 # 修改现有的find_excel_file函数，或者添加新函数
 def find_all_excel_files(root_dir='.'):
     """递归查找所有文件夹中的Excel文件"""
@@ -126,7 +143,7 @@ def extract_info(excel_file):
 
                 # 检查是否需要减1天
                 if date_type == '确认日期' or date_obj.strftime('%Y-%m-%d') in SPECIAL_DATES:
-                    date_obj = date_obj - pd.Timedelta(days=1)
+                    date_obj = previous_trading_day(date_obj)
 
                 result['date'] = date_obj.strftime('%Y-%m-%d')
             except Exception:
@@ -146,7 +163,7 @@ def extract_info(excel_file):
                     if date_obj:
                         # 检查是否需要减1天
                         if date_type == '确认日期' or date_obj.strftime('%Y-%m-%d') in SPECIAL_DATES:
-                            date_obj = date_obj - pd.Timedelta(days=1)
+                            date_obj = previous_trading_day(date_obj)
 
                         result['date'] = date_obj.strftime('%Y-%m-%d')
                     else:
@@ -165,9 +182,10 @@ def extract_info(excel_file):
 def create_word_document(info, output_dir=None):
     """创建Word文档，保存在脚本所在目录"""
     doc = Document()
+    product_name = normalize_product_name(info["product_name"])
 
     # 设置标题
-    title = doc.add_paragraph(f'关于{info["product_name"]}')
+    title = doc.add_paragraph(f'关于{product_name}')
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = title.runs[0]
     run.font.name = '仿宋'
@@ -220,7 +238,7 @@ def create_word_document(info, output_dir=None):
             # 如果转换失败，使用原始值
             redemption_ratio_str = f"{ratio_str}%"
 
-    content = f"上海睿量私募基金管理有限公司 （以下简称\"我公司\"）管理的{info['product_name']}（基金备案编码：{info['product_code']}）（以下简称\"本基金\"）于{date_str}发生巨额赎回，巨额赎回比例为{redemption_ratio_str}。根据《基金合同》信息披露内容和《私募投资基金信息披露管理办法》对重大事项披露事项之\"基金触发巨额赎回的\"规定，我公司已对本次巨额赎回按正常赎回程序办理全额赎回。"
+    content = f"上海睿量私募基金管理有限公司 （以下简称\"我公司\"）管理的{product_name}（基金备案编码：{info['product_code']}）（以下简称\"本基金\"）于{date_str}发生巨额赎回，巨额赎回比例为{redemption_ratio_str}。根据《基金合同》信息披露内容和《私募投资基金信息披露管理办法》对重大事项披露事项之\"基金触发巨额赎回的\"规定，我公司已对本次巨额赎回按正常赎回程序办理全额赎回。"
     content_paragraph = doc.add_paragraph()
     run = content_paragraph.add_run('    ' + content)  # 段前空两格
     run.font.name = '仿宋'
@@ -252,7 +270,7 @@ def create_word_document(info, output_dir=None):
     run._element.rPr.rFonts.set(qn('w:eastAsia'), '仿宋')
 
     # 生成文件名
-    safe_product_name = "".join(c for c in info['product_name'] if c.isalnum() or c in (' ', '-', '_')).rstrip()
+    safe_product_name = "".join(c for c in product_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
     # 添加strftime('%Y%m%d')形式的日期
     if info['date']:
         date_obj = pd.to_datetime(info['date'])

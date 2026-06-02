@@ -19,6 +19,7 @@ from module_tools.invoice.invoice_organization_local import process_zip_file
 from module_tools.inquiry_video.video import process_excel_files as process_inquiry_video_files
 from module_tools.related_deal.convert_openyxl import process_excel_files as process_related_decision_files
 from module_tools.related_deal.multi_fund import process_excel_files as process_related_notice_files
+from module_tools.valuation_table.valuation_table import process_excel_files as process_valuation_table_files
 
 
 RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
@@ -160,6 +161,31 @@ def prepare_uploaded_excel_input(uploaded_file, input_dir: Path) -> str:
     return Path(filename).stem
 
 
+def prepare_uploaded_pdf_input(uploaded_file, input_dir: Path) -> str:
+    if uploaded_file is None or not uploaded_file.filename:
+        raise ValueError("请上传文件")
+
+    filename, suffix = safe_upload_filename(uploaded_file.filename, "valuation_input")
+    if suffix not in {".zip", ".pdf"}:
+        raise ValueError("仅支持 ZIP 或 PDF 文件")
+
+    if suffix == ".zip":
+        input_dir.mkdir(parents=True, exist_ok=True)
+        saved_path = input_dir / filename
+        uploaded_file.save(str(saved_path))
+        extract_dir = input_dir / "_unzipped"
+        extract_dir.mkdir(parents=True, exist_ok=True)
+        extract_uploaded_zip(saved_path, extract_dir)
+        saved_path.unlink(missing_ok=True)
+        return Path(filename).stem
+
+    file_dir = input_dir / Path(filename).stem
+    file_dir.mkdir(parents=True, exist_ok=True)
+    saved_path = file_dir / filename
+    uploaded_file.save(str(saved_path))
+    return Path(filename).stem
+
+
 def zip_output_dir(output_dir: Path, output_zip: Path) -> None:
     files = [p for p in output_dir.rglob("*") if p.is_file()]
     if not files:
@@ -182,6 +208,37 @@ def run_document_tool(processor, download_suffix: str):
             input_dir = tmp_path / "input"
             output_dir = tmp_path / "output"
             upload_stem = prepare_uploaded_excel_input(uploaded_file, input_dir)
+
+            processor(input_dir, output_dir)
+
+            output_zip = tmp_path / f"{upload_stem}{download_suffix}"
+            zip_output_dir(output_dir, output_zip)
+            result_bytes = output_zip.read_bytes()
+
+        return send_file(
+            io.BytesIO(result_bytes),
+            mimetype="application/zip",
+            as_attachment=True,
+            download_name=output_zip.name,
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"error": f"处理失败: {exc}"}), 500
+
+
+def run_pdf_document_tool(processor, download_suffix: str):
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+
+    uploaded_file = request.files.get("file")
+    try:
+        with tempfile.TemporaryDirectory(prefix="private_tool_api_") as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            input_dir = tmp_path / "input"
+            output_dir = tmp_path / "output"
+            upload_stem = prepare_uploaded_pdf_input(uploaded_file, input_dir)
 
             processor(input_dir, output_dir)
 
@@ -287,6 +344,11 @@ def api_extra_revenue():
 @app.route("/api/redemption", methods=["POST"])
 def api_redemption():
     return run_document_tool(process_redemption_files, "_redemption_docs.zip")
+
+
+@app.route("/api/valuation-table", methods=["POST"])
+def api_valuation_table():
+    return run_pdf_document_tool(process_valuation_table_files, "_valuation_table.zip")
 
 
 @app.route("/api/excel", methods=["POST"])
