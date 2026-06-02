@@ -185,7 +185,7 @@ def extract_total_assets(pdf_path: Path) -> Decimal:
 
 def iter_pdf_files(input_dir: Path) -> Iterable[Path]:
     return sorted(
-        path for path in input_dir.rglob("*.pdf") if path.is_file()
+        path for path in input_dir.rglob("*") if path.is_file() and path.suffix.lower() == ".pdf"
     )
 
 

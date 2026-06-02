@@ -23,7 +23,7 @@ from module_tools.valuation_table.valuation_table import process_excel_files as 
 
 
 RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
-APP_VERSION = "extra-revenue-v3-2026-05-20"
+APP_VERSION = "valuation_table"
 EXPOSED_HEADERS = [
     "Content-Disposition",
     "X-App-Version",
