@@ -236,8 +236,8 @@ def extract_info(excel_file):
                         # 查找列名
                         found_columns = {}
                         column_mapping = {
-                            'client_name': ['客户名称', '投资者名称', '客户', '基金名称', '产品名称'],
-                            'apply_date': ['申请日期', '日期', '交易日期', '确认日期'],
+                            'client_name': ['客户名称', '投资者名称', '客户', '基金名称'],
+                            'apply_date': ['申请日期', '日期', '交易日期'],
                             'apply_statue': ['确认状态', '状态', '交易状态', '确认']
                         }
                         
