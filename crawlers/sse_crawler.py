@@ -222,7 +222,11 @@ def fetch(
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=get_playwright_headless())
         page = browser.new_page()
-        page.goto(URL, wait_until="domcontentloaded", timeout=timeout_ms)
+        page.goto(URL, wait_until="commit", timeout=timeout_ms)
+        try:
+            page.wait_for_load_state("domcontentloaded", timeout=5000)
+        except Exception:
+            pass
         page.wait_for_selector(f"xpath={DATE_UL_XPATH}", timeout=timeout_ms)
 
         for target_date in date_list:
