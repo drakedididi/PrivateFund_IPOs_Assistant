@@ -101,62 +101,6 @@ def _extract_from_td_with_status(
     return [], "state_confirmed_empty"
 
 
-def _extract_multi_from_td_with_status(
-    td: Locator,
-    include_class_tokens: list[str],
-    reference_date: str,
-    market: str,
-) -> tuple[list[dict[str, str]], str]:
-    entries: list[dict[str, str]] = []
-    seen_names: set[str] = set()
-    statuses: list[str] = []
-
-    for class_token in include_class_tokens:
-        items, status = _extract_from_td_with_status(
-            td=td,
-            include_class_token=class_token,
-            exclude_class_token=None,
-            reference_date=reference_date,
-            market=market,
-        )
-        statuses.append(status)
-        for item in items:
-            name = item.get("name", "")
-            if not name or name in seen_names:
-                continue
-            seen_names.add(name)
-            entries.append(item)
-
-    if entries:
-        return entries, "data_found"
-    if statuses and all(status == "xpath_missing" for status in statuses):
-        return [], "xpath_missing"
-    return [], "state_confirmed_empty"
-
-
-def _reserved_visibility(td: Locator) -> dict[str, bool]:
-    targets = {
-        "subscribe": ["title_purchase_"],
-        "payment": ["title_issue_result_"],
-        "listing": ["title_enter_premium_"],
-    }
-    result: dict[str, bool] = {}
-
-    for key, class_keys in targets.items():
-        visible = False
-        for class_key in class_keys:
-            blocks = td.locator(f"div[class*='{class_key}']")
-            for i in range(blocks.count()):
-                if _is_visible(blocks.nth(i).get_attribute("style")):
-                    visible = True
-                    break
-            if visible:
-                break
-        result[key] = visible
-
-    return result
-
-
 def fetch(
     reference_date: str = REFERENCE_DATE,
     timeout_ms: int = 30000,
@@ -226,32 +170,6 @@ def fetch(
                 )
                 raw_data[date_key]["inquiry"] = inquiry_items
 
-                subscribe_items, subscribe_status = _extract_from_td_with_status(
-                    td=td,
-                    include_class_token="title_purchase_",
-                    exclude_class_token=None,
-                    reference_date=reference_date,
-                    market="BJ",
-                )
-                raw_data[date_key]["subscribe"] = subscribe_items
-
-                payment_items, payment_status = _extract_multi_from_td_with_status(
-                    td=td,
-                    include_class_tokens=["title_issue_result_"],
-                    reference_date=reference_date,
-                    market="BJ",
-                )
-                raw_data[date_key]["payment"] = payment_items
-
-                listing_items, listing_status = _extract_from_td_with_status(
-                    td=td,
-                    include_class_token="title_enter_premium_",
-                    exclude_class_token=None,
-                    reference_date=reference_date,
-                    market="BJ",
-                )
-                raw_data[date_key]["listing"] = listing_items
-
                 if verbose:
                     if drafting_status == "xpath_missing":
                         print(f"[BSE][{date_key}][drafting] XPath未命中: div[class*='title_enquiry_notice_']")
@@ -266,29 +184,6 @@ def fetch(
                         print(f"[BSE][{date_key}][inquiry] 状态确认: 已命中元素，但内容为空/无/隐藏。")
                     else:
                         print(f"[BSE][{date_key}][inquiry] 命中有效数据: {len(inquiry_items)} 条。")
-
-                    if subscribe_status == "xpath_missing":
-                        print(f"[BSE][{date_key}][subscribe] XPath未命中: div[class*='title_purchase_']")
-                    elif subscribe_status == "state_confirmed_empty":
-                        print(f"[BSE][{date_key}][subscribe] 状态确认: 已命中元素，但内容为空/无/隐藏。")
-                    else:
-                        print(f"[BSE][{date_key}][subscribe] 命中有效数据: {len(subscribe_items)} 条。")
-
-                    if payment_status == "xpath_missing":
-                        print(f"[BSE][{date_key}][payment] XPath未命中: div[class*='title_issue_result_']")
-                    elif payment_status == "state_confirmed_empty":
-                        print(f"[BSE][{date_key}][payment] 状态确认: 已命中元素，但内容为空/无/隐藏。")
-                    else:
-                        print(f"[BSE][{date_key}][payment] 命中有效数据: {len(payment_items)} 条。")
-
-                    if listing_status == "xpath_missing":
-                        print(f"[BSE][{date_key}][listing] XPath未命中: div[class*='title_enter_premium_']")
-                    elif listing_status == "state_confirmed_empty":
-                        print(f"[BSE][{date_key}][listing] 状态确认: 已命中元素，但内容为空/无/隐藏。")
-                    else:
-                        print(f"[BSE][{date_key}][listing] 命中有效数据: {len(listing_items)} 条。")
-
-                _ = _reserved_visibility(td)
 
         browser.close()
 
