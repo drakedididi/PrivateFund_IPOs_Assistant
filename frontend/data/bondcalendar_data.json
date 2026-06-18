@@ -1,7 +1,26 @@
 {
-  "generated_at": "2026-06-16 09:59:08",
-  "reference_date": "2026-06-16",
+  "generated_at": "2026-06-18 07:13:33",
+  "reference_date": "2026-06-18",
   "date_list": [
+    "2026-05-06",
+    "2026-05-07",
+    "2026-05-11",
+    "2026-05-13",
+    "2026-05-15",
+    "2026-05-18",
+    "2026-05-20",
+    "2026-05-22",
+    "2026-05-25",
+    "2026-05-27",
+    "2026-05-29",
+    "2026-06-01",
+    "2026-06-02",
+    "2026-06-03",
+    "2026-06-05",
+    "2026-06-08",
+    "2026-06-09",
+    "2026-06-11",
+    "2026-06-12",
     "2026-06-15",
     "2026-06-16",
     "2026-06-17",
@@ -11,9 +30,144 @@
     "2026-06-23",
     "2026-06-24",
     "2026-06-25",
-    "2026-06-26"
+    "2026-06-26",
+    "2026-06-29",
+    "2026-07-01"
   ],
   "bond": {
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-18": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-25": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-06-15": {
       "drafting": [],
       "inquiry": [],
@@ -50,13 +204,7 @@
         }
       ],
       "payment": [],
-      "listing": [
-        {
-          "code": "123271",
-          "name": "123271（通合转债）+300491（通合科技）",
-          "market": "SZ"
-        }
-      ]
+      "listing": []
     },
     "2026-06-18": {
       "drafting": [],
@@ -88,7 +236,13 @@
     "2026-06-23": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "118071",
+          "name": "118071（华峰转债）+688200（华峰测控）",
+          "market": "SH"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -107,6 +261,20 @@
       "listing": []
     },
     "2026-06-26": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-01": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -115,6 +283,139 @@
     }
   },
   "convertible_bond": {
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-18": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-25": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-06-15": {
       "drafting": [],
       "inquiry": [],
@@ -151,13 +452,7 @@
         }
       ],
       "payment": [],
-      "listing": [
-        {
-          "code": "123271",
-          "name": "123271（通合转债）+300491（通合科技）",
-          "market": "SZ"
-        }
-      ]
+      "listing": []
     },
     "2026-06-18": {
       "drafting": [],
@@ -189,7 +484,13 @@
     "2026-06-23": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "118071",
+          "name": "118071（华峰转债）+688200（华峰测控）",
+          "market": "SH"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -208,6 +509,20 @@
       "listing": []
     },
     "2026-06-26": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-06-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-01": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
