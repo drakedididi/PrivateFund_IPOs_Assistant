@@ -1,0 +1,3584 @@
+{
+  "generated_at": "2026-05-07 16:36:39",
+  "reference_date": "2026-05-07",
+  "date_list": [
+    "2025-11-11",
+    "2025-12-19",
+    "2025-12-22",
+    "2026-02-02",
+    "2026-04-01",
+    "2026-04-07",
+    "2026-04-08",
+    "2026-04-09",
+    "2026-04-10",
+    "2026-04-13",
+    "2026-04-14",
+    "2026-04-15",
+    "2026-04-16",
+    "2026-04-17",
+    "2026-04-20",
+    "2026-04-21",
+    "2026-04-22",
+    "2026-04-24",
+    "2026-04-27",
+    "2026-04-28",
+    "2026-04-29",
+    "2026-04-30",
+    "2026-05-04",
+    "2026-05-05",
+    "2026-05-06",
+    "2026-05-07",
+    "2026-05-08",
+    "2026-05-11",
+    "2026-05-12",
+    "2026-05-13",
+    "2026-05-14",
+    "2026-05-15"
+  ],
+  "a_share": {
+    "all": {
+      "2025-11-11": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "180306",
+            "name": "华夏安博仓储REIT",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2025-12-19": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "180306",
+            "name": "华夏安博仓储REIT",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2025-12-22": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508050",
+            "name": "中核清能",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-02-02": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "508050",
+            "name": "中核清能",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-01": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508020",
+            "name": "隧道REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-07": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920177",
+            "name": "恒道科技",
+            "market": "BJ"
+          },
+          {
+            "code": "603293",
+            "name": "埃泰克",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-08": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "301513",
+            "name": "尚水智能",
+            "market": "SZ"
+          },
+          {
+            "code": "180503",
+            "name": "中航北京昌保租赁住房REIT",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-09": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920191",
+            "name": "瑞尔竞达",
+            "market": "BJ"
+          },
+          {
+            "code": "688820",
+            "name": "盛合晶微",
+            "market": "SH"
+          }
+        ],
+        "payment": [
+          {
+            "code": "603293",
+            "name": "埃泰克",
+            "market": "SH"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-10": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "001312",
+            "name": "福恩股份",
+            "market": "SZ"
+          }
+        ],
+        "payment": [
+          {
+            "code": "301513",
+            "name": "尚水智能",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-13": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920125",
+            "name": "鸿仕达",
+            "market": "BJ"
+          }
+        ],
+        "payment": [
+          {
+            "code": "688820",
+            "name": "盛合晶微",
+            "market": "SH"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-14": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "688808",
+            "name": "联讯仪器",
+            "market": "SH"
+          }
+        ],
+        "payment": [
+          {
+            "code": "001312",
+            "name": "福恩股份",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-15": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920156",
+            "name": "海昌智能",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-16": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "688808",
+            "name": "联讯仪器",
+            "market": "SH"
+          }
+        ],
+        "listing": [
+          {
+            "code": "920177",
+            "name": "恒道科技",
+            "market": "BJ"
+          },
+          {
+            "code": "603293",
+            "name": "埃泰克",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-17": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "301513",
+            "name": "尚水智能",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2026-04-20": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920186",
+            "name": "中科仪",
+            "market": "BJ"
+          },
+          {
+            "code": "301599",
+            "name": "理奇智能",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920191",
+            "name": "瑞尔竞达",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-21": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "001312",
+            "name": "福恩股份",
+            "market": "SZ"
+          },
+          {
+            "code": "688820",
+            "name": "盛合晶微",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-22": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920200",
+            "name": "振宏",
+            "market": "BJ"
+          }
+        ],
+        "payment": [
+          {
+            "code": "301599",
+            "name": "理奇智能",
+            "market": "SZ"
+          }
+        ],
+        "listing": [
+          {
+            "code": "508020",
+            "name": "隧道REIT",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-24": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "301531",
+            "name": "春光集团",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "688808",
+            "name": "联讯仪器",
+            "market": "SH"
+          },
+          {
+            "code": "920125",
+            "name": "鸿仕达",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-27": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920178",
+            "name": "锐翔智能",
+            "market": "BJ"
+          },
+          {
+            "code": "603407",
+            "name": "长裕集团",
+            "market": "SH"
+          },
+          {
+            "code": "508093",
+            "name": "北投REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920156",
+            "name": "海昌智能",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-28": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "301531",
+            "name": "春光集团",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-29": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "603407",
+            "name": "长裕集团",
+            "market": "SH"
+          }
+        ],
+        "listing": [
+          {
+            "code": "920186",
+            "name": "中科仪",
+            "market": "BJ"
+          },
+          {
+            "code": "180503",
+            "name": "中航北京昌保租赁住房REIT",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2026-04-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "301599",
+            "name": "理奇智能",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2026-05-04": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-05": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-06": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920096",
+            "name": "嘉晨智能",
+            "market": "BJ"
+          },
+          {
+            "code": "001393",
+            "name": "维通利",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-07": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "001365",
+            "name": "天海电子",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920200",
+            "name": "振宏",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-05-08": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "001393",
+            "name": "维通利",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-05-11": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "001365",
+            "name": "天海电子",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-05-12": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-13": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "603435",
+            "name": "嘉德利",
+            "market": "SH"
+          },
+          {
+            "code": "001237",
+            "name": "惠康科技",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-14": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-15": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "603435",
+            "name": "嘉德利",
+            "market": "SH"
+          },
+          {
+            "code": "001237",
+            "name": "惠康科技",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      }
+    },
+    "hs": {
+      "2025-11-11": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "180306",
+            "name": "华夏安博仓储REIT",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2025-12-19": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "180306",
+            "name": "华夏安博仓储REIT",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2025-12-22": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508050",
+            "name": "中核清能",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-02-02": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "508050",
+            "name": "中核清能",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-01": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508020",
+            "name": "隧道REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-07": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "603293",
+            "name": "埃泰克",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-08": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "301513",
+            "name": "尚水智能",
+            "market": "SZ"
+          },
+          {
+            "code": "180503",
+            "name": "中航北京昌保租赁住房REIT",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-09": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "688820",
+            "name": "盛合晶微",
+            "market": "SH"
+          }
+        ],
+        "payment": [
+          {
+            "code": "603293",
+            "name": "埃泰克",
+            "market": "SH"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-10": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "001312",
+            "name": "福恩股份",
+            "market": "SZ"
+          }
+        ],
+        "payment": [
+          {
+            "code": "301513",
+            "name": "尚水智能",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-13": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "688820",
+            "name": "盛合晶微",
+            "market": "SH"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-14": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "688808",
+            "name": "联讯仪器",
+            "market": "SH"
+          }
+        ],
+        "payment": [
+          {
+            "code": "001312",
+            "name": "福恩股份",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-15": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-16": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "688808",
+            "name": "联讯仪器",
+            "market": "SH"
+          }
+        ],
+        "listing": [
+          {
+            "code": "603293",
+            "name": "埃泰克",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-17": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "301513",
+            "name": "尚水智能",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2026-04-20": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "301599",
+            "name": "理奇智能",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-21": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "001312",
+            "name": "福恩股份",
+            "market": "SZ"
+          },
+          {
+            "code": "688820",
+            "name": "盛合晶微",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-22": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "301599",
+            "name": "理奇智能",
+            "market": "SZ"
+          }
+        ],
+        "listing": [
+          {
+            "code": "508020",
+            "name": "隧道REIT",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-24": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "301531",
+            "name": "春光集团",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "688808",
+            "name": "联讯仪器",
+            "market": "SH"
+          }
+        ]
+      },
+      "2026-04-27": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "603407",
+            "name": "长裕集团",
+            "market": "SH"
+          },
+          {
+            "code": "508093",
+            "name": "北投REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-28": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "301531",
+            "name": "春光集团",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-04-29": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "603407",
+            "name": "长裕集团",
+            "market": "SH"
+          }
+        ],
+        "listing": [
+          {
+            "code": "180503",
+            "name": "中航北京昌保租赁住房REIT",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2026-04-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "301599",
+            "name": "理奇智能",
+            "market": "SZ"
+          }
+        ]
+      },
+      "2026-05-04": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-05": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-06": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "001393",
+            "name": "维通利",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-07": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "001365",
+            "name": "天海电子",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-08": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "001393",
+            "name": "维通利",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-05-11": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "001365",
+            "name": "天海电子",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      },
+      "2026-05-12": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-13": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "603435",
+            "name": "嘉德利",
+            "market": "SH"
+          },
+          {
+            "code": "001237",
+            "name": "惠康科技",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-14": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-15": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [
+          {
+            "code": "603435",
+            "name": "嘉德利",
+            "market": "SH"
+          },
+          {
+            "code": "001237",
+            "name": "惠康科技",
+            "market": "SZ"
+          }
+        ],
+        "listing": []
+      }
+    },
+    "bj": {
+      "2025-11-11": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2025-12-19": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2025-12-22": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-02-02": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-01": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-07": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920177",
+            "name": "恒道科技",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-08": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-09": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920191",
+            "name": "瑞尔竞达",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-10": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-13": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920125",
+            "name": "鸿仕达",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-14": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-15": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920156",
+            "name": "海昌智能",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-16": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920177",
+            "name": "恒道科技",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-17": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-20": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920186",
+            "name": "中科仪",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920191",
+            "name": "瑞尔竞达",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-21": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-22": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920200",
+            "name": "振宏",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-24": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920125",
+            "name": "鸿仕达",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-27": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920178",
+            "name": "锐翔智能",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920156",
+            "name": "海昌智能",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-28": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-04-29": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920186",
+            "name": "中科仪",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-04-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-04": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-05": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-06": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "920096",
+            "name": "嘉晨智能",
+            "market": "BJ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-07": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": [
+          {
+            "code": "920200",
+            "name": "振宏",
+            "market": "BJ"
+          }
+        ]
+      },
+      "2026-05-08": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-11": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-12": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-13": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-14": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-05-15": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      }
+    }
+  },
+  "all": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "180306",
+          "name": "华夏安博仓储REIT",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "180306",
+          "name": "华夏安博仓储REIT",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508050",
+          "name": "中核清能",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "508050",
+          "name": "中核清能",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508020",
+          "name": "隧道REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920177",
+          "name": "恒道科技",
+          "market": "BJ"
+        },
+        {
+          "code": "603293",
+          "name": "埃泰克",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "301513",
+          "name": "尚水智能",
+          "market": "SZ"
+        },
+        {
+          "code": "180503",
+          "name": "中航北京昌保租赁住房REIT",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920191",
+          "name": "瑞尔竞达",
+          "market": "BJ"
+        },
+        {
+          "code": "688820",
+          "name": "盛合晶微",
+          "market": "SH"
+        }
+      ],
+      "payment": [
+        {
+          "code": "603293",
+          "name": "埃泰克",
+          "market": "SH"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "001312",
+          "name": "福恩股份",
+          "market": "SZ"
+        }
+      ],
+      "payment": [
+        {
+          "code": "301513",
+          "name": "尚水智能",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920125",
+          "name": "鸿仕达",
+          "market": "BJ"
+        }
+      ],
+      "payment": [
+        {
+          "code": "688820",
+          "name": "盛合晶微",
+          "market": "SH"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "688808",
+          "name": "联讯仪器",
+          "market": "SH"
+        }
+      ],
+      "payment": [
+        {
+          "code": "001312",
+          "name": "福恩股份",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920156",
+          "name": "海昌智能",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "688808",
+          "name": "联讯仪器",
+          "market": "SH"
+        }
+      ],
+      "listing": [
+        {
+          "code": "920177",
+          "name": "恒道科技",
+          "market": "BJ"
+        },
+        {
+          "code": "603293",
+          "name": "埃泰克",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "301513",
+          "name": "尚水智能",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920186",
+          "name": "中科仪",
+          "market": "BJ"
+        },
+        {
+          "code": "301599",
+          "name": "理奇智能",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920191",
+          "name": "瑞尔竞达",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "001312",
+          "name": "福恩股份",
+          "market": "SZ"
+        },
+        {
+          "code": "688820",
+          "name": "盛合晶微",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920200",
+          "name": "振宏",
+          "market": "BJ"
+        }
+      ],
+      "payment": [
+        {
+          "code": "301599",
+          "name": "理奇智能",
+          "market": "SZ"
+        }
+      ],
+      "listing": [
+        {
+          "code": "508020",
+          "name": "隧道REIT",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "301531",
+          "name": "春光集团",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "688808",
+          "name": "联讯仪器",
+          "market": "SH"
+        },
+        {
+          "code": "920125",
+          "name": "鸿仕达",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920178",
+          "name": "锐翔智能",
+          "market": "BJ"
+        },
+        {
+          "code": "603407",
+          "name": "长裕集团",
+          "market": "SH"
+        },
+        {
+          "code": "508093",
+          "name": "北投REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920156",
+          "name": "海昌智能",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "301531",
+          "name": "春光集团",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "603407",
+          "name": "长裕集团",
+          "market": "SH"
+        }
+      ],
+      "listing": [
+        {
+          "code": "920186",
+          "name": "中科仪",
+          "market": "BJ"
+        },
+        {
+          "code": "180503",
+          "name": "中航北京昌保租赁住房REIT",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "301599",
+          "name": "理奇智能",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920096",
+          "name": "嘉晨智能",
+          "market": "BJ"
+        },
+        {
+          "code": "001393",
+          "name": "维通利",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "001365",
+          "name": "天海电子",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920200",
+          "name": "振宏",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "001393",
+          "name": "维通利",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "001365",
+          "name": "天海电子",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "603435",
+          "name": "嘉德利",
+          "market": "SH"
+        },
+        {
+          "code": "001237",
+          "name": "惠康科技",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "603435",
+          "name": "嘉德利",
+          "market": "SH"
+        },
+        {
+          "code": "001237",
+          "name": "惠康科技",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    }
+  },
+  "hs": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "180306",
+          "name": "华夏安博仓储REIT",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "180306",
+          "name": "华夏安博仓储REIT",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508050",
+          "name": "中核清能",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "508050",
+          "name": "中核清能",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508020",
+          "name": "隧道REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "603293",
+          "name": "埃泰克",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "301513",
+          "name": "尚水智能",
+          "market": "SZ"
+        },
+        {
+          "code": "180503",
+          "name": "中航北京昌保租赁住房REIT",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "688820",
+          "name": "盛合晶微",
+          "market": "SH"
+        }
+      ],
+      "payment": [
+        {
+          "code": "603293",
+          "name": "埃泰克",
+          "market": "SH"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "001312",
+          "name": "福恩股份",
+          "market": "SZ"
+        }
+      ],
+      "payment": [
+        {
+          "code": "301513",
+          "name": "尚水智能",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "688820",
+          "name": "盛合晶微",
+          "market": "SH"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "688808",
+          "name": "联讯仪器",
+          "market": "SH"
+        }
+      ],
+      "payment": [
+        {
+          "code": "001312",
+          "name": "福恩股份",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "688808",
+          "name": "联讯仪器",
+          "market": "SH"
+        }
+      ],
+      "listing": [
+        {
+          "code": "603293",
+          "name": "埃泰克",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "301513",
+          "name": "尚水智能",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "301599",
+          "name": "理奇智能",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "001312",
+          "name": "福恩股份",
+          "market": "SZ"
+        },
+        {
+          "code": "688820",
+          "name": "盛合晶微",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "301599",
+          "name": "理奇智能",
+          "market": "SZ"
+        }
+      ],
+      "listing": [
+        {
+          "code": "508020",
+          "name": "隧道REIT",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "301531",
+          "name": "春光集团",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "688808",
+          "name": "联讯仪器",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "603407",
+          "name": "长裕集团",
+          "market": "SH"
+        },
+        {
+          "code": "508093",
+          "name": "北投REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "301531",
+          "name": "春光集团",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "603407",
+          "name": "长裕集团",
+          "market": "SH"
+        }
+      ],
+      "listing": [
+        {
+          "code": "180503",
+          "name": "中航北京昌保租赁住房REIT",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "301599",
+          "name": "理奇智能",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "001393",
+          "name": "维通利",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "001365",
+          "name": "天海电子",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "001393",
+          "name": "维通利",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "001365",
+          "name": "天海电子",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "603435",
+          "name": "嘉德利",
+          "market": "SH"
+        },
+        {
+          "code": "001237",
+          "name": "惠康科技",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [
+        {
+          "code": "603435",
+          "name": "嘉德利",
+          "market": "SH"
+        },
+        {
+          "code": "001237",
+          "name": "惠康科技",
+          "market": "SZ"
+        }
+      ],
+      "listing": []
+    }
+  },
+  "bj": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920177",
+          "name": "恒道科技",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920191",
+          "name": "瑞尔竞达",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920125",
+          "name": "鸿仕达",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920156",
+          "name": "海昌智能",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920177",
+          "name": "恒道科技",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920186",
+          "name": "中科仪",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920191",
+          "name": "瑞尔竞达",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920200",
+          "name": "振宏",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920125",
+          "name": "鸿仕达",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920178",
+          "name": "锐翔智能",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920156",
+          "name": "海昌智能",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920186",
+          "name": "中科仪",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "920096",
+          "name": "嘉晨智能",
+          "market": "BJ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "920200",
+          "name": "振宏",
+          "market": "BJ"
+        }
+      ]
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    }
+  },
+  "bond": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "123268",
+          "name": "123268（本川转债）+300964（本川智能）",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "113702",
+          "name": "113702（斯达转债）+603290（斯达半导）",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    }
+  },
+  "convertible_bond": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "123268",
+          "name": "123268（本川转债）+300964（本川智能）",
+          "market": "SZ"
+        }
+      ]
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "113702",
+          "name": "113702（斯达转债）+603290（斯达半导）",
+          "market": "SH"
+        }
+      ]
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    }
+  },
+  "h_share": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "01609",
+          "name": "天星医疗",
+          "market": "HK"
+        }
+      ]
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "01187",
+          "name": "可孚医疗",
+          "market": "HK"
+        }
+      ]
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    }
+  },
+  "hk": {
+    "2025-11-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-19": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2025-12-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-02-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-16": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-17": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-20": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-22": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-24": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-27": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-28": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-29": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-04-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-04": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-05": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "01609",
+          "name": "天星医疗",
+          "market": "HK"
+        }
+      ]
+    },
+    "2026-05-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": [
+        {
+          "code": "01187",
+          "name": "可孚医疗",
+          "market": "HK"
+        }
+      ]
+    },
+    "2026-05-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-11": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-12": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-13": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-14": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-05-15": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    }
+  }
+}

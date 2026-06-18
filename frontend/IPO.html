@@ -1970,6 +1970,11 @@
       try {
         const ts = Date.now();
         const DATA_BASE_URL = "https://pub-726d3f620e2c4dbf99889a63c9a5687d.r2.dev";
+        const dataUrls = (fileName) => [
+          `./data/${fileName}`,
+          `../data/${fileName}`,
+          `${DATA_BASE_URL}/${fileName}`
+        ];
         const tryFetchJson = async (path) => {
           try {
             const response = await fetch(`${path}?t=${ts}`);
@@ -1981,13 +1986,22 @@
             return null;
           }
         };
+        const tryFetchFirstJson = async (paths) => {
+          for (const path of paths) {
+            const data = await tryFetchJson(path);
+            if (data) {
+              return data;
+            }
+          }
+          return null;
+        };
 
         const [holidayData, ashareData, bondData, hshareData, fallbackData] = await Promise.all([
-          tryFetchJson("../data/trading_holidays.json"),
-          tryFetchJson(`${DATA_BASE_URL}/Asharecalendar_data.json`),
-          tryFetchJson(`${DATA_BASE_URL}/bondcalendar_data.json`),
-          tryFetchJson(`${DATA_BASE_URL}/Hsharecalendar_data.json`),
-          tryFetchJson(`${DATA_BASE_URL}/calendar_data.json`)
+          tryFetchFirstJson(["./data/trading_holidays.json", "../data/trading_holidays.json"]),
+          tryFetchFirstJson(dataUrls("Asharecalendar_data.json")),
+          tryFetchFirstJson(dataUrls("bondcalendar_data.json")),
+          tryFetchFirstJson(dataUrls("Hsharecalendar_data.json")),
+          tryFetchFirstJson(dataUrls("calendar_data.json"))
         ]);
         applyTradingHolidays(holidayData);
         const baseData = ashareData || fallbackData;
