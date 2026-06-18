@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-18 07:13:33",
+  "generated_at": "2026-06-18 22:57:34",
   "reference_date": "2026-06-18",
   "date_list": [
     "2026-05-06",
@@ -512,12 +512,7 @@
       },
       "2026-06-25": {
         "drafting": [],
-        "inquiry": [
-          {
-            "name": "托伦斯",
-            "market": "SZ"
-          }
-        ],
+        "inquiry": [],
         "subscribe": [],
         "payment": [],
         "listing": []
@@ -932,12 +927,7 @@
       },
       "2026-06-25": {
         "drafting": [],
-        "inquiry": [
-          {
-            "name": "托伦斯",
-            "market": "SZ"
-          }
-        ],
+        "inquiry": [],
         "subscribe": [],
         "payment": [],
         "listing": []
@@ -1792,12 +1782,7 @@
     },
     "2026-06-25": {
       "drafting": [],
-      "inquiry": [
-        {
-          "name": "托伦斯",
-          "market": "SZ"
-        }
-      ],
+      "inquiry": [],
       "subscribe": [],
       "payment": [],
       "listing": []
@@ -2212,12 +2197,7 @@
     },
     "2026-06-25": {
       "drafting": [],
-      "inquiry": [
-        {
-          "name": "托伦斯",
-          "market": "SZ"
-        }
-      ],
+      "inquiry": [],
       "subscribe": [],
       "payment": [],
       "listing": []
@@ -3276,7 +3256,13 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01392",
+          "name": "海清智元",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-23": {
       "drafting": [],
@@ -3507,7 +3493,13 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01392",
+          "name": "海清智元",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-23": {
       "drafting": [],
