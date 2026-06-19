@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-18 23:33:54",
-  "reference_date": "2026-06-18",
+  "generated_at": "2026-06-19 00:25:07",
+  "reference_date": "2026-06-19",
   "date_list": [
     "2026-05-06",
     "2026-05-07",
@@ -198,17 +198,17 @@
           },
           {
             "code": "508602",
-            "name": "国泰海通砂之船商业REIT",
+            "name": "砂之船",
             "market": "SH"
           },
           {
             "code": "508601",
-            "name": "中信建投首农商业REIT",
+            "name": "首农商业",
             "market": "SH"
           },
           {
             "code": "508603",
-            "name": "中金唯品会商业REIT",
+            "name": "唯品商业",
             "market": "SH"
           }
         ],
@@ -226,7 +226,7 @@
           },
           {
             "code": "508600",
-            "name": "汇添富上海地产商业REIT",
+            "name": "地产商业",
             "market": "SH"
           }
         ],
@@ -440,22 +440,22 @@
         "listing": [
           {
             "code": "508600",
-            "name": "汇添富上海地产商业REIT",
+            "name": "地产商业",
             "market": "SH"
           },
           {
             "code": "508602",
-            "name": "国泰海通砂之船商业REIT",
+            "name": "砂之船",
             "market": "SH"
           },
           {
             "code": "508601",
-            "name": "中信建投首农商业REIT",
+            "name": "首农商业",
             "market": "SH"
           },
           {
             "code": "508603",
-            "name": "中金唯品会商业REIT",
+            "name": "唯品商业",
             "market": "SH"
           }
         ]
@@ -682,17 +682,17 @@
         "subscribe": [
           {
             "code": "508602",
-            "name": "国泰海通砂之船商业REIT",
+            "name": "砂之船",
             "market": "SH"
           },
           {
             "code": "508601",
-            "name": "中信建投首农商业REIT",
+            "name": "首农商业",
             "market": "SH"
           },
           {
             "code": "508603",
-            "name": "中金唯品会商业REIT",
+            "name": "唯品商业",
             "market": "SH"
           }
         ],
@@ -705,7 +705,7 @@
         "subscribe": [
           {
             "code": "508600",
-            "name": "汇添富上海地产商业REIT",
+            "name": "地产商业",
             "market": "SH"
           }
         ],
@@ -860,22 +860,22 @@
         "listing": [
           {
             "code": "508600",
-            "name": "汇添富上海地产商业REIT",
+            "name": "地产商业",
             "market": "SH"
           },
           {
             "code": "508602",
-            "name": "国泰海通砂之船商业REIT",
+            "name": "砂之船",
             "market": "SH"
           },
           {
             "code": "508601",
-            "name": "中信建投首农商业REIT",
+            "name": "首农商业",
             "market": "SH"
           },
           {
             "code": "508603",
-            "name": "中金唯品会商业REIT",
+            "name": "唯品商业",
             "market": "SH"
           }
         ]
@@ -1468,17 +1468,17 @@
         },
         {
           "code": "508602",
-          "name": "国泰海通砂之船商业REIT",
+          "name": "砂之船",
           "market": "SH"
         },
         {
           "code": "508601",
-          "name": "中信建投首农商业REIT",
+          "name": "首农商业",
           "market": "SH"
         },
         {
           "code": "508603",
-          "name": "中金唯品会商业REIT",
+          "name": "唯品商业",
           "market": "SH"
         }
       ],
@@ -1496,7 +1496,7 @@
         },
         {
           "code": "508600",
-          "name": "汇添富上海地产商业REIT",
+          "name": "地产商业",
           "market": "SH"
         }
       ],
@@ -1710,22 +1710,22 @@
       "listing": [
         {
           "code": "508600",
-          "name": "汇添富上海地产商业REIT",
+          "name": "地产商业",
           "market": "SH"
         },
         {
           "code": "508602",
-          "name": "国泰海通砂之船商业REIT",
+          "name": "砂之船",
           "market": "SH"
         },
         {
           "code": "508601",
-          "name": "中信建投首农商业REIT",
+          "name": "首农商业",
           "market": "SH"
         },
         {
           "code": "508603",
-          "name": "中金唯品会商业REIT",
+          "name": "唯品商业",
           "market": "SH"
         }
       ]
@@ -1952,17 +1952,17 @@
       "subscribe": [
         {
           "code": "508602",
-          "name": "国泰海通砂之船商业REIT",
+          "name": "砂之船",
           "market": "SH"
         },
         {
           "code": "508601",
-          "name": "中信建投首农商业REIT",
+          "name": "首农商业",
           "market": "SH"
         },
         {
           "code": "508603",
-          "name": "中金唯品会商业REIT",
+          "name": "唯品商业",
           "market": "SH"
         }
       ],
@@ -1975,7 +1975,7 @@
       "subscribe": [
         {
           "code": "508600",
-          "name": "汇添富上海地产商业REIT",
+          "name": "地产商业",
           "market": "SH"
         }
       ],
@@ -2130,22 +2130,22 @@
       "listing": [
         {
           "code": "508600",
-          "name": "汇添富上海地产商业REIT",
+          "name": "地产商业",
           "market": "SH"
         },
         {
           "code": "508602",
-          "name": "国泰海通砂之船商业REIT",
+          "name": "砂之船",
           "market": "SH"
         },
         {
           "code": "508601",
-          "name": "中信建投首农商业REIT",
+          "name": "首农商业",
           "market": "SH"
         },
         {
           "code": "508603",
-          "name": "中金唯品会商业REIT",
+          "name": "唯品商业",
           "market": "SH"
         }
       ]
