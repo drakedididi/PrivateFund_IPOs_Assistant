@@ -1,8 +1,7 @@
 {
-  "generated_at": "2026-06-22 02:08:09",
+  "generated_at": "2026-06-22 22:46:24",
   "reference_date": "2026-06-22",
   "date_list": [
-    "2026-05-06",
     "2026-05-07",
     "2026-05-11",
     "2026-05-13",
@@ -34,23 +33,12 @@
     "2026-06-30",
     "2026-07-01",
     "2026-07-02",
-    "2026-07-03"
+    "2026-07-03",
+    "2026-07-06",
+    "2026-07-23"
   ],
   "a_share": {
     "all": {
-      "2026-05-06": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [
-          {
-            "code": "920096",
-            "name": "嘉晨智能",
-            "market": "BJ"
-          }
-        ],
-        "payment": [],
-        "listing": []
-      },
       "2026-05-07": {
         "drafting": [],
         "inquiry": [],
@@ -139,11 +127,6 @@
             "code": "001365",
             "name": "天海电子",
             "market": "SZ"
-          },
-          {
-            "code": "920096",
-            "name": "嘉晨智能",
-            "market": "BJ"
           }
         ]
       },
@@ -197,21 +180,6 @@
             "code": "920211",
             "name": "新睿电子",
             "market": "BJ"
-          },
-          {
-            "code": "508602",
-            "name": "砂之船",
-            "market": "SH"
-          },
-          {
-            "code": "508601",
-            "name": "首农商业",
-            "market": "SH"
-          },
-          {
-            "code": "508603",
-            "name": "唯品商业",
-            "market": "SH"
           }
         ],
         "payment": [],
@@ -434,21 +402,6 @@
             "code": "508600",
             "name": "地产商业",
             "market": "SH"
-          },
-          {
-            "code": "508602",
-            "name": "砂之船",
-            "market": "SH"
-          },
-          {
-            "code": "508601",
-            "name": "首农商业",
-            "market": "SH"
-          },
-          {
-            "code": "508603",
-            "name": "唯品商业",
-            "market": "SH"
           }
         ]
       },
@@ -485,7 +438,13 @@
             "market": "SZ"
           }
         ],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "920136",
+            "name": "永励精密",
+            "market": "BJ"
+          }
+        ],
         "payment": [
           {
             "code": "001248",
@@ -493,7 +452,13 @@
             "market": "SZ"
           }
         ],
-        "listing": []
+        "listing": [
+          {
+            "code": "688797",
+            "name": "臻宝科技",
+            "market": "SH"
+          }
+        ]
       },
       "2026-06-25": {
         "drafting": [],
@@ -557,19 +522,44 @@
       "2026-07-03": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "181001",
+            "name": "创金合信北京国资公司REIT",
+            "market": "SZ"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-06": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508605",
+            "name": "华夏保利商业REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-23": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508607",
+            "name": "华安陆家嘴商业REIT",
+            "market": "SH"
+          }
+        ],
         "payment": [],
         "listing": []
       }
     },
     "hs": {
-      "2026-05-06": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
-      },
       "2026-05-07": {
         "drafting": [],
         "inquiry": [],
@@ -685,23 +675,7 @@
       "2026-05-25": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [
-          {
-            "code": "508602",
-            "name": "砂之船",
-            "market": "SH"
-          },
-          {
-            "code": "508601",
-            "name": "首农商业",
-            "market": "SH"
-          },
-          {
-            "code": "508603",
-            "name": "唯品商业",
-            "market": "SH"
-          }
-        ],
+        "subscribe": [],
         "payment": [],
         "listing": []
       },
@@ -858,21 +832,6 @@
             "code": "508600",
             "name": "地产商业",
             "market": "SH"
-          },
-          {
-            "code": "508602",
-            "name": "砂之船",
-            "market": "SH"
-          },
-          {
-            "code": "508601",
-            "name": "首农商业",
-            "market": "SH"
-          },
-          {
-            "code": "508603",
-            "name": "唯品商业",
-            "market": "SH"
           }
         ]
       },
@@ -912,7 +871,13 @@
             "market": "SZ"
           }
         ],
-        "listing": []
+        "listing": [
+          {
+            "code": "688797",
+            "name": "臻宝科技",
+            "market": "SH"
+          }
+        ]
       },
       "2026-06-25": {
         "drafting": [],
@@ -976,25 +941,44 @@
       "2026-07-03": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
-      }
-    },
-    "bj": {
-      "2026-05-06": {
-        "drafting": [],
-        "inquiry": [],
         "subscribe": [
           {
-            "code": "920096",
-            "name": "嘉晨智能",
-            "market": "BJ"
+            "code": "181001",
+            "name": "创金合信北京国资公司REIT",
+            "market": "SZ"
           }
         ],
         "payment": [],
         "listing": []
       },
+      "2026-07-06": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508605",
+            "name": "华夏保利商业REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-23": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508607",
+            "name": "华安陆家嘴商业REIT",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      }
+    },
+    "bj": {
       "2026-05-07": {
         "drafting": [],
         "inquiry": [],
@@ -1040,13 +1024,7 @@
           }
         ],
         "payment": [],
-        "listing": [
-          {
-            "code": "920096",
-            "name": "嘉晨智能",
-            "market": "BJ"
-          }
-        ]
+        "listing": []
       },
       "2026-05-20": {
         "drafting": [],
@@ -1274,7 +1252,13 @@
       "2026-06-24": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "920136",
+            "name": "永励精密",
+            "market": "BJ"
+          }
+        ],
         "payment": [],
         "listing": []
       },
@@ -1321,6 +1305,20 @@
         "listing": []
       },
       "2026-07-03": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-06": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-23": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [],
@@ -1330,19 +1328,6 @@
     }
   },
   "all": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "920096",
-          "name": "嘉晨智能",
-          "market": "BJ"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -1431,11 +1416,6 @@
           "code": "001365",
           "name": "天海电子",
           "market": "SZ"
-        },
-        {
-          "code": "920096",
-          "name": "嘉晨智能",
-          "market": "BJ"
         }
       ]
     },
@@ -1489,21 +1469,6 @@
           "code": "920211",
           "name": "新睿电子",
           "market": "BJ"
-        },
-        {
-          "code": "508602",
-          "name": "砂之船",
-          "market": "SH"
-        },
-        {
-          "code": "508601",
-          "name": "首农商业",
-          "market": "SH"
-        },
-        {
-          "code": "508603",
-          "name": "唯品商业",
-          "market": "SH"
         }
       ],
       "payment": [],
@@ -1726,21 +1691,6 @@
           "code": "508600",
           "name": "地产商业",
           "market": "SH"
-        },
-        {
-          "code": "508602",
-          "name": "砂之船",
-          "market": "SH"
-        },
-        {
-          "code": "508601",
-          "name": "首农商业",
-          "market": "SH"
-        },
-        {
-          "code": "508603",
-          "name": "唯品商业",
-          "market": "SH"
         }
       ]
     },
@@ -1777,7 +1727,13 @@
           "market": "SZ"
         }
       ],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "920136",
+          "name": "永励精密",
+          "market": "BJ"
+        }
+      ],
       "payment": [
         {
           "code": "001248",
@@ -1785,7 +1741,13 @@
           "market": "SZ"
         }
       ],
-      "listing": []
+      "listing": [
+        {
+          "code": "688797",
+          "name": "臻宝科技",
+          "market": "SH"
+        }
+      ]
     },
     "2026-06-25": {
       "drafting": [],
@@ -1849,19 +1811,44 @@
     "2026-07-03": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "181001",
+          "name": "创金合信北京国资公司REIT",
+          "market": "SZ"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508605",
+          "name": "华夏保利商业REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508607",
+          "name": "华安陆家嘴商业REIT",
+          "market": "SH"
+        }
+      ],
       "payment": [],
       "listing": []
     }
   },
   "hs": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -1977,23 +1964,7 @@
     "2026-05-25": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "508602",
-          "name": "砂之船",
-          "market": "SH"
-        },
-        {
-          "code": "508601",
-          "name": "首农商业",
-          "market": "SH"
-        },
-        {
-          "code": "508603",
-          "name": "唯品商业",
-          "market": "SH"
-        }
-      ],
+      "subscribe": [],
       "payment": [],
       "listing": []
     },
@@ -2150,21 +2121,6 @@
           "code": "508600",
           "name": "地产商业",
           "market": "SH"
-        },
-        {
-          "code": "508602",
-          "name": "砂之船",
-          "market": "SH"
-        },
-        {
-          "code": "508601",
-          "name": "首农商业",
-          "market": "SH"
-        },
-        {
-          "code": "508603",
-          "name": "唯品商业",
-          "market": "SH"
         }
       ]
     },
@@ -2204,7 +2160,13 @@
           "market": "SZ"
         }
       ],
-      "listing": []
+      "listing": [
+        {
+          "code": "688797",
+          "name": "臻宝科技",
+          "market": "SH"
+        }
+      ]
     },
     "2026-06-25": {
       "drafting": [],
@@ -2268,25 +2230,44 @@
     "2026-07-03": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    }
-  },
-  "bj": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
       "subscribe": [
         {
-          "code": "920096",
-          "name": "嘉晨智能",
-          "market": "BJ"
+          "code": "181001",
+          "name": "创金合信北京国资公司REIT",
+          "market": "SZ"
         }
       ],
       "payment": [],
       "listing": []
     },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508605",
+          "name": "华夏保利商业REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508607",
+          "name": "华安陆家嘴商业REIT",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    }
+  },
+  "bj": {
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -2332,13 +2313,7 @@
         }
       ],
       "payment": [],
-      "listing": [
-        {
-          "code": "920096",
-          "name": "嘉晨智能",
-          "market": "BJ"
-        }
-      ]
+      "listing": []
     },
     "2026-05-20": {
       "drafting": [],
@@ -2566,7 +2541,13 @@
     "2026-06-24": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "920136",
+          "name": "永励精密",
+          "market": "BJ"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -2613,6 +2594,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -2621,13 +2616,6 @@
     }
   },
   "bond": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -2823,7 +2811,13 @@
     "2026-06-25": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "111025",
+          "name": "111025（圣泉转债）+605589（圣泉集团）",
+          "market": "SH"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -2863,6 +2857,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -2871,13 +2879,6 @@
     }
   },
   "convertible_bond": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -3073,7 +3074,13 @@
     "2026-06-25": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "111025",
+          "name": "111025（圣泉转债）+605589（圣泉集团）",
+          "market": "SH"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -3113,6 +3120,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -3121,13 +3142,6 @@
     }
   },
   "h_share": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -3300,7 +3314,18 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "06067",
+          "name": "星源材质",
+          "market": "HK"
+        },
+        {
+          "code": "06132",
+          "name": "华健未来-B",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-24": {
       "drafting": [],
@@ -3352,6 +3377,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -3360,13 +3399,6 @@
     }
   },
   "hk": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -3539,7 +3571,18 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "06067",
+          "name": "星源材质",
+          "market": "HK"
+        },
+        {
+          "code": "06132",
+          "name": "华健未来-B",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-24": {
       "drafting": [],
@@ -3591,6 +3634,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],

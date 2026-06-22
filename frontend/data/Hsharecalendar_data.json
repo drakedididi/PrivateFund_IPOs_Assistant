@@ -1,8 +1,7 @@
 {
-  "generated_at": "2026-06-22 02:08:09",
+  "generated_at": "2026-06-22 22:46:24",
   "reference_date": "2026-06-22",
   "date_list": [
-    "2026-05-06",
     "2026-05-07",
     "2026-05-11",
     "2026-05-13",
@@ -34,16 +33,11 @@
     "2026-06-30",
     "2026-07-01",
     "2026-07-02",
-    "2026-07-03"
+    "2026-07-03",
+    "2026-07-06",
+    "2026-07-23"
   ],
   "h_share": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -216,7 +210,18 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "06067",
+          "name": "星源材质",
+          "market": "HK"
+        },
+        {
+          "code": "06132",
+          "name": "华健未来-B",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-24": {
       "drafting": [],
@@ -268,6 +273,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -276,13 +295,6 @@
     }
   },
   "hk": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-07": {
       "drafting": [],
       "inquiry": [],
@@ -455,7 +467,18 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "06067",
+          "name": "星源材质",
+          "market": "HK"
+        },
+        {
+          "code": "06132",
+          "name": "华健未来-B",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-24": {
       "drafting": [],
@@ -507,6 +530,20 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
