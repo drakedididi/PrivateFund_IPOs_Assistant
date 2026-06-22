@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-21 23:07:51",
-  "reference_date": "2026-06-21",
+  "generated_at": "2026-06-22 00:08:12",
+  "reference_date": "2026-06-22",
   "date_list": [
     "2026-05-06",
     "2026-05-07",
@@ -25,14 +25,16 @@
     "2026-06-16",
     "2026-06-17",
     "2026-06-18",
-    "2026-06-19",
     "2026-06-22",
     "2026-06-23",
     "2026-06-24",
     "2026-06-25",
     "2026-06-26",
     "2026-06-29",
-    "2026-07-01"
+    "2026-06-30",
+    "2026-07-01",
+    "2026-07-02",
+    "2026-07-03"
   ],
   "a_share": {
     "all": {
@@ -393,12 +395,7 @@
       },
       "2026-06-16": {
         "drafting": [],
-        "inquiry": [
-          {
-            "name": "华润新能源",
-            "market": "SZ"
-          }
-        ],
+        "inquiry": [],
         "subscribe": [],
         "payment": [
           {
@@ -428,12 +425,7 @@
         "listing": []
       },
       "2026-06-18": {
-        "drafting": [
-          {
-            "name": "托伦斯",
-            "market": "SZ"
-          }
-        ],
+        "drafting": [],
         "inquiry": [],
         "subscribe": [],
         "payment": [],
@@ -459,13 +451,6 @@
             "market": "SH"
           }
         ]
-      },
-      "2026-06-19": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
       },
       "2026-06-22": {
         "drafting": [],
@@ -542,6 +527,13 @@
         "payment": [],
         "listing": []
       },
+      "2026-06-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
@@ -553,6 +545,20 @@
             "market": "SZ"
           }
         ],
+        "listing": []
+      },
+      "2026-07-02": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-03": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
         "listing": []
       }
     },
@@ -819,12 +825,7 @@
       },
       "2026-06-16": {
         "drafting": [],
-        "inquiry": [
-          {
-            "name": "华润新能源",
-            "market": "SZ"
-          }
-        ],
+        "inquiry": [],
         "subscribe": [],
         "payment": [
           {
@@ -848,12 +849,7 @@
         "listing": []
       },
       "2026-06-18": {
-        "drafting": [
-          {
-            "name": "托伦斯",
-            "market": "SZ"
-          }
-        ],
+        "drafting": [],
         "inquiry": [],
         "subscribe": [],
         "payment": [],
@@ -879,13 +875,6 @@
             "market": "SH"
           }
         ]
-      },
-      "2026-06-19": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
       },
       "2026-06-22": {
         "drafting": [],
@@ -957,6 +946,13 @@
         "payment": [],
         "listing": []
       },
+      "2026-06-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
@@ -968,6 +964,20 @@
             "market": "SZ"
           }
         ],
+        "listing": []
+      },
+      "2026-07-02": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-03": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
         "listing": []
       }
     },
@@ -1241,13 +1251,6 @@
         "payment": [],
         "listing": []
       },
-      "2026-06-19": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
-      },
       "2026-06-22": {
         "drafting": [],
         "inquiry": [],
@@ -1296,7 +1299,28 @@
         "payment": [],
         "listing": []
       },
+      "2026-06-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
       "2026-07-01": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-02": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-03": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [],
@@ -1663,12 +1687,7 @@
     },
     "2026-06-16": {
       "drafting": [],
-      "inquiry": [
-        {
-          "name": "华润新能源",
-          "market": "SZ"
-        }
-      ],
+      "inquiry": [],
       "subscribe": [],
       "payment": [
         {
@@ -1698,12 +1717,7 @@
       "listing": []
     },
     "2026-06-18": {
-      "drafting": [
-        {
-          "name": "托伦斯",
-          "market": "SZ"
-        }
-      ],
+      "drafting": [],
       "inquiry": [],
       "subscribe": [],
       "payment": [],
@@ -1729,13 +1743,6 @@
           "market": "SH"
         }
       ]
-    },
-    "2026-06-19": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
     },
     "2026-06-22": {
       "drafting": [],
@@ -1812,6 +1819,13 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
@@ -1823,6 +1837,20 @@
           "market": "SZ"
         }
       ],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
       "listing": []
     }
   },
@@ -2089,12 +2117,7 @@
     },
     "2026-06-16": {
       "drafting": [],
-      "inquiry": [
-        {
-          "name": "华润新能源",
-          "market": "SZ"
-        }
-      ],
+      "inquiry": [],
       "subscribe": [],
       "payment": [
         {
@@ -2118,12 +2141,7 @@
       "listing": []
     },
     "2026-06-18": {
-      "drafting": [
-        {
-          "name": "托伦斯",
-          "market": "SZ"
-        }
-      ],
+      "drafting": [],
       "inquiry": [],
       "subscribe": [],
       "payment": [],
@@ -2149,13 +2167,6 @@
           "market": "SH"
         }
       ]
-    },
-    "2026-06-19": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
     },
     "2026-06-22": {
       "drafting": [],
@@ -2227,6 +2238,13 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
@@ -2238,6 +2256,20 @@
           "market": "SZ"
         }
       ],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
       "listing": []
     }
   },
@@ -2511,13 +2543,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-19": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -2566,7 +2591,28 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],

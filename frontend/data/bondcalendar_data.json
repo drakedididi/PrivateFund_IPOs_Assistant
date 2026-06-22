@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-21 23:07:57",
-  "reference_date": "2026-06-21",
+  "generated_at": "2026-06-22 00:08:17",
+  "reference_date": "2026-06-22",
   "date_list": [
     "2026-05-06",
     "2026-05-07",
@@ -25,14 +25,16 @@
     "2026-06-16",
     "2026-06-17",
     "2026-06-18",
-    "2026-06-19",
     "2026-06-22",
     "2026-06-23",
     "2026-06-24",
     "2026-06-25",
     "2026-06-26",
     "2026-06-29",
-    "2026-07-01"
+    "2026-06-30",
+    "2026-07-01",
+    "2026-07-02",
+    "2026-07-03"
   ],
   "bond": {
     "2026-05-06": {
@@ -171,18 +173,7 @@
     "2026-06-15": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "113706",
-          "name": "113706（金帝转债）+603270（金帝股份）",
-          "market": "SH"
-        },
-        {
-          "code": "113705",
-          "name": "113705（豪26转债）+603809（豪能股份）",
-          "market": "SH"
-        }
-      ],
+      "subscribe": [],
       "payment": [],
       "listing": []
     },
@@ -196,30 +187,11 @@
     "2026-06-17": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "123273",
-          "name": "123273（三江转债）+301059（金三江）",
-          "market": "SZ"
-        }
-      ],
+      "subscribe": [],
       "payment": [],
       "listing": []
     },
     "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "118070",
-          "name": "118070（南芯转债）+688484（南芯科技）",
-          "market": "SH"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
-    "2026-06-19": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -285,7 +257,28 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -430,18 +423,7 @@
     "2026-06-15": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "113706",
-          "name": "113706（金帝转债）+603270（金帝股份）",
-          "market": "SH"
-        },
-        {
-          "code": "113705",
-          "name": "113705（豪26转债）+603809（豪能股份）",
-          "market": "SH"
-        }
-      ],
+      "subscribe": [],
       "payment": [],
       "listing": []
     },
@@ -455,30 +437,11 @@
     "2026-06-17": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "123273",
-          "name": "123273（三江转债）+301059（金三江）",
-          "market": "SZ"
-        }
-      ],
+      "subscribe": [],
       "payment": [],
       "listing": []
     },
     "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "118070",
-          "name": "118070（南芯转债）+688484（南芯科技）",
-          "market": "SH"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
-    "2026-06-19": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -544,7 +507,28 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],

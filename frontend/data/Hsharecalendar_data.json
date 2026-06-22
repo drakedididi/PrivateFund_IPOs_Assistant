@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-21 23:07:57",
-  "reference_date": "2026-06-21",
+  "generated_at": "2026-06-22 00:08:17",
+  "reference_date": "2026-06-22",
   "date_list": [
     "2026-05-06",
     "2026-05-07",
@@ -25,14 +25,16 @@
     "2026-06-16",
     "2026-06-17",
     "2026-06-18",
-    "2026-06-19",
     "2026-06-22",
     "2026-06-23",
     "2026-06-24",
     "2026-06-25",
     "2026-06-26",
     "2026-06-29",
-    "2026-07-01"
+    "2026-06-30",
+    "2026-07-01",
+    "2026-07-02",
+    "2026-07-03"
   ],
   "h_share": {
     "2026-05-06": {
@@ -173,13 +175,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "06658",
-          "name": "溜溜梅",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-16": {
       "drafting": [],
@@ -193,22 +189,9 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "06675",
-          "name": "SENASIC",
-          "market": "HK"
-        }
-      ]
-    },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
       "listing": []
     },
-    "2026-06-19": {
+    "2026-06-18": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -263,7 +246,28 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -410,13 +414,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "06658",
-          "name": "溜溜梅",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-16": {
       "drafting": [],
@@ -430,22 +428,9 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "06675",
-          "name": "SENASIC",
-          "market": "HK"
-        }
-      ]
-    },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
       "listing": []
     },
-    "2026-06-19": {
+    "2026-06-18": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -500,7 +485,28 @@
       "payment": [],
       "listing": []
     },
+    "2026-06-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-01": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-02": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-03": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
