@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23 01:36:08",
+  "generated_at": "2026-06-23 22:11:52",
   "reference_date": "2026-06-23",
   "date_list": [
     "2026-05-07",
@@ -482,11 +482,6 @@
             "code": "301583",
             "name": "托伦斯",
             "market": "SZ"
-          },
-          {
-            "code": "508059",
-            "name": "华泰三峡新能源REIT",
-            "market": "SH"
           }
         ],
         "payment": [],
@@ -502,7 +497,13 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "508059",
+            "name": "华泰三峡新能源REIT",
+            "market": "SH"
+          }
+        ],
         "payment": [
           {
             "code": "301583",
@@ -901,11 +902,6 @@
             "code": "301583",
             "name": "托伦斯",
             "market": "SZ"
-          },
-          {
-            "code": "508059",
-            "name": "华泰三峡新能源REIT",
-            "market": "SH"
           }
         ],
         "payment": [],
@@ -921,7 +917,13 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "508059",
+            "name": "华泰三峡新能源REIT",
+            "market": "SH"
+          }
+        ],
         "payment": [
           {
             "code": "301583",
@@ -1771,11 +1773,6 @@
           "code": "301583",
           "name": "托伦斯",
           "market": "SZ"
-        },
-        {
-          "code": "508059",
-          "name": "华泰三峡新能源REIT",
-          "market": "SH"
         }
       ],
       "payment": [],
@@ -1791,7 +1788,13 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "508059",
+          "name": "华泰三峡新能源REIT",
+          "market": "SH"
+        }
+      ],
       "payment": [
         {
           "code": "301583",
@@ -2190,11 +2193,6 @@
           "code": "301583",
           "name": "托伦斯",
           "market": "SZ"
-        },
-        {
-          "code": "508059",
-          "name": "华泰三峡新能源REIT",
-          "market": "SH"
         }
       ],
       "payment": [],
@@ -2210,7 +2208,13 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "508059",
+          "name": "华泰三峡新能源REIT",
+          "market": "SH"
+        }
+      ],
       "payment": [
         {
           "code": "301583",
@@ -2824,7 +2828,18 @@
     "2026-06-26": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "127114",
+          "name": "127114（宜化转债）+000422（湖北宜化）",
+          "market": "SZ"
+        },
+        {
+          "code": "123274",
+          "name": "123274（维科转债）+301499（维科精密）",
+          "market": "SZ"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -3087,7 +3102,18 @@
     "2026-06-26": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "127114",
+          "name": "127114（宜化转债）+000422（湖北宜化）",
+          "market": "SZ"
+        },
+        {
+          "code": "123274",
+          "name": "123274（维科转债）+301499（维科精密）",
+          "market": "SZ"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -3332,7 +3358,18 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "02335",
+          "name": "麦科医药-B",
+          "market": "HK"
+        },
+        {
+          "code": "06106",
+          "name": "仙工智能",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-25": {
       "drafting": [],
@@ -3589,7 +3626,18 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "02335",
+          "name": "麦科医药-B",
+          "market": "HK"
+        },
+        {
+          "code": "06106",
+          "name": "仙工智能",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-25": {
       "drafting": [],

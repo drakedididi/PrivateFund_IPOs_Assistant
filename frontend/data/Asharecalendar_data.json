@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23 01:36:02",
+  "generated_at": "2026-06-23 22:11:46",
   "reference_date": "2026-06-23",
   "date_list": [
     "2026-05-07",
@@ -482,11 +482,6 @@
             "code": "301583",
             "name": "托伦斯",
             "market": "SZ"
-          },
-          {
-            "code": "508059",
-            "name": "华泰三峡新能源REIT",
-            "market": "SH"
           }
         ],
         "payment": [],
@@ -502,7 +497,13 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "508059",
+            "name": "华泰三峡新能源REIT",
+            "market": "SH"
+          }
+        ],
         "payment": [
           {
             "code": "301583",
@@ -901,11 +902,6 @@
             "code": "301583",
             "name": "托伦斯",
             "market": "SZ"
-          },
-          {
-            "code": "508059",
-            "name": "华泰三峡新能源REIT",
-            "market": "SH"
           }
         ],
         "payment": [],
@@ -921,7 +917,13 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "508059",
+            "name": "华泰三峡新能源REIT",
+            "market": "SH"
+          }
+        ],
         "payment": [
           {
             "code": "301583",
@@ -1771,11 +1773,6 @@
           "code": "301583",
           "name": "托伦斯",
           "market": "SZ"
-        },
-        {
-          "code": "508059",
-          "name": "华泰三峡新能源REIT",
-          "market": "SH"
         }
       ],
       "payment": [],
@@ -1791,7 +1788,13 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "508059",
+          "name": "华泰三峡新能源REIT",
+          "market": "SH"
+        }
+      ],
       "payment": [
         {
           "code": "301583",
@@ -2190,11 +2193,6 @@
           "code": "301583",
           "name": "托伦斯",
           "market": "SZ"
-        },
-        {
-          "code": "508059",
-          "name": "华泰三峡新能源REIT",
-          "market": "SH"
         }
       ],
       "payment": [],
@@ -2210,7 +2208,13 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "508059",
+          "name": "华泰三峡新能源REIT",
+          "market": "SH"
+        }
+      ],
       "payment": [
         {
           "code": "301583",

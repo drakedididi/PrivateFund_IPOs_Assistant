@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23 01:36:08",
+  "generated_at": "2026-06-23 22:11:52",
   "reference_date": "2026-06-23",
   "date_list": [
     "2026-05-07",
@@ -246,7 +246,18 @@
     "2026-06-26": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "127114",
+          "name": "127114（宜化转债）+000422（湖北宜化）",
+          "market": "SZ"
+        },
+        {
+          "code": "123274",
+          "name": "123274（维科转债）+301499（维科精密）",
+          "market": "SZ"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -509,7 +520,18 @@
     "2026-06-26": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "127114",
+          "name": "127114（宜化转债）+000422（湖北宜化）",
+          "market": "SZ"
+        },
+        {
+          "code": "123274",
+          "name": "123274（维科转债）+301499（维科精密）",
+          "market": "SZ"
+        }
+      ],
       "payment": [],
       "listing": []
     },
