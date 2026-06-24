@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-23 23:55:00",
-  "reference_date": "2026-06-23",
+  "generated_at": "2026-06-24 01:30:39",
+  "reference_date": "2026-06-24",
   "date_list": [
     "2026-05-07",
     "2026-05-11",
@@ -330,7 +330,7 @@
         "subscribe": [
           {
             "code": "688797",
-            "name": "臻宝科技",
+            "name": "臻宝",
             "market": "SH"
           },
           {
@@ -368,7 +368,7 @@
         "payment": [
           {
             "code": "688797",
-            "name": "臻宝科技",
+            "name": "臻宝",
             "market": "SH"
           },
           {
@@ -455,7 +455,7 @@
         "listing": [
           {
             "code": "688797",
-            "name": "臻宝科技",
+            "name": "臻宝",
             "market": "SH"
           }
         ]
@@ -779,7 +779,7 @@
         "subscribe": [
           {
             "code": "688797",
-            "name": "臻宝科技",
+            "name": "臻宝",
             "market": "SH"
           },
           {
@@ -805,7 +805,7 @@
         "payment": [
           {
             "code": "688797",
-            "name": "臻宝科技",
+            "name": "臻宝",
             "market": "SH"
           },
           {
@@ -875,7 +875,7 @@
         "listing": [
           {
             "code": "688797",
-            "name": "臻宝科技",
+            "name": "臻宝",
             "market": "SH"
           }
         ]
@@ -1621,7 +1621,7 @@
       "subscribe": [
         {
           "code": "688797",
-          "name": "臻宝科技",
+          "name": "臻宝",
           "market": "SH"
         },
         {
@@ -1659,7 +1659,7 @@
       "payment": [
         {
           "code": "688797",
-          "name": "臻宝科技",
+          "name": "臻宝",
           "market": "SH"
         },
         {
@@ -1746,7 +1746,7 @@
       "listing": [
         {
           "code": "688797",
-          "name": "臻宝科技",
+          "name": "臻宝",
           "market": "SH"
         }
       ]
@@ -2070,7 +2070,7 @@
       "subscribe": [
         {
           "code": "688797",
-          "name": "臻宝科技",
+          "name": "臻宝",
           "market": "SH"
         },
         {
@@ -2096,7 +2096,7 @@
       "payment": [
         {
           "code": "688797",
-          "name": "臻宝科技",
+          "name": "臻宝",
           "market": "SH"
         },
         {
@@ -2166,7 +2166,7 @@
       "listing": [
         {
           "code": "688797",
-          "name": "臻宝科技",
+          "name": "臻宝",
           "market": "SH"
         }
       ]
