@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24 01:30:39",
+  "generated_at": "2026-06-24 22:12:12",
   "reference_date": "2026-06-24",
   "date_list": [
     "2026-05-07",
@@ -23,7 +23,6 @@
     "2026-06-15",
     "2026-06-16",
     "2026-06-17",
-    "2026-06-18",
     "2026-06-22",
     "2026-06-23",
     "2026-06-24",
@@ -35,7 +34,9 @@
     "2026-07-02",
     "2026-07-03",
     "2026-07-06",
-    "2026-07-23"
+    "2026-07-09",
+    "2026-07-23",
+    "2026-07-30"
   ],
   "a_share": {
     "all": {
@@ -193,11 +194,6 @@
             "code": "920206",
             "name": "彩客科技",
             "market": "BJ"
-          },
-          {
-            "code": "508600",
-            "name": "地产商业",
-            "market": "SH"
           }
         ],
         "payment": [],
@@ -330,7 +326,7 @@
         "subscribe": [
           {
             "code": "688797",
-            "name": "臻宝",
+            "name": "臻宝科技",
             "market": "SH"
           },
           {
@@ -368,7 +364,7 @@
         "payment": [
           {
             "code": "688797",
-            "name": "臻宝",
+            "name": "臻宝科技",
             "market": "SH"
           },
           {
@@ -391,19 +387,6 @@
         ],
         "payment": [],
         "listing": []
-      },
-      "2026-06-18": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": [
-          {
-            "code": "508600",
-            "name": "地产商业",
-            "market": "SH"
-          }
-        ]
       },
       "2026-06-22": {
         "drafting": [],
@@ -455,7 +438,7 @@
         "listing": [
           {
             "code": "688797",
-            "name": "臻宝",
+            "name": "臻宝科技",
             "market": "SH"
           }
         ]
@@ -472,7 +455,13 @@
         "inquiry": [],
         "subscribe": [],
         "payment": [],
-        "listing": []
+        "listing": [
+          {
+            "code": "001399",
+            "name": "惠科股份",
+            "market": "SZ"
+          }
+        ]
       },
       "2026-06-29": {
         "drafting": [],
@@ -497,13 +486,7 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [
-          {
-            "code": "508059",
-            "name": "华泰三峡新能源REIT",
-            "market": "SH"
-          }
-        ],
+        "subscribe": [],
         "payment": [
           {
             "code": "301583",
@@ -546,13 +529,39 @@
         "payment": [],
         "listing": []
       },
+      "2026-07-09": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508606",
+            "name": "凯德商业",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
       "2026-07-23": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [
           {
             "code": "508607",
-            "name": "华安陆家嘴商业REIT",
+            "name": "陆家嘴R",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508609",
+            "name": "锦江REIT",
             "market": "SH"
           }
         ],
@@ -683,13 +692,7 @@
       "2026-05-27": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [
-          {
-            "code": "508600",
-            "name": "地产商业",
-            "market": "SH"
-          }
-        ],
+        "subscribe": [],
         "payment": [],
         "listing": [
           {
@@ -779,7 +782,7 @@
         "subscribe": [
           {
             "code": "688797",
-            "name": "臻宝",
+            "name": "臻宝科技",
             "market": "SH"
           },
           {
@@ -805,7 +808,7 @@
         "payment": [
           {
             "code": "688797",
-            "name": "臻宝",
+            "name": "臻宝科技",
             "market": "SH"
           },
           {
@@ -822,19 +825,6 @@
         "subscribe": [],
         "payment": [],
         "listing": []
-      },
-      "2026-06-18": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": [
-          {
-            "code": "508600",
-            "name": "地产商业",
-            "market": "SH"
-          }
-        ]
       },
       "2026-06-22": {
         "drafting": [],
@@ -875,7 +865,7 @@
         "listing": [
           {
             "code": "688797",
-            "name": "臻宝",
+            "name": "臻宝科技",
             "market": "SH"
           }
         ]
@@ -892,7 +882,13 @@
         "inquiry": [],
         "subscribe": [],
         "payment": [],
-        "listing": []
+        "listing": [
+          {
+            "code": "001399",
+            "name": "惠科股份",
+            "market": "SZ"
+          }
+        ]
       },
       "2026-06-29": {
         "drafting": [],
@@ -917,13 +913,7 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [
-          {
-            "code": "508059",
-            "name": "华泰三峡新能源REIT",
-            "market": "SH"
-          }
-        ],
+        "subscribe": [],
         "payment": [
           {
             "code": "301583",
@@ -966,13 +956,39 @@
         "payment": [],
         "listing": []
       },
+      "2026-07-09": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508606",
+            "name": "凯德商业",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
       "2026-07-23": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [
           {
             "code": "508607",
-            "name": "华安陆家嘴商业REIT",
+            "name": "陆家嘴R",
+            "market": "SH"
+          }
+        ],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-30": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [
+          {
+            "code": "508609",
+            "name": "锦江REIT",
             "market": "SH"
           }
         ],
@@ -1224,13 +1240,6 @@
         "payment": [],
         "listing": []
       },
-      "2026-06-18": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
-      },
       "2026-06-22": {
         "drafting": [],
         "inquiry": [],
@@ -1320,7 +1329,21 @@
         "payment": [],
         "listing": []
       },
+      "2026-07-09": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
       "2026-07-23": {
+        "drafting": [],
+        "inquiry": [],
+        "subscribe": [],
+        "payment": [],
+        "listing": []
+      },
+      "2026-07-30": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [],
@@ -1484,11 +1507,6 @@
           "code": "920206",
           "name": "彩客科技",
           "market": "BJ"
-        },
-        {
-          "code": "508600",
-          "name": "地产商业",
-          "market": "SH"
         }
       ],
       "payment": [],
@@ -1621,7 +1639,7 @@
       "subscribe": [
         {
           "code": "688797",
-          "name": "臻宝",
+          "name": "臻宝科技",
           "market": "SH"
         },
         {
@@ -1659,7 +1677,7 @@
       "payment": [
         {
           "code": "688797",
-          "name": "臻宝",
+          "name": "臻宝科技",
           "market": "SH"
         },
         {
@@ -1682,19 +1700,6 @@
       ],
       "payment": [],
       "listing": []
-    },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": [
-        {
-          "code": "508600",
-          "name": "地产商业",
-          "market": "SH"
-        }
-      ]
     },
     "2026-06-22": {
       "drafting": [],
@@ -1746,7 +1751,7 @@
       "listing": [
         {
           "code": "688797",
-          "name": "臻宝",
+          "name": "臻宝科技",
           "market": "SH"
         }
       ]
@@ -1763,7 +1768,13 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "001399",
+          "name": "惠科股份",
+          "market": "SZ"
+        }
+      ]
     },
     "2026-06-29": {
       "drafting": [],
@@ -1788,13 +1799,7 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "508059",
-          "name": "华泰三峡新能源REIT",
-          "market": "SH"
-        }
-      ],
+      "subscribe": [],
       "payment": [
         {
           "code": "301583",
@@ -1837,13 +1842,39 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508606",
+          "name": "凯德商业",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [
         {
           "code": "508607",
-          "name": "华安陆家嘴商业REIT",
+          "name": "陆家嘴R",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508609",
+          "name": "锦江REIT",
           "market": "SH"
         }
       ],
@@ -1974,13 +2005,7 @@
     "2026-05-27": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "508600",
-          "name": "地产商业",
-          "market": "SH"
-        }
-      ],
+      "subscribe": [],
       "payment": [],
       "listing": [
         {
@@ -2070,7 +2095,7 @@
       "subscribe": [
         {
           "code": "688797",
-          "name": "臻宝",
+          "name": "臻宝科技",
           "market": "SH"
         },
         {
@@ -2096,7 +2121,7 @@
       "payment": [
         {
           "code": "688797",
-          "name": "臻宝",
+          "name": "臻宝科技",
           "market": "SH"
         },
         {
@@ -2113,19 +2138,6 @@
       "subscribe": [],
       "payment": [],
       "listing": []
-    },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": [
-        {
-          "code": "508600",
-          "name": "地产商业",
-          "market": "SH"
-        }
-      ]
     },
     "2026-06-22": {
       "drafting": [],
@@ -2166,7 +2178,7 @@
       "listing": [
         {
           "code": "688797",
-          "name": "臻宝",
+          "name": "臻宝科技",
           "market": "SH"
         }
       ]
@@ -2183,7 +2195,13 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "001399",
+          "name": "惠科股份",
+          "market": "SZ"
+        }
+      ]
     },
     "2026-06-29": {
       "drafting": [],
@@ -2208,13 +2226,7 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [
-        {
-          "code": "508059",
-          "name": "华泰三峡新能源REIT",
-          "market": "SH"
-        }
-      ],
+      "subscribe": [],
       "payment": [
         {
           "code": "301583",
@@ -2257,13 +2269,39 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508606",
+          "name": "凯德商业",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [
         {
           "code": "508607",
-          "name": "华安陆家嘴商业REIT",
+          "name": "陆家嘴R",
+          "market": "SH"
+        }
+      ],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [
+        {
+          "code": "508609",
+          "name": "锦江REIT",
           "market": "SH"
         }
       ],
@@ -2515,13 +2553,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -2611,7 +2642,21 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -2767,13 +2812,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -2885,7 +2923,21 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -3041,13 +3093,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -3159,7 +3204,21 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -3315,13 +3374,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -3427,7 +3479,21 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -3583,13 +3649,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -3695,7 +3754,21 @@
       "payment": [],
       "listing": []
     },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
     "2026-07-23": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
