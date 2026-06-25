@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24 23:04:41",
+  "generated_at": "2026-06-25 00:04:31",
   "reference_date": "2026-06-24",
   "date_list": [
     "2026-05-07",
@@ -445,7 +445,12 @@
       },
       "2026-06-25": {
         "drafting": [],
-        "inquiry": [],
+        "inquiry": [
+          {
+            "name": "托伦斯",
+            "market": "SZ"
+          }
+        ],
         "subscribe": [],
         "payment": [],
         "listing": []
@@ -872,7 +877,12 @@
       },
       "2026-06-25": {
         "drafting": [],
-        "inquiry": [],
+        "inquiry": [
+          {
+            "name": "托伦斯",
+            "market": "SZ"
+          }
+        ],
         "subscribe": [],
         "payment": [],
         "listing": []
@@ -1758,7 +1768,12 @@
     },
     "2026-06-25": {
       "drafting": [],
-      "inquiry": [],
+      "inquiry": [
+        {
+          "name": "托伦斯",
+          "market": "SZ"
+        }
+      ],
       "subscribe": [],
       "payment": [],
       "listing": []
@@ -2185,7 +2200,12 @@
     },
     "2026-06-25": {
       "drafting": [],
-      "inquiry": [],
+      "inquiry": [
+        {
+          "name": "托伦斯",
+          "market": "SZ"
+        }
+      ],
       "subscribe": [],
       "payment": [],
       "listing": []
