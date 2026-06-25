@@ -1,9 +1,7 @@
 {
-  "generated_at": "2026-06-25 01:38:44",
+  "generated_at": "2026-06-25 22:20:28",
   "reference_date": "2026-06-25",
   "date_list": [
-    "2026-05-07",
-    "2026-05-11",
     "2026-05-13",
     "2026-05-15",
     "2026-05-18",
@@ -40,32 +38,6 @@
   ],
   "a_share": {
     "all": {
-      "2026-05-07": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [
-          {
-            "code": "001365",
-            "name": "天海电子",
-            "market": "SZ"
-          }
-        ],
-        "payment": [],
-        "listing": []
-      },
-      "2026-05-11": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [
-          {
-            "code": "001365",
-            "name": "天海电子",
-            "market": "SZ"
-          }
-        ],
-        "listing": []
-      },
       "2026-05-13": {
         "drafting": [],
         "inquiry": [],
@@ -123,13 +95,7 @@
           }
         ],
         "payment": [],
-        "listing": [
-          {
-            "code": "001365",
-            "name": "天海电子",
-            "market": "SZ"
-          }
-        ]
+        "listing": []
       },
       "2026-05-20": {
         "drafting": [],
@@ -468,13 +434,24 @@
         "inquiry": [],
         "subscribe": [
           {
+            "code": "920189",
+            "name": "康美特",
+            "market": "BJ"
+          },
+          {
             "code": "301583",
             "name": "托伦斯",
             "market": "SZ"
           }
         ],
         "payment": [],
-        "listing": []
+        "listing": [
+          {
+            "code": "920072",
+            "name": "科莱瑞迪",
+            "market": "BJ"
+          }
+        ]
       },
       "2026-06-30": {
         "drafting": [],
@@ -570,32 +547,6 @@
       }
     },
     "hs": {
-      "2026-05-07": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [
-          {
-            "code": "001365",
-            "name": "天海电子",
-            "market": "SZ"
-          }
-        ],
-        "payment": [],
-        "listing": []
-      },
-      "2026-05-11": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [
-          {
-            "code": "001365",
-            "name": "天海电子",
-            "market": "SZ"
-          }
-        ],
-        "listing": []
-      },
       "2026-05-13": {
         "drafting": [],
         "inquiry": [],
@@ -643,13 +594,7 @@
           }
         ],
         "payment": [],
-        "listing": [
-          {
-            "code": "001365",
-            "name": "天海电子",
-            "market": "SZ"
-          }
-        ]
+        "listing": []
       },
       "2026-05-20": {
         "drafting": [],
@@ -997,20 +942,6 @@
       }
     },
     "bj": {
-      "2026-05-07": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
-      },
-      "2026-05-11": {
-        "drafting": [],
-        "inquiry": [],
-        "subscribe": [],
-        "payment": [],
-        "listing": []
-      },
       "2026-05-13": {
         "drafting": [],
         "inquiry": [],
@@ -1290,9 +1221,21 @@
       "2026-06-29": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "920189",
+            "name": "康美特",
+            "market": "BJ"
+          }
+        ],
         "payment": [],
-        "listing": []
+        "listing": [
+          {
+            "code": "920072",
+            "name": "科莱瑞迪",
+            "market": "BJ"
+          }
+        ]
       },
       "2026-06-30": {
         "drafting": [],
@@ -1353,32 +1296,6 @@
     }
   },
   "all": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "001365",
-          "name": "天海电子",
-          "market": "SZ"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [
-        {
-          "code": "001365",
-          "name": "天海电子",
-          "market": "SZ"
-        }
-      ],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -1436,13 +1353,7 @@
         }
       ],
       "payment": [],
-      "listing": [
-        {
-          "code": "001365",
-          "name": "天海电子",
-          "market": "SZ"
-        }
-      ]
+      "listing": []
     },
     "2026-05-20": {
       "drafting": [],
@@ -1781,13 +1692,24 @@
       "inquiry": [],
       "subscribe": [
         {
+          "code": "920189",
+          "name": "康美特",
+          "market": "BJ"
+        },
+        {
           "code": "301583",
           "name": "托伦斯",
           "market": "SZ"
         }
       ],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "920072",
+          "name": "科莱瑞迪",
+          "market": "BJ"
+        }
+      ]
     },
     "2026-06-30": {
       "drafting": [],
@@ -1883,32 +1805,6 @@
     }
   },
   "hs": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "001365",
-          "name": "天海电子",
-          "market": "SZ"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [
-        {
-          "code": "001365",
-          "name": "天海电子",
-          "market": "SZ"
-        }
-      ],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -1956,13 +1852,7 @@
         }
       ],
       "payment": [],
-      "listing": [
-        {
-          "code": "001365",
-          "name": "天海电子",
-          "market": "SZ"
-        }
-      ]
+      "listing": []
     },
     "2026-05-20": {
       "drafting": [],
@@ -2310,20 +2200,6 @@
     }
   },
   "bj": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -2603,9 +2479,21 @@
     "2026-06-29": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "920189",
+          "name": "康美特",
+          "market": "BJ"
+        }
+      ],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "920072",
+          "name": "科莱瑞迪",
+          "market": "BJ"
+        }
+      ]
     },
     "2026-06-30": {
       "drafting": [],
@@ -2665,20 +2553,6 @@
     }
   },
   "bond": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -2946,20 +2820,6 @@
     }
   },
   "convertible_bond": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -3227,20 +3087,6 @@
     }
   },
   "h_share": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -3379,13 +3225,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "01392",
-          "name": "海清智元",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-23": {
       "drafting": [],
@@ -3435,7 +3275,33 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01688",
+          "name": "领益智造",
+          "market": "HK"
+        },
+        {
+          "code": "01956",
+          "name": "中科闻歌",
+          "market": "HK"
+        },
+        {
+          "code": "03661",
+          "name": "圣邦股份",
+          "market": "HK"
+        },
+        {
+          "code": "06228",
+          "name": "MERDEKAGOLD-DRS",
+          "market": "HK"
+        },
+        {
+          "code": "09630",
+          "name": "芯碁微装",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-29": {
       "drafting": [],
@@ -3502,20 +3368,6 @@
     }
   },
   "hk": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -3654,13 +3506,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "01392",
-          "name": "海清智元",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-23": {
       "drafting": [],
@@ -3710,7 +3556,33 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01688",
+          "name": "领益智造",
+          "market": "HK"
+        },
+        {
+          "code": "01956",
+          "name": "中科闻歌",
+          "market": "HK"
+        },
+        {
+          "code": "03661",
+          "name": "圣邦股份",
+          "market": "HK"
+        },
+        {
+          "code": "06228",
+          "name": "MERDEKAGOLD-DRS",
+          "market": "HK"
+        },
+        {
+          "code": "09630",
+          "name": "芯碁微装",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-29": {
       "drafting": [],

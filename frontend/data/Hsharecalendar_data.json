@@ -1,9 +1,7 @@
 {
-  "generated_at": "2026-06-25 01:38:44",
+  "generated_at": "2026-06-25 22:20:28",
   "reference_date": "2026-06-25",
   "date_list": [
-    "2026-05-07",
-    "2026-05-11",
     "2026-05-13",
     "2026-05-15",
     "2026-05-18",
@@ -39,20 +37,6 @@
     "2026-07-30"
   ],
   "h_share": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -191,13 +175,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "01392",
-          "name": "海清智元",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-23": {
       "drafting": [],
@@ -247,7 +225,33 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01688",
+          "name": "领益智造",
+          "market": "HK"
+        },
+        {
+          "code": "01956",
+          "name": "中科闻歌",
+          "market": "HK"
+        },
+        {
+          "code": "03661",
+          "name": "圣邦股份",
+          "market": "HK"
+        },
+        {
+          "code": "06228",
+          "name": "MERDEKAGOLD-DRS",
+          "market": "HK"
+        },
+        {
+          "code": "09630",
+          "name": "芯碁微装",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-29": {
       "drafting": [],
@@ -314,20 +318,6 @@
     }
   },
   "hk": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -466,13 +456,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "01392",
-          "name": "海清智元",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-23": {
       "drafting": [],
@@ -522,7 +506,33 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01688",
+          "name": "领益智造",
+          "market": "HK"
+        },
+        {
+          "code": "01956",
+          "name": "中科闻歌",
+          "market": "HK"
+        },
+        {
+          "code": "03661",
+          "name": "圣邦股份",
+          "market": "HK"
+        },
+        {
+          "code": "06228",
+          "name": "MERDEKAGOLD-DRS",
+          "market": "HK"
+        },
+        {
+          "code": "09630",
+          "name": "芯碁微装",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-29": {
       "drafting": [],

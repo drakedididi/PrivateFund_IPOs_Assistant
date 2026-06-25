@@ -1,9 +1,7 @@
 {
-  "generated_at": "2026-06-25 01:38:44",
+  "generated_at": "2026-06-25 22:20:28",
   "reference_date": "2026-06-25",
   "date_list": [
-    "2026-05-07",
-    "2026-05-11",
     "2026-05-13",
     "2026-05-15",
     "2026-05-18",
@@ -39,20 +37,6 @@
     "2026-07-30"
   ],
   "bond": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -320,20 +304,6 @@
     }
   },
   "convertible_bond": {
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
