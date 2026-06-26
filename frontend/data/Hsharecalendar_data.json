@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26 01:41:56",
+  "generated_at": "2026-06-26 22:07:12",
   "reference_date": "2026-06-26",
   "date_list": [
     "2026-05-13",
@@ -182,18 +182,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "06067",
-          "name": "星源材质",
-          "market": "HK"
-        },
-        {
-          "code": "06132",
-          "name": "华健未来-B",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-24": {
       "drafting": [],
@@ -204,11 +193,6 @@
         {
           "code": "02335",
           "name": "麦科医药-B",
-          "market": "HK"
-        },
-        {
-          "code": "06106",
-          "name": "仙工智能",
           "market": "HK"
         }
       ]
@@ -258,7 +242,23 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01191",
+          "name": "海光芯正",
+          "market": "HK"
+        },
+        {
+          "code": "02672",
+          "name": "白鸽在线",
+          "market": "HK"
+        },
+        {
+          "code": "09637",
+          "name": "礼邦医药-B",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-30": {
       "drafting": [],
@@ -463,18 +463,7 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": [
-        {
-          "code": "06067",
-          "name": "星源材质",
-          "market": "HK"
-        },
-        {
-          "code": "06132",
-          "name": "华健未来-B",
-          "market": "HK"
-        }
-      ]
+      "listing": []
     },
     "2026-06-24": {
       "drafting": [],
@@ -485,11 +474,6 @@
         {
           "code": "02335",
           "name": "麦科医药-B",
-          "market": "HK"
-        },
-        {
-          "code": "06106",
-          "name": "仙工智能",
           "market": "HK"
         }
       ]
@@ -539,7 +523,23 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "01191",
+          "name": "海光芯正",
+          "market": "HK"
+        },
+        {
+          "code": "02672",
+          "name": "白鸽在线",
+          "market": "HK"
+        },
+        {
+          "code": "09637",
+          "name": "礼邦医药-B",
+          "market": "HK"
+        }
+      ]
     },
     "2026-06-30": {
       "drafting": [],
