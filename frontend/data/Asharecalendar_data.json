@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29 01:40:02",
+  "generated_at": "2026-06-29 22:09:07",
   "reference_date": "2026-06-29",
   "date_list": [
     "2026-05-13",
@@ -34,7 +34,7 @@
     "2026-07-08",
     "2026-07-09",
     "2026-07-10",
-    "2026-07-23",
+    "2026-07-21",
     "2026-07-30"
   ],
   "a_share": {
@@ -52,11 +52,6 @@
             "code": "603435",
             "name": "嘉德利",
             "market": "SH"
-          },
-          {
-            "code": "001237",
-            "name": "惠康科技",
-            "market": "SZ"
           }
         ],
         "payment": [],
@@ -71,11 +66,6 @@
             "code": "603435",
             "name": "嘉德利",
             "market": "SH"
-          },
-          {
-            "code": "001237",
-            "name": "惠康科技",
-            "market": "SZ"
           }
         ],
         "listing": []
@@ -132,11 +122,6 @@
             "code": "603435",
             "name": "嘉德利",
             "market": "SH"
-          },
-          {
-            "code": "001237",
-            "name": "惠康科技",
-            "market": "SZ"
           }
         ]
       },
@@ -311,7 +296,7 @@
         "subscribe": [
           {
             "code": "920072",
-            "name": "科莱",
+            "name": "科莱瑞迪",
             "market": "BJ"
           }
         ],
@@ -430,7 +415,7 @@
         "listing": [
           {
             "code": "920072",
-            "name": "科莱",
+            "name": "科莱瑞迪",
             "market": "BJ"
           }
         ]
@@ -451,7 +436,13 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "920081",
+            "name": "欧伦电气",
+            "market": "BJ"
+          }
+        ],
         "payment": [
           {
             "code": "301583",
@@ -528,7 +519,7 @@
         "payment": [],
         "listing": []
       },
-      "2026-07-23": {
+      "2026-07-21": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [
@@ -564,11 +555,6 @@
             "code": "603435",
             "name": "嘉德利",
             "market": "SH"
-          },
-          {
-            "code": "001237",
-            "name": "惠康科技",
-            "market": "SZ"
           }
         ],
         "payment": [],
@@ -583,11 +569,6 @@
             "code": "603435",
             "name": "嘉德利",
             "market": "SH"
-          },
-          {
-            "code": "001237",
-            "name": "惠康科技",
-            "market": "SZ"
           }
         ],
         "listing": []
@@ -628,11 +609,6 @@
             "code": "603435",
             "name": "嘉德利",
             "market": "SH"
-          },
-          {
-            "code": "001237",
-            "name": "惠康科技",
-            "market": "SZ"
           }
         ]
       },
@@ -925,7 +901,7 @@
         "payment": [],
         "listing": []
       },
-      "2026-07-23": {
+      "2026-07-21": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [
@@ -1149,7 +1125,7 @@
         "subscribe": [
           {
             "code": "920072",
-            "name": "科莱",
+            "name": "科莱瑞迪",
             "market": "BJ"
           }
         ],
@@ -1229,7 +1205,7 @@
         "listing": [
           {
             "code": "920072",
-            "name": "科莱",
+            "name": "科莱瑞迪",
             "market": "BJ"
           }
         ]
@@ -1250,7 +1226,13 @@
       "2026-07-01": {
         "drafting": [],
         "inquiry": [],
-        "subscribe": [],
+        "subscribe": [
+          {
+            "code": "920081",
+            "name": "欧伦电气",
+            "market": "BJ"
+          }
+        ],
         "payment": [],
         "listing": []
       },
@@ -1303,7 +1285,7 @@
         "payment": [],
         "listing": []
       },
-      "2026-07-23": {
+      "2026-07-21": {
         "drafting": [],
         "inquiry": [],
         "subscribe": [],
@@ -1333,11 +1315,6 @@
           "code": "603435",
           "name": "嘉德利",
           "market": "SH"
-        },
-        {
-          "code": "001237",
-          "name": "惠康科技",
-          "market": "SZ"
         }
       ],
       "payment": [],
@@ -1352,11 +1329,6 @@
           "code": "603435",
           "name": "嘉德利",
           "market": "SH"
-        },
-        {
-          "code": "001237",
-          "name": "惠康科技",
-          "market": "SZ"
         }
       ],
       "listing": []
@@ -1413,11 +1385,6 @@
           "code": "603435",
           "name": "嘉德利",
           "market": "SH"
-        },
-        {
-          "code": "001237",
-          "name": "惠康科技",
-          "market": "SZ"
         }
       ]
     },
@@ -1592,7 +1559,7 @@
       "subscribe": [
         {
           "code": "920072",
-          "name": "科莱",
+          "name": "科莱瑞迪",
           "market": "BJ"
         }
       ],
@@ -1711,7 +1678,7 @@
       "listing": [
         {
           "code": "920072",
-          "name": "科莱",
+          "name": "科莱瑞迪",
           "market": "BJ"
         }
       ]
@@ -1732,7 +1699,13 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "920081",
+          "name": "欧伦电气",
+          "market": "BJ"
+        }
+      ],
       "payment": [
         {
           "code": "301583",
@@ -1809,7 +1782,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-07-23": {
+    "2026-07-21": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [
@@ -1845,11 +1818,6 @@
           "code": "603435",
           "name": "嘉德利",
           "market": "SH"
-        },
-        {
-          "code": "001237",
-          "name": "惠康科技",
-          "market": "SZ"
         }
       ],
       "payment": [],
@@ -1864,11 +1832,6 @@
           "code": "603435",
           "name": "嘉德利",
           "market": "SH"
-        },
-        {
-          "code": "001237",
-          "name": "惠康科技",
-          "market": "SZ"
         }
       ],
       "listing": []
@@ -1909,11 +1872,6 @@
           "code": "603435",
           "name": "嘉德利",
           "market": "SH"
-        },
-        {
-          "code": "001237",
-          "name": "惠康科技",
-          "market": "SZ"
         }
       ]
     },
@@ -2206,7 +2164,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-07-23": {
+    "2026-07-21": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [
@@ -2430,7 +2388,7 @@
       "subscribe": [
         {
           "code": "920072",
-          "name": "科莱",
+          "name": "科莱瑞迪",
           "market": "BJ"
         }
       ],
@@ -2510,7 +2468,7 @@
       "listing": [
         {
           "code": "920072",
-          "name": "科莱",
+          "name": "科莱瑞迪",
           "market": "BJ"
         }
       ]
@@ -2531,7 +2489,13 @@
     "2026-07-01": {
       "drafting": [],
       "inquiry": [],
-      "subscribe": [],
+      "subscribe": [
+        {
+          "code": "920081",
+          "name": "欧伦电气",
+          "market": "BJ"
+        }
+      ],
       "payment": [],
       "listing": []
     },
@@ -2584,7 +2548,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-07-23": {
+    "2026-07-21": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],

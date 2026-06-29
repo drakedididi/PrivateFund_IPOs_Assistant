@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29 01:40:07",
+  "generated_at": "2026-06-29 22:09:12",
   "reference_date": "2026-06-29",
   "date_list": [
     "2026-05-13",
@@ -34,7 +34,7 @@
     "2026-07-08",
     "2026-07-09",
     "2026-07-10",
-    "2026-07-23",
+    "2026-07-21",
     "2026-07-30"
   ],
   "h_share": {
@@ -220,7 +220,28 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "02697",
+          "name": "真健康医疗-B",
+          "market": "HK"
+        },
+        {
+          "code": "03952",
+          "name": "来福谐波",
+          "market": "HK"
+        },
+        {
+          "code": "06715",
+          "name": "鲟龙科技",
+          "market": "HK"
+        },
+        {
+          "code": "06915",
+          "name": "江西生物",
+          "market": "HK"
+        }
+      ]
     },
     "2026-07-01": {
       "drafting": [],
@@ -278,7 +299,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-07-23": {
+    "2026-07-21": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -476,7 +497,28 @@
       "inquiry": [],
       "subscribe": [],
       "payment": [],
-      "listing": []
+      "listing": [
+        {
+          "code": "02697",
+          "name": "真健康医疗-B",
+          "market": "HK"
+        },
+        {
+          "code": "03952",
+          "name": "来福谐波",
+          "market": "HK"
+        },
+        {
+          "code": "06715",
+          "name": "鲟龙科技",
+          "market": "HK"
+        },
+        {
+          "code": "06915",
+          "name": "江西生物",
+          "market": "HK"
+        }
+      ]
     },
     "2026-07-01": {
       "drafting": [],
@@ -534,7 +576,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-07-23": {
+    "2026-07-21": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
