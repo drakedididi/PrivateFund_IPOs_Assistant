@@ -132,7 +132,8 @@ def extract_info(excel_file):
                         column_mapping = {
                             'client_name': ['客户名称', '投资者名称'],
                             'apply_date': ['申请日期'],
-                            'apply_statue': ['确认状态', '确认情况']
+                            'apply_statue': ['确认状态', '确认情况'],
+                            'business_type': ['业务类型']
                         }
                         
                         # 遍历表头行，查找列名
@@ -204,10 +205,17 @@ def extract_info(excel_file):
                                     status_cell = ws.cell(row=row, column=found_columns['apply_statue'] + 1)
                                     apply_statue = str(status_cell.value).strip() if status_cell.value else ''
 
+                                # 处理业务类型（可选列，缺失时默认为空）
+                                business_type = ''
+                                if 'business_type' in found_columns:
+                                    biz_cell = ws.cell(row=row, column=found_columns['business_type'] + 1)
+                                    business_type = str(biz_cell.value).strip() if biz_cell.value else ''
+
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
-                                    'apply_statue': apply_statue
+                                    'apply_statue': apply_statue,
+                                    'business_type': business_type
                                 }
 
                                 all_records.append(record)
@@ -238,7 +246,8 @@ def extract_info(excel_file):
                         column_mapping = {
                             'client_name': ['客户名称', '投资者名称', '客户', '基金名称'],
                             'apply_date': ['申请日期', '日期', '交易日期'],
-                            'apply_statue': ['确认状态', '状态', '交易状态', '确认']
+                            'apply_statue': ['确认状态', '状态', '交易状态', '确认'],
+                            'business_type': ['业务类型']
                         }
                         
                         # 遍历表头行，查找列名
@@ -309,10 +318,17 @@ def extract_info(excel_file):
                                     status_value = ws.cell_value(row, found_columns['apply_statue'])
                                     apply_statue = str(status_value).strip() if status_value else ''
 
+                                # 处理业务类型（可选列，缺失时默认为空）
+                                business_type = ''
+                                if 'business_type' in found_columns:
+                                    biz_value = ws.cell_value(row, found_columns['business_type'])
+                                    business_type = str(biz_value).strip() if biz_value else ''
+
                                 record = {
                                     'client_name': client_name,
                                     'apply_date': apply_date,
-                                    'apply_statue': apply_statue
+                                    'apply_statue': apply_statue,
+                                    'business_type': business_type
                                 }
 
                                 all_records.append(record)
@@ -340,18 +356,32 @@ def extract_info(excel_file):
 def clean_data(records):
     """清洗数据"""
     cleaned_records = []
-    
+    skipped_forced_redemption = 0
+
     print(f"清洗前记录数量: {len(records)}")
-    
+
     for record in records:
         # 打印记录信息用于调试
         print(f"处理记录: 客户={record['client_name']}, 状态={record['apply_statue']}, 日期={record['apply_date']}")
-        
+
         # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
         record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
 
+        # 过滤掉客户名称为"总计"的记录
+        if record['client_name'] == '总计':
+            continue
+
         # 删除client_name是上海睿量私募基金管理有限公司的记录
         if record['client_name'] == '上海睿量私募基金管理有限公司':
+            continue
+
+        # 过滤掉申请日期为空的记录
+        if not record['apply_date']:
+            continue
+
+        # 过滤掉"强制赎回"业务类型（暂不处理）
+        if record.get('business_type', '') == '强制赎回':
+            skipped_forced_redemption += 1
             continue
 
         # 排除确认失败即可
@@ -362,9 +392,11 @@ def clean_data(records):
                 if len(date_str) == 8 and date_str.isdigit():
                     print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
                 continue
-        
+
         cleaned_records.append(record)
-    
+
+    if skipped_forced_redemption > 0:
+        print(f'  已跳过 {skipped_forced_redemption} 条"强制赎回"记录（暂不处理）')
     print(f"清洗后记录数量: {len(cleaned_records)}")
     return cleaned_records
 

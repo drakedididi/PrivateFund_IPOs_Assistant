@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 import random
 from docx import Document
@@ -422,7 +423,11 @@ def get_effective_amount(record):
 def clean_data(records):
     """数据清洗，过滤掉不符合条件的记录"""
     cleaned_records = []
+    skipped_forced_redemption = 0
     for record in records:
+        # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
+        record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
+
         # 过滤掉客户名称为"总计"的记录
         if record['client_name'] == '总计':
             continue
@@ -450,21 +455,35 @@ def clean_data(records):
         # 过滤掉申请日期为空的记录
         if not record['apply_date']:
             continue
+
+        # 过滤掉"强制赎回"业务类型（暂不处理）
+        if record.get('business_type', '') == '强制赎回':
+            skipped_forced_redemption += 1
+            continue
+
         cleaned_records.append(record)
+    if skipped_forced_redemption > 0:
+        print(f'  已跳过 {skipped_forced_redemption} 条"强制赎回"记录（暂不处理）')
     return cleaned_records
 
-def process_normal_business(records, folder_name, output_dir=None):
+def process_normal_business(records, folder_name):
     """处理普通业务类（申购、赎回）"""
     processed_count = 0
+    skipped_unknown = []
     for record in records:
         try:
-            doc_name = create_word_document(record, folder_name, output_dir)
+            doc_name = create_word_document(record, folder_name)
+            if doc_name is None:
+                skipped_unknown.append(record.get('business_type', '未知'))
+                continue
             processed_count += 1
         except Exception as e:
             continue
+    if skipped_unknown:
+        print(f"  跳过未支持的业务类型: {list(set(skipped_unknown))}")
     return processed_count
 
-def process_special_business(conversion_out_records, conversion_in_records, folder_name, output_dir=None):
+def process_special_business(conversion_out_records, conversion_in_records, folder_name):
     """处理特殊业务类（基金转换）"""
     processed_count = 0
     paired_indices = set()
@@ -513,7 +532,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
                 }
                 
                 try:
-                    doc_name = create_word_document(conversion_record, folder_name, output_dir)
+                    doc_name = create_word_document(conversion_record, folder_name)
                     processed_count += 1
                     
                     # 标记为已配对
@@ -526,7 +545,7 @@ def process_special_business(conversion_out_records, conversion_in_records, fold
     
     return processed_count
 
-def create_word_document(info, folder_name, output_dir=None):
+def create_word_document(info, folder_name):
     """创建Word文档，保存在脚本所在目录"""
     doc = Document()
     
@@ -597,15 +616,20 @@ def create_word_document(info, folder_name, output_dir=None):
     content += f'3. 拟投资日期：{info["apply_date"]}\n\n'
     
     # 处理拟投资定价
-    if info['business_type'] == '申购' or info['business_type'] == '申购确认':
-        content += f'4. 拟投资定价：申购 {get_effective_amount(info)} 元\n\n'
+    if info['business_type'] in ('申购', '申购确认', '认购', '认购确认'):
+        biz_label = '认购' if '认购' in info['business_type'] else '申购'
+        content += f'4. 拟投资定价：{biz_label} {get_effective_amount(info)} 元\n\n'
     elif info['business_type'] == '赎回' or info['business_type'] == '赎回确认':
         content += f'4. 拟投资定价：赎回 {info["confirm_share"]} 份\n\n'
     elif info['business_type'] == '金额赎回':
         content += f'4. 拟投资定价：赎回 {get_effective_amount(info)} 元\n\n'
     elif '转换' in info['business_type']:
         content += f'4. 拟投资定价：基金转换 {info["confirm_share"]} 份\n\n'
-    
+    else:
+        # 未知业务类型，跳过不生成文档
+        print(f"  警告：未支持的业务类型 '{info['business_type']}'，跳过生成文档")
+        return None
+
     # 添加决策依据
     content += '5. 决策依据：'
     
@@ -691,8 +715,9 @@ def create_word_document(info, folder_name, output_dir=None):
         # 普通交易的文件名
         safe_product = "".join(c for c in info['product_name'] if c.isalnum() or c in (' ', '-', '_')).rstrip()
         safe_client = "".join(c for c in info['client_name'] if c.isalnum() or c in (' ', '-', '_')).rstrip()
-        if info['business_type'] in ['申购', '申购确认']:
-            doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-申购{get_effective_amount(info)}元.docx"
+        if info['business_type'] in ('申购', '申购确认', '认购', '认购确认'):
+            biz_label = '认购' if '认购' in info['business_type'] else '申购'
+            doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-{biz_label}{get_effective_amount(info)}元.docx"
         elif info['business_type'] in ['赎回', '赎回确认']:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-赎回{info.get('confirm_share', info.get('apply_share'))}份.docx"
         elif info['business_type'] == '金额赎回':
@@ -700,24 +725,20 @@ def create_word_document(info, folder_name, output_dir=None):
         else:
             doc_name = f"【{folder_name}】关联交易决策留档-{safe_product}-{safe_client}-{info['business_type']}.docx"
     
-    # 保存文档
-    doc_path = os.path.join(output_dir, doc_name) if output_dir else doc_name
-    doc.save(doc_path)
-    return doc_path
+    # 保存文档（保存在脚本所在目录）
+    doc.save(doc_name)
+    return doc_name
 
-def process_excel_files(base_dir=None, output_dir=None):
+def process_excel_files(base_dir=None):
     """
     处理所有Excel文件并生成Word文档。
 
     Args:
         base_dir: Excel文件所在的根目录。如果为None，则使用脚本所在目录（本地运行）。
     """
-    original_cwd = os.getcwd()
     try:
         if base_dir is None:
             base_dir = os.path.dirname(os.path.abspath(__file__))
-        if output_dir:
-            os.makedirs(output_dir, exist_ok=True)
 
         # 切换到工作目录，确保生成的Word文档保存在该目录
         os.chdir(base_dir)
@@ -784,11 +805,11 @@ def process_excel_files(base_dir=None, output_dir=None):
                 print(f'基金转换(出)记录: {len(conversion_out_records)}')
 
                 # 处理普通业务
-                normal_count = process_normal_business(normal_records, folder_name, output_dir)
+                normal_count = process_normal_business(normal_records, folder_name)
                 total_normal_records += normal_count
 
                 # 处理特殊业务
-                special_count = process_special_business(conversion_out_records, conversion_in_records, folder_name, output_dir)
+                special_count = process_special_business(conversion_out_records, conversion_in_records, folder_name)
                 total_special_records += special_count
 
                 total_processed += 1
@@ -822,8 +843,6 @@ def process_excel_files(base_dir=None, output_dir=None):
         import traceback
         traceback.print_exc()
         return {"success": False, "message": str(e), "count": 0}
-    finally:
-        os.chdir(original_cwd)
 
 def main():
     """本地运行入口"""
