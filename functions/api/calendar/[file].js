@@ -1,4 +1,3 @@
-const DATA_BASE_URL = "https://pub-726d3f620e2c4dbf99889a63c9a5687d.r2.dev";
 const ALLOWED_FILES = new Set([
   "Asharecalendar_data.json",
   "bondcalendar_data.json",
@@ -6,6 +5,7 @@ const ALLOWED_FILES = new Set([
   "calendar_data.json",
   "trading_holidays.json",
 ]);
+const R2_BINDING_NAMES = ["PRIVATEFUND_DATA", "CALENDAR_DATA", "R2_BUCKET"];
 
 export async function onRequestGet(context) {
   const fileName = context.params.file;
@@ -13,16 +13,20 @@ export async function onRequestGet(context) {
     return new Response("Not found", { status: 404 });
   }
 
-  const upstream = await fetch(`${DATA_BASE_URL}/${fileName}`, {
-    headers: { Accept: "application/json" },
-    cf: { cacheTtl: 300, cacheEverything: true },
-  });
+  const bucket = R2_BINDING_NAMES
+    .map((name) => context.env[name])
+    .find((binding) => binding && typeof binding.get === "function");
 
-  if (!upstream.ok) {
-    return new Response("Calendar data unavailable", { status: upstream.status });
+  if (!bucket) {
+    return new Response("R2 binding is not configured", { status: 500 });
   }
 
-  return new Response(upstream.body, {
+  const object = await bucket.get(fileName);
+  if (!object) {
+    return new Response("Calendar data not found", { status: 404 });
+  }
+
+  return new Response(object.body, {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
