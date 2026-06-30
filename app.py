@@ -206,6 +206,42 @@ def zip_output_dir(output_dir: Path, output_zip: Path) -> None:
             zf.write(file_path, file_path.relative_to(output_dir))
 
 
+def move_generated_docx_files(source_dir: Path, output_dir: Path, before: set[Path]) -> int:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    moved_count = 0
+    for file_path in source_dir.rglob("*.docx"):
+        resolved = file_path.resolve()
+        if resolved in before or not file_path.is_file():
+            continue
+
+        target_path = output_dir / file_path.name
+        if target_path.exists():
+            stem = target_path.stem
+            suffix = target_path.suffix
+            index = 2
+            while target_path.exists():
+                target_path = output_dir / f"{stem}_{index}{suffix}"
+                index += 1
+
+        shutil.move(str(file_path), str(target_path))
+        moved_count += 1
+    return moved_count
+
+
+def process_related_decision_web(input_dir: Path, output_dir: Path):
+    input_path = Path(input_dir)
+    output_path = Path(output_dir)
+    before = {p.resolve() for p in input_path.rglob("*.docx") if p.is_file()}
+    original_cwd = Path.cwd()
+    try:
+        result = process_related_decision_files(input_path)
+    finally:
+        os.chdir(original_cwd)
+
+    move_generated_docx_files(input_path, output_path, before)
+    return result
+
+
 def run_document_tool(processor, download_suffix: str):
     auth_error = require_secret_token()
     if auth_error:
@@ -371,7 +407,7 @@ def api_valuation_table():
 
 @app.route("/api/excel", methods=["POST"])
 def api_excel():
-    return run_document_tool(process_related_decision_files, "_related_decision_docs.zip")
+    return run_document_tool(process_related_decision_web, "_related_decision_docs.zip")
 
 
 @app.route("/api/fund", methods=["POST"])
