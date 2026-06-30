@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-29 23:59:23",
-  "reference_date": "2026-06-29",
+  "generated_at": "2026-06-30 01:35:49",
+  "reference_date": "2026-06-30",
   "date_list": [
     "2026-05-13",
     "2026-05-15",
@@ -346,7 +346,7 @@
         "subscribe": [
           {
             "code": "920222",
-            "name": "益坤电气",
+            "name": "益坤",
             "market": "BJ"
           },
           {
@@ -428,7 +428,7 @@
         "listing": [
           {
             "code": "920222",
-            "name": "益坤电气",
+            "name": "益坤",
             "market": "BJ"
           }
         ]
@@ -1164,7 +1164,7 @@
         "subscribe": [
           {
             "code": "920222",
-            "name": "益坤电气",
+            "name": "益坤",
             "market": "BJ"
           }
         ],
@@ -1218,7 +1218,7 @@
         "listing": [
           {
             "code": "920222",
-            "name": "益坤电气",
+            "name": "益坤",
             "market": "BJ"
           }
         ]
@@ -1609,7 +1609,7 @@
       "subscribe": [
         {
           "code": "920222",
-          "name": "益坤电气",
+          "name": "益坤",
           "market": "BJ"
         },
         {
@@ -1691,7 +1691,7 @@
       "listing": [
         {
           "code": "920222",
-          "name": "益坤电气",
+          "name": "益坤",
           "market": "BJ"
         }
       ]
@@ -2427,7 +2427,7 @@
       "subscribe": [
         {
           "code": "920222",
-          "name": "益坤电气",
+          "name": "益坤",
           "market": "BJ"
         }
       ],
@@ -2481,7 +2481,7 @@
       "listing": [
         {
           "code": "920222",
-          "name": "益坤电气",
+          "name": "益坤",
           "market": "BJ"
         }
       ]
