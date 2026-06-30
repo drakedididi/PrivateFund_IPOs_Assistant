@@ -1,10 +1,7 @@
 {
-  "generated_at": "2026-06-22 00:08:17",
-  "reference_date": "2026-06-22",
+  "generated_at": "2026-06-30 01:35:54",
+  "reference_date": "2026-06-30",
   "date_list": [
-    "2026-05-06",
-    "2026-05-07",
-    "2026-05-11",
     "2026-05-13",
     "2026-05-15",
     "2026-05-18",
@@ -24,40 +21,23 @@
     "2026-06-15",
     "2026-06-16",
     "2026-06-17",
-    "2026-06-18",
     "2026-06-22",
-    "2026-06-23",
     "2026-06-24",
-    "2026-06-25",
     "2026-06-26",
     "2026-06-29",
     "2026-06-30",
     "2026-07-01",
     "2026-07-02",
-    "2026-07-03"
+    "2026-07-03",
+    "2026-07-06",
+    "2026-07-07",
+    "2026-07-08",
+    "2026-07-09",
+    "2026-07-10",
+    "2026-07-21",
+    "2026-07-30"
   ],
   "bond": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -191,13 +171,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -205,38 +178,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-23": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "118071",
-          "name": "118071（华峰转债）+688200（华峰测控）",
-          "market": "SH"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-24": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "118072",
-          "name": "118072（鼎通转债）+688668（鼎通科技）",
-          "market": "SH"
-        },
-        {
-          "code": "110101",
-          "name": "110101（宝钛转债）+600456（宝钛股份）",
-          "market": "SH"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
-    "2026-06-25": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -279,6 +221,55 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -287,27 +278,6 @@
     }
   },
   "convertible_bond": {
-    "2026-05-06": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-07": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
-    "2026-05-11": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-05-13": {
       "drafting": [],
       "inquiry": [],
@@ -441,13 +411,6 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-18": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-22": {
       "drafting": [],
       "inquiry": [],
@@ -455,38 +418,7 @@
       "payment": [],
       "listing": []
     },
-    "2026-06-23": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "118071",
-          "name": "118071（华峰转债）+688200（华峰测控）",
-          "market": "SH"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
     "2026-06-24": {
-      "drafting": [],
-      "inquiry": [],
-      "subscribe": [
-        {
-          "code": "118072",
-          "name": "118072（鼎通转债）+688668（鼎通科技）",
-          "market": "SH"
-        },
-        {
-          "code": "110101",
-          "name": "110101（宝钛转债）+600456（宝钛股份）",
-          "market": "SH"
-        }
-      ],
-      "payment": [],
-      "listing": []
-    },
-    "2026-06-25": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
@@ -529,6 +461,55 @@
       "listing": []
     },
     "2026-07-03": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-06": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-07": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-08": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-09": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-10": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-21": {
+      "drafting": [],
+      "inquiry": [],
+      "subscribe": [],
+      "payment": [],
+      "listing": []
+    },
+    "2026-07-30": {
       "drafting": [],
       "inquiry": [],
       "subscribe": [],
