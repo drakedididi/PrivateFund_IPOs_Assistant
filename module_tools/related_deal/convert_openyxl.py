@@ -2,6 +2,7 @@ import os
 import re
 import pandas as pd
 import random
+from difflib import SequenceMatcher
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
@@ -420,16 +421,74 @@ def get_effective_amount(record):
     return amount
 
 
+def normalize_similarity_text(value):
+    text = re.sub(r'\s+', '', str(value or '')).strip()
+    text = re.sub(r'[，,。．.、/\\\-_（）()【】\[\]{}（）·]+', '', text)
+    while True:
+        new_text = re.sub(
+            r'((?:第?[一二三四五六七八九十\d]+期)|(?:[A-Z]{1,3}类)|(?:[A-Z]{1,3}份额)|(?:[A-Z]{1,3}期)|(?:[A-Z]{1,3}号)|(?:[A-Z]{1,3}级)|(?:[A-Z]{1,3}型))$',
+            '',
+            text,
+        )
+        if new_text == text:
+            break
+        text = new_text
+    return text
+
+
+def client_product_are_similar(client_name, product_name):
+    client_key = normalize_similarity_text(client_name)
+    product_key = normalize_similarity_text(product_name)
+    if not client_key or not product_key:
+        return False
+    if client_key == product_key:
+        return True
+    if client_key in product_key or product_key in client_key:
+        shorter = client_key if len(client_key) <= len(product_key) else product_key
+        longer = product_key if shorter is client_key else client_key
+        if len(shorter) >= 4 and len(shorter) / max(len(longer), 1) >= 0.75:
+            return True
+    return SequenceMatcher(None, client_key, product_key).ratio() >= 0.88
+
+
+def write_cleanup_info(output_dir, cleanup_logs):
+    output_path = os.path.join(output_dir, '清洗信息.txt')
+    lines = ['清洗信息', '=' * 50]
+    if cleanup_logs:
+        lines.extend(cleanup_logs)
+    else:
+        lines.append('未发现需要清洗的记录。')
+    content = '\n'.join(lines) + '\n'
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+    print('\n'.join(lines))
+    print(f"清洗信息已写入: {output_path}")
+    return output_path
+
+
 def clean_data(records):
     """数据清洗，过滤掉不符合条件的记录"""
     cleaned_records = []
     skipped_forced_redemption = 0
+    cleanup_logs = []
     for record in records:
+        record = dict(record)
         # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
         record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
+        similar_hit = client_product_are_similar(record.get('client_name', ''), record.get('product_name', ''))
+        if similar_hit and record.get('business_type', '') != '强制赎回':
+            old_business_type = record.get('business_type', '')
+            record['business_type'] = '强制赎回'
+            record['_cleanup_reason'] = (
+                f"客户名与产品名非常类似，业务类型由 '{old_business_type}' 调整为 '强制赎回'："
+                f"客户={record.get('client_name', '')}，产品={record.get('product_name', '')}"
+            )
 
         # 过滤掉客户名称为"总计"的记录
         if record['client_name'] == '总计':
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，原因=客户名称为总计"
+            )
             continue
 
         # 过滤掉金额小于1000000（100万）或无金额的记录
@@ -450,21 +509,31 @@ def clean_data(records):
                 amount_ok = True
 
         if not amount_ok:
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，业务={record.get('business_type', '')}，原因=金额不足或为空"
+            )
             continue
 
         # 过滤掉申请日期为空的记录
         if not record['apply_date']:
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，业务={record.get('business_type', '')}，原因=申请日期为空"
+            )
             continue
 
         # 过滤掉"强制赎回"业务类型（暂不处理）
         if record.get('business_type', '') == '强制赎回':
             skipped_forced_redemption += 1
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，原因={record.pop('_cleanup_reason', '业务类型为强制赎回')}"
+            )
             continue
 
+        record.pop('_cleanup_reason', None)
         cleaned_records.append(record)
     if skipped_forced_redemption > 0:
         print(f'  已跳过 {skipped_forced_redemption} 条"强制赎回"记录（暂不处理）')
-    return cleaned_records
+    return cleaned_records, cleanup_logs
 
 def process_normal_business(records, folder_name):
     """处理普通业务类（申购、赎回）"""
@@ -765,6 +834,7 @@ def process_excel_files(base_dir=None):
         total_processed = 0
         total_normal_records = 0
         total_special_records = 0
+        all_cleanup_logs = []
 
         for excel_file, folder_name in excel_files:
             try:
@@ -775,7 +845,8 @@ def process_excel_files(base_dir=None):
                 records = extract_info(excel_file)
 
                 # 数据清洗
-                cleaned_records = clean_data(records)
+                cleaned_records, cleanup_logs = clean_data(records)
+                all_cleanup_logs.extend([f"[{os.path.basename(excel_file)}] {line}" for line in cleanup_logs])
 
                 if not cleaned_records:
                     print("无有效记录，跳过")
@@ -820,6 +891,8 @@ def process_excel_files(base_dir=None):
                 print(f"处理失败: {e}")
                 print("-" * 30)
                 continue
+
+        write_cleanup_info(base_dir, all_cleanup_logs)
 
         print("\n" + "=" * 50)
         print("处理完成！")

@@ -8,6 +8,7 @@ import openpyxl
 import xlrd
 from datetime import datetime, timedelta
 from docx.oxml.ns import qn
+from difflib import SequenceMatcher
 
 # 客户名称和客户代码对应关系
 client_code_map = {
@@ -357,48 +358,116 @@ def clean_data(records):
     """清洗数据"""
     cleaned_records = []
     skipped_forced_redemption = 0
+    cleanup_logs = []
 
     print(f"清洗前记录数量: {len(records)}")
 
     for record in records:
+        record = dict(record)
         # 打印记录信息用于调试
         print(f"处理记录: 客户={record['client_name']}, 状态={record['apply_statue']}, 日期={record['apply_date']}")
 
         # 清洗client_name：去除末尾的ASCII大写字母后缀（如份额类别A/B/C等）
         record['client_name'] = re.sub(r'[A-Z]+$', '', record['client_name']).strip()
+        similar_hit = client_product_are_similar(record.get('client_name', ''), record.get('product_name', ''))
+        if similar_hit and record.get('business_type', '') != '强制赎回':
+            old_business_type = record.get('business_type', '')
+            record['business_type'] = '强制赎回'
+            record['_cleanup_reason'] = (
+                f"客户名与产品名非常类似，业务类型由 '{old_business_type}' 调整为 '强制赎回'："
+                f"客户={record.get('client_name', '')}，产品={record.get('product_name', '')}"
+            )
 
         # 过滤掉客户名称为"总计"的记录
         if record['client_name'] == '总计':
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，原因=客户名称为总计"
+            )
             continue
 
         # 删除client_name是上海睿量私募基金管理有限公司的记录
         if record['client_name'] == '上海睿量私募基金管理有限公司':
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，原因=客户名称为上海睿量私募基金管理有限公司"
+            )
             continue
 
         # 过滤掉申请日期为空的记录
         if not record['apply_date']:
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，业务={record.get('business_type', '')}，原因=申请日期为空"
+            )
             continue
 
         # 过滤掉"强制赎回"业务类型（暂不处理）
         if record.get('business_type', '') == '强制赎回':
             skipped_forced_redemption += 1
+            cleanup_logs.append(
+                f"已清洗掉：客户={record.get('client_name', '')}，产品={record.get('product_name', '')}，原因={record.pop('_cleanup_reason', '业务类型为强制赎回')}"
+            )
             continue
 
         # 排除确认失败即可
         if record['apply_statue']:
-            if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success','未确认']:
-                # 检查是否是日期格式，如果是，说明列名匹配错误
-                date_str = str(record['apply_statue']).strip()
-                if len(date_str) == 8 and date_str.isdigit():
-                    print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
-                continue
+                if record['apply_statue'] not in ['成功', '确认成功', '已确认', '确认', 'SUCCESS', 'success','未确认']:
+                    # 检查是否是日期格式，如果是，说明列名匹配错误
+                    date_str = str(record['apply_statue']).strip()
+                    if len(date_str) == 8 and date_str.isdigit():
+                        print(f"  警告: 状态字段是日期格式，可能列名匹配错误: {date_str}")
+                    continue
 
+        record.pop('_cleanup_reason', None)
         cleaned_records.append(record)
 
     if skipped_forced_redemption > 0:
         print(f'  已跳过 {skipped_forced_redemption} 条"强制赎回"记录（暂不处理）')
     print(f"清洗后记录数量: {len(cleaned_records)}")
-    return cleaned_records
+    return cleaned_records, cleanup_logs
+
+
+def normalize_similarity_text(value):
+    text = re.sub(r'\s+', '', str(value or '')).strip()
+    text = re.sub(r'[，,。．.、/\\\-_（）()【】\[\]{}（）·]+', '', text)
+    while True:
+        new_text = re.sub(
+            r'((?:第?[一二三四五六七八九十\d]+期)|(?:[A-Z]{1,3}类)|(?:[A-Z]{1,3}份额)|(?:[A-Z]{1,3}期)|(?:[A-Z]{1,3}号)|(?:[A-Z]{1,3}级)|(?:[A-Z]{1,3}型))$',
+            '',
+            text,
+        )
+        if new_text == text:
+            break
+        text = new_text
+    return text
+
+
+def client_product_are_similar(client_name, product_name):
+    client_key = normalize_similarity_text(client_name)
+    product_key = normalize_similarity_text(product_name)
+    if not client_key or not product_key:
+        return False
+    if client_key == product_key:
+        return True
+    if client_key in product_key or product_key in client_key:
+        shorter = client_key if len(client_key) <= len(product_key) else product_key
+        longer = product_key if shorter is client_key else client_key
+        if len(shorter) >= 4 and len(shorter) / max(len(longer), 1) >= 0.75:
+            return True
+    return SequenceMatcher(None, client_key, product_key).ratio() >= 0.88
+
+
+def write_cleanup_info(output_dir, cleanup_logs):
+    output_path = os.path.join(output_dir, '清洗信息.txt')
+    lines = ['清洗信息', '=' * 50]
+    if cleanup_logs:
+        lines.extend(cleanup_logs)
+    else:
+        lines.append('未发现需要清洗的记录。')
+    content = '\n'.join(lines) + '\n'
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+    print('\n'.join(lines))
+    print(f"清洗信息已写入: {output_path}")
+    return output_path
 
 def organize_data(records):
     """整理数据为字典"""
@@ -546,8 +615,9 @@ def process_excel_files(base_dir=None, output_dir=None):
                 continue
 
         # 数据清洗
-        cleaned_records = clean_data(all_records)
+        cleaned_records, cleanup_logs = clean_data(all_records)
         print(f"清洗后共得到 {len(cleaned_records)} 条有效记录")
+        write_cleanup_info(output_dir, cleanup_logs)
 
         # 整理数据
         data_dict = organize_data(cleaned_records)

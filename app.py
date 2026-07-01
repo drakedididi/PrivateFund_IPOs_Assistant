@@ -209,9 +209,11 @@ def zip_output_dir(output_dir: Path, output_zip: Path) -> None:
 def move_generated_docx_files(source_dir: Path, output_dir: Path, before: set[Path]) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     moved_count = 0
-    for file_path in source_dir.rglob("*.docx"):
+    for file_path in source_dir.rglob("*"):
         resolved = file_path.resolve()
         if resolved in before or not file_path.is_file():
+            continue
+        if file_path.suffix.lower() not in {".docx", ".txt"}:
             continue
 
         target_path = output_dir / file_path.name
