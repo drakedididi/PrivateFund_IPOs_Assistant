@@ -140,6 +140,43 @@
       font-weight: 700;
     }
 
+    .week-pager {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .week-nav {
+      min-width: 76px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--navy-deep);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .week-nav:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+    }
+
+    .week-nav.primary {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+
+    .week-nav:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      transform: none;
+    }
+
     .view {
       display: none;
       padding: 10px 14px 16px;
@@ -812,6 +849,11 @@
         <span class="range-strong" id="dateRange"></span>
         <span id="todayInfo"></span>
         <span id="viewInfo"></span>
+        <div class="week-pager" id="weekPager">
+          <button type="button" class="week-nav" data-week-shift="-1">上一页</button>
+          <button type="button" class="week-nav primary" data-week-reset>回到本周</button>
+          <button type="button" class="week-nav" data-week-shift="1">下一页</button>
+        </div>
       </div>
 
       <section class="view active" id="view-a_share">
@@ -955,6 +997,7 @@
     const todayInfoEl = document.getElementById("todayInfo");
     const viewInfoEl = document.getElementById("viewInfo");
     const exchangeFiltersEl = document.getElementById("exchangeFilters");
+    const weekPagerEl = document.getElementById("weekPager");
     const aShareBoardEl = document.getElementById("aShareBoard");
     const shareButtons = Array.from(document.querySelectorAll(".share-trigger"));
     const shareModalEl = document.getElementById("shareModal");
@@ -987,6 +1030,9 @@
 
     let activeTab = "a_share";
     let activeExchange = "all";
+    let weekOffset = 0;
+    const WEEK_OFFSET_MIN = -1;
+    const WEEK_OFFSET_MAX = 1;
     const BOARD_CHECK_STORAGE_KEY = "ipo_board_checks_v1";
     const BOARD_MARKETS = new Set(["SH", "SZ"]);
     const boardCheckSet = loadBoardChecks();
@@ -1721,7 +1767,7 @@
     function renderAll() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const monday = startOfWeek(today);
+      const monday = addDays(startOfWeek(today), weekOffset * 7);
       const nextMonday = addDays(monday, 7);
       const currentWeek = getWeekDays(monday);
       const nextWeek = getWeekDays(nextMonday);
@@ -1738,6 +1784,8 @@
       } else {
         viewInfoEl.textContent = `当前视图：${VIEW_LABELS[activeTab]}`;
       }
+
+      updateWeekPagerState();
     }
 
     function setTab(tab) {
@@ -1750,6 +1798,26 @@
       });
       mainTitleEl.textContent = TAB_TITLES[tab];
       renderAll();
+    }
+
+    function updateWeekOffset(nextOffset) {
+      weekOffset = Math.max(WEEK_OFFSET_MIN, Math.min(WEEK_OFFSET_MAX, nextOffset));
+      renderAll();
+    }
+
+    function updateWeekPagerState() {
+      const prevBtn = weekPagerEl.querySelector("[data-week-shift='-1']");
+      const nextBtn = weekPagerEl.querySelector("[data-week-shift='1']");
+      const resetBtn = weekPagerEl.querySelector("[data-week-reset]");
+      if (prevBtn) {
+        prevBtn.disabled = weekOffset <= WEEK_OFFSET_MIN;
+      }
+      if (nextBtn) {
+        nextBtn.disabled = weekOffset >= WEEK_OFFSET_MAX;
+      }
+      if (resetBtn) {
+        resetBtn.disabled = weekOffset === 0;
+      }
     }
 
     function safeFileNamePart(value) {
@@ -2060,6 +2128,18 @@
         pill.classList.toggle("active", pill.dataset.exchange === activeExchange);
       });
       renderAll();
+    });
+
+    weekPagerEl.addEventListener("click", (event) => {
+      const shiftBtn = event.target.closest("[data-week-shift]");
+      if (shiftBtn) {
+        updateWeekOffset(weekOffset + Number(shiftBtn.dataset.weekShift || 0));
+        return;
+      }
+      const resetBtn = event.target.closest("[data-week-reset]");
+      if (resetBtn) {
+        updateWeekOffset(0);
+      }
     });
 
     if (aShareBoardEl) {
