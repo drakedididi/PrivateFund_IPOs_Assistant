@@ -983,14 +983,11 @@
             <button class="filter-btn pill" data-exchange="hs">沪深交易所</button>
             <button class="filter-btn pill" data-exchange="bj">北交所</button>
           </div>
+          <button type="button" class="share-trigger share-trigger-a-share" id="consoleShareBtn" data-share-view="a_share">分享图片</button>
         </div>
       </div>
 
       <section class="view active" id="view-a_share">
-        <div class="panel-head panel-head-a-share">
-          <h2 class="panel-title">A股日历</h2>
-          <button type="button" class="share-trigger share-trigger-a-share" data-share-view="a_share">分享图片</button>
-        </div>
         <main class="calendar">
           <div class="week-row" id="aWeekCurrent"></div>
           <div class="week-row" id="aWeekNext"></div>
@@ -1008,12 +1005,6 @@
       </section>
 
       <section class="view" id="view-bond">
-        <div class="panel-head">
-          <h2 class="panel-title">可转债日历</h2>
-          <div class="panel-actions">
-            <button type="button" class="share-trigger share-trigger-a-share" data-share-view="bond">分享图片</button>
-          </div>
-        </div>
         <main class="calendar">
           <div class="week-row" id="bondWeekCurrent"></div>
           <div class="week-row" id="bondWeekNext"></div>
@@ -1027,12 +1018,6 @@
       </section>
 
       <section class="view" id="view-h_share">
-        <div class="panel-head">
-          <h2 class="panel-title">H股日历</h2>
-          <div class="panel-actions">
-            <button type="button" class="share-trigger share-trigger-a-share" data-share-view="h_share">分享图片</button>
-          </div>
-        </div>
         <main class="calendar">
           <div class="week-row" id="hWeekCurrent"></div>
           <div class="week-row" id="hWeekNext"></div>
@@ -1116,14 +1101,14 @@
       h_share: {}
     };
 
-    const tabsEl = document.getElementById("tabs");
+      const tabsEl = document.getElementById("tabs");
       const mainTitleEl = document.getElementById("mainTitle");
       const consoleTitleEl = document.getElementById("consoleTitle");
-    const dateRangeEl = document.getElementById("dateRange");
-    const todayInfoEl = document.getElementById("todayInfo");
-    const viewInfoEl = document.getElementById("viewInfo");
-    const exchangeFiltersEl = document.getElementById("exchangeFilters");
-    const weekPagerEl = document.getElementById("weekPager");
+      const dateRangeEl = document.getElementById("dateRange");
+      const todayInfoEl = document.getElementById("todayInfo");
+      const exchangeFiltersEl = document.getElementById("exchangeFilters");
+      const weekPagerEl = document.getElementById("weekPager");
+      const consoleShareBtnEl = document.getElementById("consoleShareBtn");
     const aShareBoardEl = document.getElementById("aShareBoard");
     const shareButtons = Array.from(document.querySelectorAll(".share-trigger"));
     const shareModalEl = document.getElementById("shareModal");
@@ -1890,6 +1875,18 @@
       renderWeek(targets.h_share.next, nextWeek, today, TWO_TYPES, calendarData.h_share || {}, false, "all");
     }
 
+      function syncConsoleControls() {
+        if (consoleTitleEl) {
+          consoleTitleEl.textContent = VIEW_LABELS[activeTab];
+        }
+        if (exchangeFiltersEl) {
+          exchangeFiltersEl.style.display = activeTab === "a_share" ? "" : "none";
+        }
+        if (consoleShareBtnEl) {
+          consoleShareBtnEl.dataset.shareView = activeTab;
+        }
+      }
+
       function renderAll() {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -1905,23 +1902,16 @@
       dateRangeEl.textContent = formatRange(currentWeek[0], nextWeek[4]);
       todayInfoEl.textContent = `今天 ${today.getFullYear()}年${pad(today.getMonth() + 1)}月${pad(today.getDate())}日`;
 
-        if (activeTab === "a_share") {
-          viewInfoEl.textContent = `当前视图：${EXCHANGE_LABELS[activeExchange]}`;
-        } else {
-          viewInfoEl.textContent = `当前视图：${VIEW_LABELS[activeTab]}`;
-        }
-        if (consoleTitleEl) {
-          consoleTitleEl.textContent = VIEW_LABELS[activeTab];
-        }
+        syncConsoleControls();
 
         updateWeekPagerState();
       }
 
-    function setTab(tab) {
-      activeTab = tab;
-      Array.from(tabsEl.querySelectorAll(".tab-btn")).forEach((button) => {
-        button.classList.toggle("active", button.dataset.tab === tab);
-      });
+      function setTab(tab) {
+        activeTab = tab;
+        Array.from(tabsEl.querySelectorAll(".tab-btn")).forEach((button) => {
+          button.classList.toggle("active", button.dataset.tab === tab);
+        });
       Object.keys(views).forEach((key) => {
         views[key].classList.toggle("active", key === tab);
       });
@@ -2071,7 +2061,6 @@
       meta.appendChild(today);
 
       const viewInfo = document.createElement("span");
-      viewInfo.textContent = viewInfoEl.textContent || "";
       meta.appendChild(viewInfo);
 
       sheet.appendChild(meta);
