@@ -4,6 +4,7 @@ __pycache__/
 data/*
 !data/trading_holidays.json
 frontend/data/
+dist/
 temp/
 *.tmp
 项目说明.md

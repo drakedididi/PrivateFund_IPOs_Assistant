@@ -1969,12 +1969,9 @@
     async function loadCalendarData() {
       try {
         const ts = Date.now();
-        const DATA_BASE_URL = "https://pub-726d3f620e2c4dbf99889a63c9a5687d.r2.dev";
         const dataUrls = (fileName) => [
-          `/api/calendar/${fileName}`,
           `./data/${fileName}`,
-          `../data/${fileName}`,
-          `${DATA_BASE_URL}/${fileName}`
+          `../data/${fileName}`
         ];
         const tryFetchJson = async (path) => {
           try {

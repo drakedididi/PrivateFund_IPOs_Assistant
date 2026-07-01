@@ -1,6 +1,10 @@
 name: Daily Crawl
 
 on:
+  push:
+    branches:
+      - main
+
   schedule:
     - cron: '0 21 * * *'
     - cron: '0 22 * * *'
@@ -10,7 +14,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   crawl:
@@ -38,26 +42,34 @@ jobs:
           playwright install-deps chromium
 
       - name: Run crawler
-        env:
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: python scramer_merge.py
+
+      - name: Sync frontend calendar data
+        run: |
+          mkdir -p frontend/data
+          cp data/Asharecalendar_data.json frontend/data/Asharecalendar_data.json
+          cp data/bondcalendar_data.json frontend/data/bondcalendar_data.json
+          cp data/Hsharecalendar_data.json frontend/data/Hsharecalendar_data.json
+          cp data/calendar_data.json frontend/data/calendar_data.json
+          cp data/trading_holidays.json frontend/data/trading_holidays.json
 
       - name: Sync unlock db
         id: sync_unlock_db
         continue-on-error: true
         run: python sync_unlock_db.py
 
-      - name: Commit unlock db changes
-        if: steps.sync_unlock_db.outcome == 'success'
+      - name: Build Pages artifact
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add frontend/unlock_db.js
-          if git diff --cached --quiet; then
-            echo "No unlock_db.js changes to commit."
-            exit 0
-          fi
-          git commit -m "chore: refresh unlock db"
-          git push
+          mkdir -p dist
+          cp -r frontend dist/frontend
+          cp index.html dist/index.html
+          cp IPO.html dist/IPO.html
+          cp module_tools.html dist/module_tools.html
+          cp trade_tools.html dist/trade_tools.html
+
+      - name: Deploy generated site to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=fundsassistant --branch=main
