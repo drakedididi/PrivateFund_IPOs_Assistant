@@ -327,6 +327,34 @@
       font-size: 14px;
     }
 
+    .pdf-withdraw-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .pdf-withdraw-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 42px;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid #d9e3f5;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pdf-withdraw-count {
+      color: var(--navy);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
     @media (max-width: 640px) {
       .upload-row {
         flex-direction: column;
@@ -353,6 +381,10 @@
         width: 100%;
         padding: 4px 0;
       }
+
+      .pdf-withdraw-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -369,6 +401,7 @@
       <a href="#extra-revenue" data-target="extra-revenue">超额收益</a>
       <a href="#redemption" data-target="redemption">巨额赎回</a>
       <a href="#valuation-table" data-target="valuation-table">资产爬取</a>
+      <a href="#pdf-withdraw" data-target="pdf-withdraw">PDF抽取</a>
       <a href="#related-deal" data-target="related-deal">关联交易</a>
     </div>
 
@@ -456,6 +489,43 @@
         <button class="upload-btn enabled" type="button" data-api="/api/valuation-table" data-private="true" data-extensions=".zip,.pdf" data-download-suffix="_valuation_table.zip">上传并下载结果</button>
       </div>
       <p class="upload-status"></p>
+    </section>
+
+    <section class="tool-card" id="pdf-withdraw">
+      <h2>PDF抽取</h2>
+      <p class="script-path">脚本：module_tools/withdraw.py</p>
+      <div class="pdf-withdraw-grid">
+        <div class="sub-tool">
+          <h3>读取产品清单</h3>
+          <div class="upload-row">
+            <label class="upload-area enabled" id="pdf-withdraw-excel-area">
+              <input class="upload-input enabled" type="file" id="pdf-withdraw-excel-input" accept=".xlsx,.xls">
+              <span class="file-label" id="pdf-withdraw-excel-label">拖拽 Excel 文件到此处，或点击选择文件</span>
+            </label>
+            <button class="upload-btn enabled" type="button" id="pdf-withdraw-products-btn">读取产品</button>
+          </div>
+          <p class="upload-status" id="pdf-withdraw-products-status"></p>
+          <div class="pdf-withdraw-summary">
+            <span>已读取产品数量</span>
+            <span class="pdf-withdraw-count" id="pdf-withdraw-product-count">0</span>
+          </div>
+        </div>
+
+        <div class="sub-tool">
+          <h3>匹配PDF压缩包</h3>
+          <div class="upload-row">
+            <label class="upload-area enabled" id="pdf-withdraw-zip-area">
+              <input class="upload-input enabled" type="file" id="pdf-withdraw-zip-input" accept=".zip,application/zip">
+              <span class="file-label" id="pdf-withdraw-zip-label">拖拽 ZIP 文件到此处，或点击选择文件</span>
+            </label>
+            <button class="upload-btn enabled" type="button" id="pdf-withdraw-run-btn" disabled>上传并下载结果</button>
+          </div>
+          <p class="upload-status" id="pdf-withdraw-run-status"></p>
+          <div class="pdf-withdraw-summary">
+            <span>匹配完成后下载 ZIP，内含匹配报告</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="tool-card" id="related-deal">
@@ -818,9 +888,220 @@
         });
       }
 
+      function initPdfWithdrawTool() {
+        const excelArea = document.getElementById("pdf-withdraw-excel-area");
+        const excelInput = document.getElementById("pdf-withdraw-excel-input");
+        const excelLabel = document.getElementById("pdf-withdraw-excel-label");
+        const productsButton = document.getElementById("pdf-withdraw-products-btn");
+        const productsStatus = document.getElementById("pdf-withdraw-products-status");
+        const productCount = document.getElementById("pdf-withdraw-product-count");
+        const zipArea = document.getElementById("pdf-withdraw-zip-area");
+        const zipInput = document.getElementById("pdf-withdraw-zip-input");
+        const zipLabel = document.getElementById("pdf-withdraw-zip-label");
+        const runButton = document.getElementById("pdf-withdraw-run-btn");
+        const runStatus = document.getElementById("pdf-withdraw-run-status");
+
+        if (!excelArea || !excelInput || !excelLabel || !productsButton || !productsStatus ||
+            !productCount || !zipArea || !zipInput || !zipLabel || !runButton || !runStatus) {
+          return;
+        }
+
+        const defaultExcelLabel = excelLabel.textContent;
+        const defaultZipLabel = zipLabel.textContent;
+        const defaultProductsButtonText = productsButton.textContent;
+        const defaultRunButtonText = runButton.textContent;
+        let selectedExcel = null;
+        let selectedZip = null;
+        let products = [];
+
+        function setStatus(element, text, state) {
+          element.textContent = text;
+          element.classList.toggle("error", state === "error");
+          element.classList.toggle("success", state === "success");
+        }
+
+        function tokenHeaders(statusEl) {
+          const token = tokenInput ? tokenInput.value.trim() : "";
+          if (!token) {
+            setStatus(statusEl, "请输入 APP_SECRET_TOKEN。", "error");
+            return null;
+          }
+          return { "X-App-Secret-Token": token };
+        }
+
+        function setProductsLoading(loading) {
+          productsButton.disabled = loading;
+          excelInput.disabled = loading;
+          productsButton.textContent = loading ? "读取中..." : defaultProductsButtonText;
+        }
+
+        function setRunLoading(loading) {
+          runButton.disabled = loading || products.length === 0;
+          zipInput.disabled = loading;
+          runButton.textContent = loading ? "处理中..." : defaultRunButtonText;
+        }
+
+        function setExcelFile(file) {
+          selectedExcel = file || null;
+          excelLabel.textContent = selectedExcel ? ("已选择：" + selectedExcel.name) : defaultExcelLabel;
+          products = [];
+          productCount.textContent = "0";
+          runButton.disabled = true;
+          setStatus(runStatus, "");
+        }
+
+        function setZipFile(file) {
+          selectedZip = file || null;
+          zipLabel.textContent = selectedZip ? ("已选择：" + selectedZip.name) : defaultZipLabel;
+        }
+
+        function bindFileDrop(area, setFile) {
+          ["dragenter", "dragover"].forEach(function (eventName) {
+            area.addEventListener(eventName, function (event) {
+              handleDragState(event, area, true);
+            });
+          });
+          ["dragleave", "dragend", "drop"].forEach(function (eventName) {
+            area.addEventListener(eventName, function (event) {
+              handleDragState(event, area, false);
+            });
+          });
+          area.addEventListener("drop", function (event) {
+            const files = event.dataTransfer ? event.dataTransfer.files : null;
+            if (files && files.length > 0) {
+              setFile(files[0]);
+            }
+          });
+        }
+
+        bindFileDrop(excelArea, setExcelFile);
+        bindFileDrop(zipArea, setZipFile);
+
+        excelInput.addEventListener("change", function () {
+          setExcelFile(excelInput.files && excelInput.files.length > 0 ? excelInput.files[0] : null);
+        });
+
+        zipInput.addEventListener("change", function () {
+          setZipFile(zipInput.files && zipInput.files.length > 0 ? zipInput.files[0] : null);
+        });
+
+        productsButton.addEventListener("click", async function () {
+          if (!selectedExcel) {
+            setStatus(productsStatus, "请先选择 Excel 文件。", "error");
+            return;
+          }
+          if (![".xlsx", ".xls"].includes(fileExtension(selectedExcel.name))) {
+            setStatus(productsStatus, "仅支持 .xlsx 或 .xls 文件。", "error");
+            return;
+          }
+          const headers = tokenHeaders(productsStatus);
+          if (!headers) {
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("file", selectedExcel, selectedExcel.name);
+          setProductsLoading(true);
+          setStatus(productsStatus, "正在读取产品列...");
+
+          try {
+            const response = await fetch(resolveApiUrl("/api/pdf-withdraw/products"), {
+              method: "POST",
+              headers: headers,
+              body: formData
+            });
+            const body = await response.json();
+            if (!response.ok) {
+              throw new Error(body && body.error ? body.error : ("请求失败：" + response.status));
+            }
+            products = Array.isArray(body.products) ? body.products : [];
+            productCount.textContent = String(products.length);
+            runButton.disabled = products.length === 0;
+            setStatus(productsStatus, "读取完成，共 " + products.length + " 个产品。", "success");
+          } catch (error) {
+            products = [];
+            productCount.textContent = "0";
+            runButton.disabled = true;
+            setStatus(productsStatus, "读取失败：" + (error.message || "未知错误"), "error");
+          } finally {
+            setProductsLoading(false);
+          }
+        });
+
+        runButton.addEventListener("click", async function () {
+          if (products.length === 0) {
+            setStatus(runStatus, "请先读取产品清单。", "error");
+            return;
+          }
+          if (!selectedZip) {
+            setStatus(runStatus, "请先选择 ZIP 文件。", "error");
+            return;
+          }
+          if (fileExtension(selectedZip.name) !== ".zip") {
+            setStatus(runStatus, "仅支持 .zip 文件。", "error");
+            return;
+          }
+          const headers = tokenHeaders(runStatus);
+          if (!headers) {
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("file", selectedZip, selectedZip.name);
+          formData.append("products", JSON.stringify(products));
+          setRunLoading(true);
+          setStatus(runStatus, "正在遍历 ZIP 并匹配 PDF...");
+
+          try {
+            const response = await fetch(resolveApiUrl("/api/pdf-withdraw"), {
+              method: "POST",
+              headers: headers,
+              body: formData
+            });
+            if (!response.ok) {
+              let errorMessage = "请求失败：" + response.status;
+              try {
+                const errorBody = await response.json();
+                if (errorBody && errorBody.error) {
+                  errorMessage = errorBody.error;
+                }
+              } catch (e) {
+              }
+              throw new Error(errorMessage);
+            }
+
+            const outputBlob = await response.blob();
+            const downloadName = inferDownloadName(
+              response,
+              stemName(selectedZip.name) + "_pdf_withdraw.zip"
+            );
+            const objectUrl = URL.createObjectURL(outputBlob);
+            const link = document.createElement("a");
+            link.href = objectUrl;
+            link.download = downloadName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+
+            const summary = decodeHeaderValue(response.headers.get("X-PDF-Withdraw-Summary"));
+            setStatus(runStatus, summary || "处理完成，结果已开始下载。", "success");
+          } catch (error) {
+            let message = error && error.message ? error.message : "未知错误";
+            if (message === "Failed to fetch") {
+              message = "无法连接后端，请确认 Render 服务可访问：https://privatefund-ipos-assistant-km21.onrender.com/api/health";
+            }
+            setStatus(runStatus, "处理失败：" + message, "error");
+          } finally {
+            setRunLoading(false);
+          }
+        });
+      }
+
       uploadButtons.forEach(function (button) {
         initUploadTool(button);
       });
+      initPdfWithdrawTool();
     })();
   </script>
 </body>

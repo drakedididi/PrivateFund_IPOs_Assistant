@@ -8,7 +8,6 @@ import openpyxl
 import xlrd
 from datetime import datetime, timedelta
 from docx.oxml.ns import qn
-from difflib import SequenceMatcher
 
 # 客户名称和客户代码对应关系
 client_code_map = {
@@ -428,31 +427,38 @@ def clean_data(records):
 def normalize_similarity_text(value):
     text = re.sub(r'\s+', '', str(value or '')).strip()
     text = re.sub(r'[，,。．.、/\\\-_（）()【】\[\]{}（）·]+', '', text)
-    while True:
-        new_text = re.sub(
-            r'((?:第?[一二三四五六七八九十\d]+期)|(?:[A-Z]{1,3}类)|(?:[A-Z]{1,3}份额)|(?:[A-Z]{1,3}期)|(?:[A-Z]{1,3}号)|(?:[A-Z]{1,3}级)|(?:[A-Z]{1,3}型))$',
-            '',
-            text,
-        )
-        if new_text == text:
-            break
-        text = new_text
     return text
 
 
+def extract_related_name_signature(value):
+    text = normalize_similarity_text(value)
+    if not text:
+        return None
+
+    phase_match = re.search(r'(?:第?)(一|二|1|2)期', text)
+    class_match = re.search(r'([AB])(?:类(?:份额)?|份额)?', text, re.IGNORECASE)
+
+    marker_value = None
+    if phase_match:
+        marker_value = 'A' if phase_match.group(1) in ('一', '1') else 'B'
+    elif class_match:
+        marker_value = class_match.group(1).upper()
+
+    core = re.sub(r'(?:第?)(?:一|二|1|2)期', '', text)
+    core = re.sub(r'([AB])(?:类(?:份额)?|份额)?', '', core, flags=re.IGNORECASE)
+    core = re.sub(r'([AB])$', '', core, flags=re.IGNORECASE)
+    core = core.strip()
+    if not core or marker_value is None:
+        return None
+    return core, marker_value
+
+
 def client_product_are_similar(client_name, product_name):
-    client_key = normalize_similarity_text(client_name)
-    product_key = normalize_similarity_text(product_name)
-    if not client_key or not product_key:
+    client_signature = extract_related_name_signature(client_name)
+    product_signature = extract_related_name_signature(product_name)
+    if not client_signature or not product_signature:
         return False
-    if client_key == product_key:
-        return True
-    if client_key in product_key or product_key in client_key:
-        shorter = client_key if len(client_key) <= len(product_key) else product_key
-        longer = product_key if shorter is client_key else client_key
-        if len(shorter) >= 4 and len(shorter) / max(len(longer), 1) >= 0.75:
-            return True
-    return SequenceMatcher(None, client_key, product_key).ratio() >= 0.88
+    return client_signature == product_signature
 
 
 def write_cleanup_info(output_dir, cleanup_logs):

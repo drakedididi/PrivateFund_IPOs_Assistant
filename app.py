@@ -21,6 +21,7 @@ from module_tools.inquiry_video.video import process_excel_files as process_inqu
 from module_tools.related_deal.convert_openyxl import process_excel_files as process_related_decision_files
 from module_tools.related_deal.multi_fund import process_excel_files as process_related_notice_files
 from module_tools.valuation_table.valuation_table import process_excel_files as process_valuation_table_files
+from module_tools.withdraw import read_products_from_excel_bytes, withdraw_pdfs
 
 
 RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
@@ -30,6 +31,7 @@ EXPOSED_HEADERS = [
     "X-App-Version",
     "X-Extra-Revenue-Frequency",
     "X-Max-Recovery-Period",
+    "X-PDF-Withdraw-Summary",
     "X-Recovery-Periods",
 ]
 
@@ -350,6 +352,90 @@ def run_extra_revenue_tool():
             str(result["recovery_periods_text"]),
             safe="",
         )
+        return response
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"error": f"处理失败: {exc}"}), 500
+
+
+def parse_product_payload() -> list[str]:
+    products_json = request.form.get("products", "[]")
+    try:
+        import json
+
+        raw_products = json.loads(products_json)
+    except Exception as exc:
+        raise ValueError("产品列表格式错误") from exc
+    if not isinstance(raw_products, list):
+        raise ValueError("产品列表格式错误")
+    products = [str(item).strip() for item in raw_products if str(item).strip()]
+    if not products:
+        raise ValueError("产品列表为空，请先读取 Excel")
+    return products
+
+
+@app.route("/api/pdf-withdraw/products", methods=["POST"])
+def api_pdf_withdraw_products():
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+
+    uploaded_file = request.files.get("file")
+    if uploaded_file is None or not uploaded_file.filename:
+        return jsonify({"error": "请上传 Excel 文件"}), 400
+
+    filename, suffix = safe_upload_filename(uploaded_file.filename, "products")
+    if suffix not in {".xlsx", ".xls"}:
+        return jsonify({"error": "仅支持 XLSX 或 XLS 文件"}), 400
+
+    try:
+        products = read_products_from_excel_bytes(uploaded_file.read(), suffix)
+        return jsonify({"count": len(products), "products": products, "filename": filename}), 200
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"error": f"处理失败: {exc}"}), 500
+
+
+@app.route("/api/pdf-withdraw", methods=["POST"])
+def api_pdf_withdraw():
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+
+    uploaded_file = request.files.get("file")
+    if uploaded_file is None or not uploaded_file.filename:
+        return jsonify({"error": "请上传 ZIP 文件"}), 400
+
+    filename, suffix = safe_upload_filename(uploaded_file.filename, "pdf_withdraw_input")
+    if suffix != ".zip":
+        return jsonify({"error": "仅支持 ZIP 文件"}), 400
+
+    try:
+        products = parse_product_payload()
+        with tempfile.TemporaryDirectory(prefix="pdf_withdraw_api_") as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            input_zip = tmp_path / filename
+            output_zip = tmp_path / f"{Path(filename).stem}_pdf_withdraw.zip"
+            uploaded_file.save(str(input_zip))
+            stats = withdraw_pdfs(input_zip, products, output_zip)
+            result_bytes = output_zip.read_bytes()
+
+        response = send_file(
+            io.BytesIO(result_bytes),
+            mimetype="application/zip",
+            as_attachment=True,
+            download_name=output_zip.name,
+        )
+        summary = (
+            f"产品{stats['product_total']}个；"
+            f"ZIP内PDF{stats['pdf_total']}个；"
+            f"匹配产品{stats['matched_products']}个；"
+            f"抽取PDF{stats['copied_total']}个；"
+            f"未匹配产品{stats['unmatched_products']}个"
+        )
+        response.headers["X-PDF-Withdraw-Summary"] = quote(summary, safe="")
         return response
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
