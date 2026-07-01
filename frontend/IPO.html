@@ -125,56 +125,155 @@
       box-shadow: 0 10px 24px rgba(47, 94, 168, 0.22);
     }
 
-    .board-meta {
+    .board-meta-console {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 14px;
-      padding: 10px 18px 0;
-      color: var(--muted);
-      font-size: 14px;
+      justify-content: space-between;
+      background-color: #ffffff;
+      border: 1px solid var(--line, #c9d7ee);
+      border-radius: 14px;
+      padding: 12px 20px;
+      margin: 16px 12px;
+      box-shadow: 0 4px 16px rgba(47, 94, 168, 0.05);
+      gap: 20px;
     }
 
-    .range-strong {
-      color: var(--text);
+    .console-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1 1 30%;
+      min-width: 0;
+    }
+
+    .console-title {
+      margin: 0;
+      font-size: 18px;
+      color: var(--navy, #2f5ea8);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .console-divider {
+      color: #d0d5dd;
+      font-weight: 300;
+    }
+
+    .console-date-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .console-date-info .range-strong {
+      font-size: 14px;
       font-weight: 700;
+      color: #1d2939;
+    }
+
+    .console-date-info .today-tag {
+      font-size: 11px;
+      color: #667085;
+    }
+
+    .console-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1 1 40%;
+      min-width: 0;
     }
 
     .week-pager {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      background-color: #f2f4f7;
+      padding: 4px;
+      border-radius: 99px;
+      gap: 2px;
+    }
+
+    .pager-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #344054;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .pager-btn:hover {
+      background-color: #ffffff;
+      color: var(--navy, #2f5ea8);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .pager-btn.today {
+      background-color: #ffffff;
+      color: var(--navy, #2f5ea8);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .console-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+      flex: 1 1 30%;
+      min-width: 0;
+    }
+
+    .exchange-filters {
+      display: flex;
+      background-color: #f2f4f7;
+      padding: 4px;
+      border-radius: 8px;
+      gap: 2px;
+      flex: 0 0 auto;
       margin-left: auto;
     }
 
-    .week-nav {
-      min-width: 76px;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--navy-deep);
-      border-radius: 999px;
-      padding: 6px 10px;
+    .filter-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 6px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
+      color: #475467;
       cursor: pointer;
-      transition: 0.2s ease;
+      white-space: nowrap;
+      transition: all 0.15s ease;
     }
 
-    .week-nav:hover {
-      border-color: var(--line-strong);
-      transform: translateY(-1px);
+    .filter-btn.active,
+    .filter-btn:hover {
+      background-color: var(--navy, #2f5ea8);
+      color: #ffffff;
     }
 
-    .week-nav.primary {
-      background: var(--navy);
-      border-color: var(--navy);
-      color: #fff;
+    .share-btn {
+      border: 1px solid #d0d5dd;
+      background: #ffffff;
+      color: #344054;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
     }
 
-    .week-nav:disabled {
-      cursor: not-allowed;
-      opacity: 0.45;
-      transform: none;
+    .share-btn:hover {
+      background-color: #f9fafb;
+      border-color: #98a2b3;
     }
 
     .view {
@@ -215,6 +314,7 @@
     .exchange-filters {
       margin-left: auto;
       gap: 10px;
+      flex: 0 0 auto;
     }
 
     .pill {
@@ -788,8 +888,24 @@
         padding: 12px 12px 8px;
       }
 
-      .board-meta {
-        padding: 8px 12px 0;
+      .board-meta-console {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin: 12px 8px;
+        padding: 12px 14px;
+      }
+
+      .console-left,
+      .console-center,
+      .console-right {
+        flex: 1 1 auto;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .console-right {
+        justify-content: center;
       }
 
       .view {
@@ -845,14 +961,28 @@
         </div>
       </header>
 
-      <div class="board-meta">
-        <span class="range-strong" id="dateRange"></span>
-        <span id="todayInfo"></span>
-        <span id="viewInfo"></span>
-        <div class="week-pager" id="weekPager">
-          <button type="button" class="week-nav" data-week-shift="-1">上一页</button>
-          <button type="button" class="week-nav primary" data-week-reset>回到本周</button>
-          <button type="button" class="week-nav" data-week-shift="1">下一页</button>
+      <div class="board-meta-console">
+        <div class="console-left">
+          <h2 class="console-title" id="consoleTitle">A股日历</h2>
+          <span class="console-divider">|</span>
+          <div class="console-date-info">
+            <span class="range-strong" id="dateRange"></span>
+            <span class="today-tag" id="todayInfo"></span>
+          </div>
+        </div>
+        <div class="console-center">
+          <div class="week-pager" id="weekPager">
+            <button type="button" class="pager-btn prev week-nav" data-week-shift="-1">上一页</button>
+            <button type="button" class="pager-btn today week-nav primary" data-week-reset>返回本周</button>
+            <button type="button" class="pager-btn next week-nav" data-week-shift="1">下一页</button>
+          </div>
+        </div>
+        <div class="console-right">
+          <div class="filters exchange-filters" id="exchangeFilters">
+            <button class="filter-btn pill active" data-exchange="all">全部交易所</button>
+            <button class="filter-btn pill" data-exchange="hs">沪深交易所</button>
+            <button class="filter-btn pill" data-exchange="bj">北交所</button>
+          </div>
         </div>
       </div>
 
@@ -860,11 +990,6 @@
         <div class="panel-head panel-head-a-share">
           <h2 class="panel-title">A股日历</h2>
           <button type="button" class="share-trigger share-trigger-a-share" data-share-view="a_share">分享图片</button>
-          <div class="filters exchange-filters" id="exchangeFilters">
-            <button class="pill active" data-exchange="all">全部交易所</button>
-            <button class="pill" data-exchange="hs">沪深交易所</button>
-            <button class="pill" data-exchange="bj">北交所</button>
-          </div>
         </div>
         <main class="calendar">
           <div class="week-row" id="aWeekCurrent"></div>
@@ -992,7 +1117,8 @@
     };
 
     const tabsEl = document.getElementById("tabs");
-    const mainTitleEl = document.getElementById("mainTitle");
+      const mainTitleEl = document.getElementById("mainTitle");
+      const consoleTitleEl = document.getElementById("consoleTitle");
     const dateRangeEl = document.getElementById("dateRange");
     const todayInfoEl = document.getElementById("todayInfo");
     const viewInfoEl = document.getElementById("viewInfo");
@@ -1764,9 +1890,9 @@
       renderWeek(targets.h_share.next, nextWeek, today, TWO_TYPES, calendarData.h_share || {}, false, "all");
     }
 
-    function renderAll() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      function renderAll() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
       const monday = addDays(startOfWeek(today), weekOffset * 7);
       const nextMonday = addDays(monday, 7);
       const currentWeek = getWeekDays(monday);
@@ -1779,14 +1905,17 @@
       dateRangeEl.textContent = formatRange(currentWeek[0], nextWeek[4]);
       todayInfoEl.textContent = `今天 ${today.getFullYear()}年${pad(today.getMonth() + 1)}月${pad(today.getDate())}日`;
 
-      if (activeTab === "a_share") {
-        viewInfoEl.textContent = `当前视图：${EXCHANGE_LABELS[activeExchange]}`;
-      } else {
-        viewInfoEl.textContent = `当前视图：${VIEW_LABELS[activeTab]}`;
-      }
+        if (activeTab === "a_share") {
+          viewInfoEl.textContent = `当前视图：${EXCHANGE_LABELS[activeExchange]}`;
+        } else {
+          viewInfoEl.textContent = `当前视图：${VIEW_LABELS[activeTab]}`;
+        }
+        if (consoleTitleEl) {
+          consoleTitleEl.textContent = VIEW_LABELS[activeTab];
+        }
 
-      updateWeekPagerState();
-    }
+        updateWeekPagerState();
+      }
 
     function setTab(tab) {
       activeTab = tab;
@@ -2118,17 +2247,17 @@
       setTab(btn.dataset.tab);
     });
 
-    exchangeFiltersEl.addEventListener("click", (event) => {
-      const btn = event.target.closest(".pill");
-      if (!btn) {
-        return;
-      }
-      activeExchange = btn.dataset.exchange;
-      Array.from(exchangeFiltersEl.querySelectorAll(".pill")).forEach((pill) => {
-        pill.classList.toggle("active", pill.dataset.exchange === activeExchange);
+      exchangeFiltersEl.addEventListener("click", (event) => {
+        const btn = event.target.closest(".pill, .filter-btn");
+        if (!btn) {
+          return;
+        }
+        activeExchange = btn.dataset.exchange;
+        Array.from(exchangeFiltersEl.querySelectorAll(".pill, .filter-btn")).forEach((pill) => {
+          pill.classList.toggle("active", pill.dataset.exchange === activeExchange);
+        });
+        renderAll();
       });
-      renderAll();
-    });
 
     weekPagerEl.addEventListener("click", (event) => {
       const shiftBtn = event.target.closest("[data-week-shift]");
