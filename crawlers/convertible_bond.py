@@ -96,7 +96,7 @@ def fetch(
 
         tbody = page.locator(f"xpath={TBODY_XPATH}")
         rows = tbody.first.locator("tr")
-        row_count = min(10, rows.count())
+        row_count = min(20, rows.count())
         if verbose:
             print(f"[BOND] 开始解析 {row_count} 行。")
 
