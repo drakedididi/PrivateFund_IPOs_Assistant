@@ -106,7 +106,7 @@ def fetch(
     timeout_ms: int = 30000,
     verbose: bool = True,
 ) -> dict[str, dict[str, list[Any]]]:
-    date_list = get_calendar_range(reference_date)
+    date_list = get_calendar_range(reference_date, weeks_before=0, weeks_after=1)
     raw_data = init_calendar_data(date_list)
 
     row_date_map = {

@@ -74,19 +74,20 @@ def get_playwright_headless(default: bool = False) -> bool:
     return default
 
 
-def get_calendar_range(reference_date: dt.date | dt.datetime | str | None = None) -> list[str]:
+def get_calendar_range(
+    reference_date: dt.date | dt.datetime | str | None = None,
+    weeks_before: int = 1,
+    weeks_after: int = 2,
+) -> list[str]:
     ref = _to_date(reference_date)
     monday = ref - dt.timedelta(days=ref.weekday())
-    current_week = [
-        (monday + dt.timedelta(days=offset)).strftime("%Y-%m-%d")
+    start_monday = monday - dt.timedelta(days=max(0, weeks_before) * 7)
+    week_count = 1 + max(0, weeks_before) + max(0, weeks_after)
+    return [
+        (start_monday + dt.timedelta(days=week * 7 + offset)).strftime("%Y-%m-%d")
+        for week in range(week_count)
         for offset in range(5)
     ]
-    next_monday = monday + dt.timedelta(days=7)
-    next_week = [
-        (next_monday + dt.timedelta(days=offset)).strftime("%Y-%m-%d")
-        for offset in range(5)
-    ]
-    return current_week + next_week
 
 
 def init_calendar_data(date_list: Sequence[str]) -> dict[str, dict[str, list[Any]]]:
