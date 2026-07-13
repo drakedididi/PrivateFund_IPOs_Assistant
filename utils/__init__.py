@@ -7,6 +7,7 @@ from .utils import (
     in_calendar_range,
     init_calendar_data,
     normalize_fetch_output,
+    shift_trading_date_key,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "in_calendar_range",
     "init_calendar_data",
     "normalize_fetch_output",
+    "shift_trading_date_key",
 ]

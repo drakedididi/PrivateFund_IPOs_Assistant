@@ -14,6 +14,7 @@ EMPTY_DAY = {
     "subscribe": [],
     "payment": [],
     "listing": [],
+    "grey_market": [],
 }
 
 EVENT_KEYS = tuple(EMPTY_DAY.keys())
@@ -114,6 +115,23 @@ def clean_data(value: Any, reference_date: dt.date | dt.datetime | str | None = 
 
 def in_calendar_range(date_key: str, date_list: Sequence[str]) -> bool:
     return clean_data(date_key) in set(date_list)
+
+
+def shift_trading_date_key(date_key: str, days: int) -> str:
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(date_key or "").strip()):
+        return ""
+    try:
+        current = dt.datetime.strptime(str(date_key).strip(), "%Y-%m-%d").date()
+    except ValueError:
+        return ""
+
+    step = 1 if days >= 0 else -1
+    remaining = abs(days)
+    while remaining:
+        current += dt.timedelta(days=step)
+        if current.weekday() < 5:
+            remaining -= 1
+    return current.strftime("%Y-%m-%d")
 
 
 def normalize_fetch_output(
