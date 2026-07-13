@@ -13,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from utils import clean_data, get_calendar_range, get_playwright_headless, init_calendar_data, normalize_fetch_output
+from utils import clean_data, get_calendar_range, get_playwright_headless, init_calendar_data, normalize_fetch_output, shift_trading_date_key
 
 
 URL = "https://data.eastmoney.com/xg/xg/?mkt=kzz"
@@ -101,6 +101,7 @@ def fetch(
             print(f"[BOND] 开始解析 {row_count} 行。")
 
         hit_subscribe = 0
+        hit_payment = 0
         hit_listing = 0
 
         for i in range(row_count):
@@ -125,17 +126,21 @@ def fetch(
             )
 
             subscribe_date = _extract_date_from_td(cells.nth(3), reference_date=reference_date)
+            payment_date = shift_trading_date_key(subscribe_date, 2)
             listing_date = _extract_date_from_td(cells.nth(19), reference_date=reference_date)
 
             if subscribe_date in date_set:
                 raw_data[subscribe_date]["subscribe"].append(dict(item))
                 hit_subscribe += 1
+            if payment_date in date_set:
+                raw_data[payment_date]["payment"].append(dict(item))
+                hit_payment += 1
             if listing_date in date_set:
                 raw_data[listing_date]["listing"].append(dict(item))
                 hit_listing += 1
 
         if verbose:
-            print(f"[BOND] 命中 subscribe={hit_subscribe}, listing={hit_listing}")
+            print(f"[BOND] 命中 subscribe={hit_subscribe}, payment={hit_payment}, listing={hit_listing}")
 
         browser.close()
 

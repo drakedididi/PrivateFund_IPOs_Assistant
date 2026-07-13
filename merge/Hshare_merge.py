@@ -13,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from utils import clean_data, get_calendar_range, get_playwright_headless, init_calendar_data, normalize_fetch_output
+from utils import clean_data, get_calendar_range, get_playwright_headless, init_calendar_data, normalize_fetch_output, shift_trading_date_key
 
 
 URL = "https://hk.eastmoney.com/ipolist.html"
@@ -83,6 +83,7 @@ def fetch(
             print(f"[HSHARE] 开始解析 {row_count} 行。")
 
         hit_subscribe = 0
+        hit_grey_market = 0
         hit_listing = 0
 
         for i in range(row_count):
@@ -111,6 +112,7 @@ def fetch(
                 indexes=[4, 7],
                 reference_date=reference_date,
             )
+            grey_market_date = shift_trading_date_key(listing_date, -1)
 
             if subscribe_date in date_set:
                 raw_data[subscribe_date]["subscribe"].append(dict(item))
@@ -120,8 +122,12 @@ def fetch(
                 raw_data[listing_date]["listing"].append(dict(item))
                 hit_listing += 1
 
+            if grey_market_date in date_set:
+                raw_data[grey_market_date]["grey_market"].append(dict(item))
+                hit_grey_market += 1
+
         if verbose:
-            print(f"[HSHARE] 命中 subscribe={hit_subscribe}, listing={hit_listing}")
+            print(f"[HSHARE] 命中 subscribe={hit_subscribe}, grey_market={hit_grey_market}, listing={hit_listing}")
 
         browser.close()
 

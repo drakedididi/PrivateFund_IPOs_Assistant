@@ -1084,8 +1084,14 @@
       { key: "listing", label: "上市" },
       { key: "unlock", label: "解禁" }
     ];
-    const TWO_TYPES = [
+    const BOND_TYPES = [
       { key: "subscribe", label: "申购" },
+      { key: "bond_payment", label: "缴款" },
+      { key: "listing", label: "上市" }
+    ];
+    const H_SHARE_TYPES = [
+      { key: "subscribe", label: "申购" },
+      { key: "grey_market", label: "暗盘" },
       { key: "listing", label: "上市" }
     ];
     const UNLOCK_DEFAULT_LOCK_MONTHS = 6;
@@ -1460,6 +1466,26 @@
       return formatDateKey(next);
     }
 
+    function shiftTradingDateKey(dateKey, days) {
+      if (!isIsoDateKey(dateKey)) {
+        return "";
+      }
+      const current = new Date(`${dateKey}T00:00:00`);
+      if (Number.isNaN(current.getTime())) {
+        return "";
+      }
+      const step = days >= 0 ? 1 : -1;
+      let remaining = Math.abs(days);
+      while (remaining > 0) {
+        current.setDate(current.getDate() + step);
+        const day = current.getDay();
+        if (day !== 0 && day !== 6) {
+          remaining -= 1;
+        }
+      }
+      return formatDateKey(current);
+    }
+
     function getPrevTradingDateKeyFromDate(dateKey) {
       if (!dateKey) {
         return "";
@@ -1563,6 +1589,22 @@
       return matches;
     }
 
+    function resolveShiftedEventValues(sourceData, targetDateKey, targetKey, sourceKey, offsetDays, includeMarket) {
+      const daily = sourceData[targetDateKey] || {};
+      const directValues = normalizeEventItems(daily[targetKey] || []);
+      if (directValues.length) {
+        return directValues
+          .map((item) => formatEventName(item, includeMarket))
+          .filter(Boolean);
+      }
+
+      const sourceDateKey = shiftTradingDateKey(targetDateKey, -offsetDays);
+      const sourceDaily = sourceData[sourceDateKey] || {};
+      return normalizeEventItems(sourceDaily[sourceKey] || [])
+        .map((item) => formatEventName(item, includeMarket))
+        .filter(Boolean);
+    }
+
     function resolveEventValues(typeKey, date, sourceData, includeMarket = true, exchangeScope = "all") {
       if (typeKey === "unlock") {
         return getUnlockValuesByDate(date, exchangeScope);
@@ -1575,6 +1617,12 @@
         return normalizeEventItems(nextDaily.inquiry || [])
           .map((item) => formatEventName(item, includeMarket))
           .filter(Boolean);
+      }
+      if (typeKey === "bond_payment") {
+        return resolveShiftedEventValues(sourceData, dateKey, "payment", "subscribe", 2, includeMarket);
+      }
+      if (typeKey === "grey_market") {
+        return resolveShiftedEventValues(sourceData, dateKey, "grey_market", "listing", -1, includeMarket);
       }
       return normalizeEventItems(daily[typeKey] || [])
         .map((item) => formatEventName(item, includeMarket))
@@ -1867,12 +1915,12 @@
         return;
       }
       if (viewKey === "bond") {
-        renderWeek(targets.bond.current, currentWeek, today, TWO_TYPES, calendarData.bond || {}, false, "all");
-        renderWeek(targets.bond.next, nextWeek, today, TWO_TYPES, calendarData.bond || {}, false, "all");
+        renderWeek(targets.bond.current, currentWeek, today, BOND_TYPES, calendarData.bond || {}, false, "all");
+        renderWeek(targets.bond.next, nextWeek, today, BOND_TYPES, calendarData.bond || {}, false, "all");
         return;
       }
-      renderWeek(targets.h_share.current, currentWeek, today, TWO_TYPES, calendarData.h_share || {}, false, "all");
-      renderWeek(targets.h_share.next, nextWeek, today, TWO_TYPES, calendarData.h_share || {}, false, "all");
+      renderWeek(targets.h_share.current, currentWeek, today, H_SHARE_TYPES, calendarData.h_share || {}, false, "all");
+      renderWeek(targets.h_share.next, nextWeek, today, H_SHARE_TYPES, calendarData.h_share || {}, false, "all");
     }
 
       function syncConsoleControls() {
