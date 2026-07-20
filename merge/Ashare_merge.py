@@ -14,6 +14,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from crawlers.bse_crawler import fetch as fetch_bse
 from crawlers.eastmoney_crawler import fetch as fetch_eastmoney
+from crawlers.eastmoney_stock_detail import StockDetailFetchError, fetch_stock_detail
 from crawlers.sse_crawler import fetch as fetch_sse
 from crawlers.sz_crawler import fetch as fetch_sz
 from utils import EMPTY_DAY, clean_data, get_calendar_range, init_calendar_data, normalize_fetch_output
@@ -25,6 +26,11 @@ REFERENCE_DATE = dt.datetime.now().date().strftime("%Y-%m-%d")
 DATE_KEY_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 FETCH_ATTEMPTS = max(1, int(os.getenv("ASHARE_FETCH_ATTEMPTS", "3")))
 FETCH_TIMEOUT_MS = max(30000, int(os.getenv("ASHARE_FETCH_TIMEOUT_MS", "60000")))
+DETAIL_TIMEOUT_SECONDS = max(5, int(os.getenv("NEW_STOCK_DETAIL_TIMEOUT_SECONDS", "30")))
+DETAIL_FETCH_ATTEMPTS = max(1, int(os.getenv("NEW_STOCK_DETAIL_FETCH_ATTEMPTS", "3")))
+PREVIEW_MARKETS = {"SH", "SZ"}
+REITS_CODE_PREFIXES = ("18", "50")
+PREVIEW_EVENT_ORDER = ("drafting", "inquiry", "subscribe", "payment", "listing")
 
 
 def _signature(item: Any) -> str:
@@ -197,6 +203,184 @@ def _collect_date_list(
     return sorted(keys)
 
 
+def _is_reits_code(code: str) -> bool:
+    return code.startswith(REITS_CODE_PREFIXES)
+
+
+def _preview_identity(item: Any) -> tuple[str, str, str]:
+    if not isinstance(item, Mapping):
+        return "", str(clean_data(item) or "").strip(), ""
+    return (
+        str(clean_data(item.get("code", "")) or "").strip(),
+        str(clean_data(item.get("name", "")) or "").strip(),
+        str(item.get("market", "") or "").strip().upper(),
+    )
+
+
+def _collect_preview_candidates(
+    source_data: Mapping[str, Mapping[str, Any]],
+    reference_date: str,
+) -> list[dict[str, str]]:
+    by_key: dict[str, dict[str, str]] = {}
+    by_code: dict[str, str] = {}
+    by_name_market: dict[str, str] = {}
+
+    for date_key in sorted(source_data):
+        day_data = source_data.get(date_key)
+        if not isinstance(day_data, Mapping):
+            continue
+        for event_key in PREVIEW_EVENT_ORDER:
+            for item in _iter_items(day_data.get(event_key, [])):
+                code, name, market = _preview_identity(item)
+                if market not in PREVIEW_MARKETS or (code and _is_reits_code(code)):
+                    continue
+
+                name_market_key = f"{name}|{market}"
+                if code and code in by_code:
+                    stock_key = by_code[code]
+                elif (name or market) and name_market_key in by_name_market:
+                    stock_key = by_name_market[name_market_key]
+                else:
+                    stock_key = f"code:{code}" if code else f"name:{name_market_key}"
+
+                stock = by_key.setdefault(
+                    stock_key,
+                    {
+                        "name": "",
+                        "code": "",
+                        "market": "",
+                        **{event: "" for event in PREVIEW_EVENT_ORDER},
+                    },
+                )
+                if not stock["name"] and name:
+                    stock["name"] = name
+                if not stock["code"] and code:
+                    stock["code"] = code
+                if not stock["market"] and market:
+                    stock["market"] = market
+                if not stock[event_key]:
+                    stock[event_key] = date_key
+
+                if code:
+                    by_code[code] = stock_key
+                if name or market:
+                    by_name_market[name_market_key] = stock_key
+
+    candidates = [
+        stock
+        for stock in by_key.values()
+        if (stock["name"] or stock["code"])
+        and stock["market"] in PREVIEW_MARKETS
+        and (not stock["code"] or not _is_reits_code(stock["code"]))
+        and (not stock["listing"] or reference_date < stock["listing"])
+    ]
+    candidates.sort(
+        key=lambda stock: (
+            stock["subscribe"]
+            or stock["inquiry"]
+            or stock["drafting"]
+            or stock["payment"]
+            or stock["listing"]
+            or "9999-99-99",
+            stock["name"] or stock["code"],
+        )
+    )
+    return candidates
+
+
+def _build_new_stock_preview(
+    source_data: Mapping[str, Mapping[str, Any]],
+    reference_date: str,
+    fetcher=fetch_stock_detail,
+) -> list[dict[str, Any]]:
+    previews: list[dict[str, Any]] = []
+    candidates = _collect_preview_candidates(source_data, reference_date)
+
+    for candidate in candidates:
+        code = candidate["code"]
+        preview: dict[str, Any] = {
+            "name": candidate["name"] or None,
+            "code": code or None,
+            "market": candidate["market"],
+            "industry": None,
+            "offline_placing_num": None,
+            "issue_num": None,
+        }
+        if not code:
+            print(f"[MERGE][PREVIEW] detail skipped: code unavailable for {candidate['name'] or '-'}")
+            previews.append(preview)
+            continue
+
+        try:
+            detail = fetcher(
+                code,
+                timeout=DETAIL_TIMEOUT_SECONDS,
+                retries=DETAIL_FETCH_ATTEMPTS,
+            )
+        except (StockDetailFetchError, ValueError, OSError) as exc:
+            print(f"[MERGE][PREVIEW] detail failed for {code}: {exc}")
+            previews.append(preview)
+            continue
+
+        preview.update(
+            {
+                "name": str(detail.get("name") or candidate["name"] or "").strip() or None,
+                "market": str(detail.get("market") or candidate["market"]).strip().upper(),
+                "industry": detail.get("industry") or None,
+                "offline_placing_num": detail.get("offline_placing_num"),
+                "issue_num": detail.get("issue_num"),
+            }
+        )
+        previews.append(preview)
+
+    print(f"[MERGE][PREVIEW] built {len(previews)} card records")
+    return previews
+
+
+def _enrich_calendar_names(
+    source_data: Mapping[str, Mapping[str, Any]],
+    previews: Iterable[Mapping[str, Any]],
+) -> None:
+    names_by_code = {
+        str(item.get("code") or "").strip(): str(item.get("name") or "").strip()
+        for item in previews
+        if str(item.get("code") or "").strip() and str(item.get("name") or "").strip()
+    }
+    if not names_by_code:
+        return
+
+    identity_by_name_market: dict[tuple[str, str], tuple[str, str]] = {}
+    for day_data in source_data.values():
+        if not isinstance(day_data, Mapping):
+            continue
+        for event_key in EMPTY_DAY:
+            for item in _iter_items(day_data.get(event_key, [])):
+                if not isinstance(item, Mapping):
+                    continue
+                code = str(item.get("code") or "").strip()
+                name = str(item.get("name") or "").strip()
+                market = str(item.get("market") or "").strip().upper()
+                if code in names_by_code and name:
+                    identity_by_name_market[(name, market)] = (code, names_by_code[code])
+
+    for day_data in source_data.values():
+        if not isinstance(day_data, Mapping):
+            continue
+        for event_key in EMPTY_DAY:
+            for item in _iter_items(day_data.get(event_key, [])):
+                if not isinstance(item, dict):
+                    continue
+                code = str(item.get("code") or "").strip()
+                if code in names_by_code:
+                    item["name"] = names_by_code[code]
+                    continue
+                name = str(item.get("name") or "").strip()
+                market = str(item.get("market") or "").strip().upper()
+                matched_identity = identity_by_name_market.get((name, market))
+                if matched_identity:
+                    item["code"], item["name"] = matched_identity
+
+
 def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
     sse_data = _safe_fetch("SSE", fetch_sse, reference_date)
     sz_data = _safe_fetch("SZSE", fetch_sz, reference_date)
@@ -226,6 +410,9 @@ def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
     hs_map = normalize_fetch_output(hs_map, date_list=date_list, reference_date=reference_date)
     bj_map = normalize_fetch_output(bj_map, date_list=date_list, reference_date=reference_date)
     all_map = normalize_fetch_output(all_map, date_list=date_list, reference_date=reference_date)
+    new_stock_preview = _build_new_stock_preview(hs_map, reference_date=reference_date)
+    _enrich_calendar_names(hs_map, new_stock_preview)
+    _enrich_calendar_names(all_map, new_stock_preview)
 
     return {
         "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -235,10 +422,12 @@ def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
             "all": all_map,
             "hs": hs_map,
             "bj": bj_map,
+            "new_stock_preview": new_stock_preview,
         },
         "all": all_map,
         "hs": hs_map,
         "bj": bj_map,
+        "new_stock_preview": new_stock_preview,
         "bond": {},
         "h_share": {},
     }

@@ -513,6 +513,23 @@
       padding-top: 2px;
     }
 
+    .event-value a,
+    .board-stock-link,
+    .new-stock-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .event-value a:hover,
+    .event-value a:focus-visible,
+    .board-stock-link:hover,
+    .board-stock-link:focus-visible,
+    .new-stock-link:hover,
+    .new-stock-link:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .event-value.empty {
       color: #8d95a8;
     }
@@ -603,6 +620,118 @@
       margin: 0;
       font-size: 15px;
       color: #1d365f;
+      overflow-wrap: anywhere;
+    }
+
+    .new-stock-preview {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .new-stock-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+
+    .new-stock-card {
+      min-width: 0;
+      min-height: 152px;
+      border: 1px solid #cfdaeb;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(30, 54, 101, 0.07);
+      padding: 14px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+    }
+
+    .new-stock-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .stock-meta-left {
+      min-width: 0;
+    }
+
+    .new-stock-link {
+      display: grid;
+      gap: 3px;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .new-stock-name {
+      color: #18345f;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .new-stock-code {
+      color: #53627d;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .new-stock-industry {
+      flex: 0 1 48%;
+      color: #53627d;
+      font-size: 12px;
+      line-height: 1.45;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .new-stock-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e9f4;
+    }
+
+    .new-stock-metric {
+      min-width: 0;
+      display: grid;
+      align-content: start;
+      gap: 6px;
+    }
+
+    .metric-lbl {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .metric-num,
+    .metric-num-highlight {
+      color: #213b66;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-num-highlight {
+      color: #c83c32;
+    }
+
+    .metric-value-long {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .metric-pending {
+      color: #8d95a8;
+      font-weight: 500;
     }
 
     .board-table {
@@ -920,6 +1049,10 @@
         grid-template-columns: 1fr;
       }
 
+      .new-stock-grid {
+        grid-template-columns: 1fr;
+      }
+
       .share-dialog {
         padding: 14px;
         border-radius: 18px;
@@ -996,12 +1129,10 @@
           <h3 class="board-title">打新群看板</h3>
           <div id="aShareBoard"></div>
         </section>
-        <div class="reserve-grid one">
-          <article class="reserve-card">
-            <h3 class="reserve-title">北交所 vs REITs</h3>
-            <p class="reserve-desc">预留输入区域、规则参数和计算结果展示区。</p>
-          </article>
-        </div>
+        <section class="new-stock-preview">
+          <h3 class="board-title">新股预览板块</h3>
+          <div class="new-stock-grid" id="newStockGrid"></div>
+        </section>
       </section>
 
       <section class="view" id="view-bond">
@@ -1101,7 +1232,8 @@
       a_share: {
         all: {},
         hs: {},
-        bj: {}
+        bj: {},
+        new_stock_preview: []
       },
       bond: {},
       h_share: {}
@@ -1116,6 +1248,7 @@
       const weekPagerEl = document.getElementById("weekPager");
       const consoleShareBtnEl = document.getElementById("consoleShareBtn");
     const aShareBoardEl = document.getElementById("aShareBoard");
+    const newStockGridEl = document.getElementById("newStockGrid");
     const shareButtons = Array.from(document.querySelectorAll(".share-trigger"));
     const shareModalEl = document.getElementById("shareModal");
     const sharePreviewEl = document.getElementById("sharePreview");
@@ -1154,6 +1287,7 @@
     const BOARD_MARKETS = new Set(["SH", "SZ"]);
     const boardCheckSet = loadBoardChecks();
     const unlockDb = initUnlockDb(window.UNLOCK_DB);
+    let aShareCodeLookup = new Map();
     let html2CanvasLoader = null;
     let sharePreviewUrl = "";
     let shareInFlight = false;
@@ -1417,6 +1551,34 @@
         .filter((item) => item.name || item.code);
     }
 
+    function normalizePreviewStocks(values) {
+      if (!Array.isArray(values)) {
+        return [];
+      }
+      return values
+        .map((item) => {
+          if (!item || typeof item !== "object") {
+            return null;
+          }
+          const normalizeCount = (value) => {
+            if (value == null || value === "") {
+              return null;
+            }
+            const number = Number(value);
+            return Number.isFinite(number) && number >= 0 ? Math.round(number) : null;
+          };
+          return {
+            name: String(item.name || "").trim(),
+            code: String(item.code || "").trim(),
+            market: String(item.market || "").trim().toUpperCase(),
+            industry: String(item.industry || "").trim(),
+            offline_placing_num: normalizeCount(item.offline_placing_num),
+            issue_num: normalizeCount(item.issue_num)
+          };
+        })
+        .filter((item) => item && (item.name || item.code) && BOARD_MARKETS.has(item.market));
+    }
+
     function formatEventName(item, includeMarket = true) {
       if (!item || typeof item !== "object") {
         return "";
@@ -1429,6 +1591,60 @@
         return base;
       }
       return item.market ? `${base}（${item.market}）` : base;
+    }
+
+    function buildCalendarStockUrl(item) {
+      const code = String((item && item.code) || "").trim();
+      const market = String((item && item.market) || "").trim().toUpperCase();
+      if (!code) {
+        return "";
+      }
+      if (market === "BJ") {
+        return `https://data.eastmoney.com/xg/jxc/${encodeURIComponent(code)}.html`;
+      }
+      if (BOARD_MARKETS.has(market)) {
+        return `https://data.eastmoney.com/xg/xg/detail/${encodeURIComponent(code)}.html`;
+      }
+      return "";
+    }
+
+    function buildExchangeIpoUrl(item) {
+      const code = String((item && item.code) || "").trim();
+      const market = String((item && item.market) || "").trim().toUpperCase();
+      if (!code) {
+        return "";
+      }
+      if (market === "SH") {
+        return `https://www.sse.com.cn/ipo/bookbuilding/detail/index.shtml?securityCode=${encodeURIComponent(code)}`;
+      }
+      if (market === "SZ") {
+        return `https://www.cninfo.com.cn/eipo/index.html#/views/xxpl/stockinquiry?stockId=${encodeURIComponent(code)}`;
+      }
+      return "";
+    }
+
+    function formatEventValue(item, includeMarket, linkStocks) {
+      const text = formatEventName(item, includeMarket);
+      if (!text || !linkStocks) {
+        return text;
+      }
+      const lookupKey = `${item.name || ""}|${item.market || ""}`;
+      const linkedItem = {
+        ...item,
+        code: item.code || aShareCodeLookup.get(lookupKey) || ""
+      };
+      const href = buildCalendarStockUrl(linkedItem);
+      return href ? { text, href } : text;
+    }
+
+    function createExternalStockLink(text, href, className) {
+      const link = document.createElement("a");
+      link.className = className;
+      link.href = href;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = text;
+      return link;
     }
 
     function isExcludedBoardCode(code) {
@@ -1571,7 +1787,7 @@
       }
     }
 
-    function getUnlockValuesByDate(date, exchangeScope = "all") {
+    function getUnlockValuesByDate(date, exchangeScope = "all", linkStocks = false) {
       if (exchangeScope === "bj") {
         return [];
       }
@@ -1583,31 +1799,46 @@
         }
         const unlockDate = calculateUnlockTradeDate(record.listing_date, record.lock_months, record.lock_day);
         if (unlockDate === targetKey) {
-          matches.push(`${record.name}（${record.market}）`);
+          matches.push(formatEventValue(record, true, linkStocks));
         }
       });
       return matches;
     }
 
-    function resolveShiftedEventValues(sourceData, targetDateKey, targetKey, sourceKey, offsetDays, includeMarket) {
+    function resolveShiftedEventValues(
+      sourceData,
+      targetDateKey,
+      targetKey,
+      sourceKey,
+      offsetDays,
+      includeMarket,
+      linkStocks
+    ) {
       const daily = sourceData[targetDateKey] || {};
       const directValues = normalizeEventItems(daily[targetKey] || []);
       if (directValues.length) {
         return directValues
-          .map((item) => formatEventName(item, includeMarket))
+          .map((item) => formatEventValue(item, includeMarket, linkStocks))
           .filter(Boolean);
       }
 
       const sourceDateKey = shiftTradingDateKey(targetDateKey, -offsetDays);
       const sourceDaily = sourceData[sourceDateKey] || {};
       return normalizeEventItems(sourceDaily[sourceKey] || [])
-        .map((item) => formatEventName(item, includeMarket))
+        .map((item) => formatEventValue(item, includeMarket, linkStocks))
         .filter(Boolean);
     }
 
-    function resolveEventValues(typeKey, date, sourceData, includeMarket = true, exchangeScope = "all") {
+    function resolveEventValues(
+      typeKey,
+      date,
+      sourceData,
+      includeMarket = true,
+      exchangeScope = "all",
+      linkStocks = false
+    ) {
       if (typeKey === "unlock") {
-        return getUnlockValuesByDate(date, exchangeScope);
+        return getUnlockValuesByDate(date, exchangeScope, linkStocks);
       }
       const dateKey = formatDateKey(date);
       const daily = sourceData[dateKey] || {};
@@ -1615,17 +1846,33 @@
         const nextKey = getNextTradingDateKey(date);
         const nextDaily = sourceData[nextKey] || {};
         return normalizeEventItems(nextDaily.inquiry || [])
-          .map((item) => formatEventName(item, includeMarket))
+          .map((item) => formatEventValue(item, includeMarket, linkStocks))
           .filter(Boolean);
       }
       if (typeKey === "bond_payment") {
-        return resolveShiftedEventValues(sourceData, dateKey, "payment", "subscribe", 2, includeMarket);
+        return resolveShiftedEventValues(
+          sourceData,
+          dateKey,
+          "payment",
+          "subscribe",
+          2,
+          includeMarket,
+          linkStocks
+        );
       }
       if (typeKey === "grey_market") {
-        return resolveShiftedEventValues(sourceData, dateKey, "grey_market", "listing", -1, includeMarket);
+        return resolveShiftedEventValues(
+          sourceData,
+          dateKey,
+          "grey_market",
+          "listing",
+          -1,
+          includeMarket,
+          linkStocks
+        );
       }
       return normalizeEventItems(daily[typeKey] || [])
-        .map((item) => formatEventName(item, includeMarket))
+        .map((item) => formatEventValue(item, includeMarket, linkStocks))
         .filter(Boolean);
     }
 
@@ -1768,6 +2015,16 @@
       const todayKey = formatDateKey(today);
       const codeLookup = buildCodeLookup(calendarData.a_share.all || {});
       const stocks = buildAshareBoardStocks(sourceData, todayKey, codeLookup);
+      const previewNamesByCode = new Map(
+        (calendarData.a_share.new_stock_preview || [])
+          .filter((item) => item.code && item.name)
+          .map((item) => [item.code, item.name])
+      );
+      stocks.forEach((stock) => {
+        if (stock.code && previewNamesByCode.has(stock.code)) {
+          stock.name = previewNamesByCode.get(stock.code);
+        }
+      });
 
       if (!stocks.length) {
         const empty = document.createElement("p");
@@ -1787,7 +2044,13 @@
         const title = document.createElement("p");
         title.className = "board-stock";
         const strong = document.createElement("strong");
-        strong.textContent = `${stock.name || ""} ${stock.code || ""}` || "未命名股票";
+        const titleText = `${stock.name || ""} ${stock.code || ""}`.trim() || "未命名股票";
+        const stockHref = buildExchangeIpoUrl(stock);
+        if (stockHref) {
+          strong.appendChild(createExternalStockLink(titleText, stockHref, "board-stock-link"));
+        } else {
+          strong.textContent = titleText;
+        }
         title.appendChild(strong);
 
         const table = document.createElement("table");
@@ -1848,6 +2111,98 @@
       aShareBoardEl.appendChild(list);
     }
 
+    function formatShareCount(value) {
+      if (!Number.isFinite(value) || value < 0) {
+        return "待披露";
+      }
+      return `${new Intl.NumberFormat("zh-CN").format(value)}\u00a0股`;
+    }
+
+    function renderNewStockPreview() {
+      if (!newStockGridEl) {
+        return;
+      }
+      newStockGridEl.innerHTML = "";
+      const stocks = activeExchange === "bj"
+        ? []
+        : (calendarData.a_share.new_stock_preview || []);
+
+      if (!stocks.length) {
+        const empty = document.createElement("p");
+        empty.className = "board-empty";
+        empty.textContent = activeExchange === "bj"
+          ? "北交所视图不展示沪深新股预览"
+          : "当前暂无未上市沪深新股";
+        newStockGridEl.appendChild(empty);
+        return;
+      }
+
+      stocks.forEach((stock) => {
+        const card = document.createElement("article");
+        card.className = "new-stock-card";
+        card.dataset.stockCode = stock.code || "";
+
+        const header = document.createElement("div");
+        header.className = "new-stock-header";
+        const meta = document.createElement("div");
+        meta.className = "stock-meta-left";
+        const identity = document.createElement(buildExchangeIpoUrl(stock) ? "a" : "div");
+        identity.className = "new-stock-link";
+        const href = buildExchangeIpoUrl(stock);
+        if (href) {
+          identity.href = href;
+          identity.target = "_blank";
+          identity.rel = "noopener noreferrer";
+        }
+
+        const name = document.createElement("span");
+        name.className = "new-stock-name";
+        name.textContent = stock.name || "名称待披露";
+        const code = document.createElement("span");
+        code.className = "new-stock-code";
+        code.textContent = stock.code
+          ? `${stock.code}${stock.market ? `.${stock.market}` : ""}`
+          : "代码待披露";
+        identity.appendChild(name);
+        identity.appendChild(code);
+        meta.appendChild(identity);
+
+        const industry = document.createElement("span");
+        industry.className = "new-stock-industry";
+        industry.textContent = stock.industry || "行业待披露";
+        header.appendChild(meta);
+        header.appendChild(industry);
+
+        const body = document.createElement("div");
+        body.className = "new-stock-body";
+        [
+          { label: "网下配售数量(股)", value: stock.offline_placing_num, highlight: false },
+          { label: "总发行数量(股)", value: stock.issue_num, highlight: true }
+        ].forEach((metric) => {
+          const wrap = document.createElement("div");
+          wrap.className = "new-stock-metric";
+          const metricLabel = document.createElement("span");
+          metricLabel.className = "metric-lbl";
+          metricLabel.textContent = metric.label;
+          const metricValue = document.createElement("span");
+          metricValue.className = metric.highlight ? "metric-num-highlight" : "metric-num";
+          if (!Number.isFinite(metric.value)) {
+            metricValue.classList.add("metric-pending");
+          } else if (metric.value >= 1_000_000_000) {
+            metricValue.classList.add("metric-value-long");
+          }
+          metricValue.textContent = formatShareCount(metric.value);
+          wrap.appendChild(metricLabel);
+          wrap.appendChild(metricValue);
+          body.appendChild(wrap);
+        });
+
+        card.appendChild(header);
+        card.appendChild(body);
+        newStockGridEl.appendChild(card);
+      });
+    }
+
     function createEventRow(label, values) {
       const item = document.createElement("div");
       item.className = "event-item";
@@ -1855,15 +2210,36 @@
       badge.className = "event-label";
       badge.textContent = label;
       const value = document.createElement("div");
-      const text = Array.isArray(values) && values.length ? values.join(" / ") : "暂无";
-      value.className = text === "暂无" ? "event-value empty" : "event-value";
-      value.textContent = text;
+      const entries = Array.isArray(values) ? values.filter(Boolean) : [];
+      value.className = entries.length ? "event-value" : "event-value empty";
+      if (!entries.length) {
+        value.textContent = "暂无";
+      } else {
+        entries.forEach((entry, index) => {
+          if (index > 0) {
+            value.appendChild(document.createTextNode(" / "));
+          }
+          if (entry && typeof entry === "object" && entry.href) {
+            value.appendChild(createExternalStockLink(entry.text || "", entry.href, "event-stock-link"));
+          } else {
+            value.appendChild(document.createTextNode(String(entry)));
+          }
+        });
+      }
       item.appendChild(badge);
       item.appendChild(value);
       return item;
     }
 
-    function createDayCard(date, today, eventTypes, sourceData, includeMarket = true, exchangeScope = "all") {
+    function createDayCard(
+      date,
+      today,
+      eventTypes,
+      sourceData,
+      includeMarket = true,
+      exchangeScope = "all",
+      linkStocks = false
+    ) {
       const card = document.createElement("article");
       card.className = "day-card";
       if (isSameDay(date, today)) {
@@ -1888,7 +2264,14 @@
         events.appendChild(closed);
       } else {
         eventTypes.forEach((typeItem) => {
-          const values = resolveEventValues(typeItem.key, date, sourceData, includeMarket, exchangeScope);
+          const values = resolveEventValues(
+            typeItem.key,
+            date,
+            sourceData,
+            includeMarket,
+            exchangeScope,
+            linkStocks
+          );
           events.appendChild(createEventRow(typeItem.label, values));
         });
       }
@@ -1899,19 +2282,31 @@
       return card;
     }
 
-    function renderWeek(target, weekDates, today, eventTypes, sourceData, includeMarket = true, exchangeScope = "all") {
+    function renderWeek(
+      target,
+      weekDates,
+      today,
+      eventTypes,
+      sourceData,
+      includeMarket = true,
+      exchangeScope = "all",
+      linkStocks = false
+    ) {
       target.innerHTML = "";
       weekDates.forEach((date) => {
-        target.appendChild(createDayCard(date, today, eventTypes, sourceData, includeMarket, exchangeScope));
+        target.appendChild(
+          createDayCard(date, today, eventTypes, sourceData, includeMarket, exchangeScope, linkStocks)
+        );
       });
     }
 
     function renderViewCalendar(viewKey, currentWeek, nextWeek, today) {
       if (viewKey === "a_share") {
         const source = calendarData.a_share[activeExchange] || {};
-        renderWeek(targets.a_share.current, currentWeek, today, A_TYPES, source, true, activeExchange);
-        renderWeek(targets.a_share.next, nextWeek, today, A_TYPES, source, true, activeExchange);
+        renderWeek(targets.a_share.current, currentWeek, today, A_TYPES, source, true, activeExchange, true);
+        renderWeek(targets.a_share.next, nextWeek, today, A_TYPES, source, true, activeExchange, true);
         renderAshareBoard(source, today);
+        renderNewStockPreview();
         return;
       }
       if (viewKey === "bond") {
@@ -2246,6 +2641,11 @@
         const nestedA = typeof aShareRaw === "object" && (aShareRaw.all || aShareRaw.hs || aShareRaw.bj);
         const hsMap = (baseData && baseData.hs) || (nestedA ? (aShareRaw.hs || {}) : aShareRaw || {});
         const bjMap = (baseData && baseData.bj) || (nestedA ? (aShareRaw.bj || {}) : {});
+        const previewStocks = normalizePreviewStocks(
+          (baseData && baseData.new_stock_preview) ||
+          (nestedA ? aShareRaw.new_stock_preview : []) ||
+          []
+        );
         const bondMap =
           (bondData && (bondData.bond || bondData.convertible_bond)) ||
           (baseData && (baseData.bond || baseData.convertible_bond)) ||
@@ -2259,18 +2659,21 @@
           a_share: {
             all: (baseData && baseData.all) || (nestedA ? (aShareRaw.all || {}) : hsMap || {}),
             hs: hsMap || {},
-            bj: bjMap || {}
+            bj: bjMap || {},
+            new_stock_preview: previewStocks
           },
           bond: bondMap,
           h_share: hshareMap
         };
+        aShareCodeLookup = buildCodeLookup(calendarData.a_share.all || {});
         syncUnlockDbFromListing(calendarData.a_share.all || {});
       } catch (error) {
         calendarData = {
-          a_share: { all: {}, hs: {}, bj: {} },
+          a_share: { all: {}, hs: {}, bj: {}, new_stock_preview: [] },
           bond: {},
           h_share: {}
         };
+        aShareCodeLookup = new Map();
       }
       purgeExpiredUnlockDb(new Date());
       renderAll();
