@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime as dt
 import json
-import os
 import re
 import sys
 from pathlib import Path
@@ -25,12 +24,6 @@ ASHARE_FILE = DATA_DIR / "Asharecalendar_data.json"
 BOND_FILE = DATA_DIR / "bondcalendar_data.json"
 HSHARE_FILE = DATA_DIR / "Hsharecalendar_data.json"
 DATE_KEY_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
-R2_ENDPOINT_URL = "https://0cb4978c638c310279a1d85ef69f1d23.r2.cloudflarestorage.com"
-R2_ENV_VARS = (
-    "R2_ACCESS_KEY_ID",
-    "R2_SECRET_ACCESS_KEY",
-    "R2_BUCKET_NAME",
-)
 TRADING_HOLIDAYS_FILE = ROOT_DIR / "data" / "trading_holidays.json"
 UNLOCK_DB_FILE = ROOT_DIR / "frontend" / "unlock_db.js"
 UNLOCK_DB_RE = re.compile(r"window\.UNLOCK_DB\s*=\s*(\[[\s\S]*\])\s*;?\s*$")
@@ -390,44 +383,6 @@ def sync_unlock_db_main(reference_date: str | None = None) -> None:
     _sync_unlock_db_from_calendar(source_data, reference_date=reference)
 
 
-def _get_r2_config() -> dict[str, str] | None:
-    config = {name: os.getenv(name, "").strip() for name in R2_ENV_VARS}
-    missing = [name for name, value in config.items() if not value]
-    if len(missing) == len(R2_ENV_VARS):
-        return None
-    if missing:
-        raise RuntimeError(
-            f"missing R2 environment variables: {', '.join(missing)}"
-        )
-    return config
-
-
-def _upload_json_files_to_r2(*paths: str | Path) -> None:
-    config = _get_r2_config()
-    if not config:
-        print("[SCRAMER][R2] skipped: R2 environment variables are not set")
-        return
-
-    import boto3
-
-    client = boto3.client(
-        "s3",
-        endpoint_url=R2_ENDPOINT_URL,
-        aws_access_key_id=config["R2_ACCESS_KEY_ID"],
-        aws_secret_access_key=config["R2_SECRET_ACCESS_KEY"],
-        region_name="auto",
-    )
-
-    for path in paths:
-        path_obj = Path(path)
-        client.upload_file(
-            str(path_obj),
-            config["R2_BUCKET_NAME"],
-            path_obj.name,
-        )
-        print(f"已上传: {path_obj.name}")
-
-
 def build_payload(reference_date: str = REFERENCE_DATE) -> dict[str, Any]:
     ashare_payload = _safe_build_ashare(reference_date)
     bond_map = _safe_fetch_bond(reference_date)
@@ -493,12 +448,6 @@ def main() -> None:
     _write_json(OUTPUT_FILE, payload)
     print(f"[SCRAMER] written: {OUTPUT_FILE}")
     print(f"[SCRAMER] written: {ASHARE_FILE}, {BOND_FILE}, {HSHARE_FILE}")
-    _upload_json_files_to_r2(
-        ASHARE_FILE,
-        BOND_FILE,
-        HSHARE_FILE,
-        OUTPUT_FILE,
-    )
 
 
 if __name__ == "__main__":
