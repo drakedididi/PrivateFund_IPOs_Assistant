@@ -1,11 +1,24 @@
 __pycache__/
-*.pyc
+.pytest_cache/
+*.py[cod]
+
+# Local environment and runtime files
 .env
+.env.*
+dist/
+temp/
+tmp/
+*.tmp
+pcf_runtime/
+
+# Personal Codex/agent tooling; keep AGENTS.md and docs/agents for repo conventions.
+.codex/
+.agents/
+
+# Generated calendar data. Keep the static holiday source in git.
 data/*
 !data/trading_holidays.json
 frontend/data/
-dist/
-temp/
-*.tmp
-项目说明.md
+
+# Local-only development notes.
 开发日志.md

@@ -2,15 +2,19 @@ from __future__ import annotations
 
 import io
 import hmac
+import json
 import os
 import shutil
 import tempfile
+import threading
 import time
+import uuid
 import zipfile
+from dataclasses import asdict
 from pathlib import Path
 from urllib.parse import quote
 
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
@@ -22,6 +26,17 @@ from module_tools.related_deal.convert_openyxl import process_excel_files as pro
 from module_tools.related_deal.multi_fund import process_excel_files as process_related_notice_files
 from module_tools.valuation_table.valuation_table import process_excel_files as process_valuation_table_files
 from module_tools.withdraw import read_products_from_excel_bytes, withdraw_pdfs
+from trade_tools.PCF.pcf_service import (
+    cache_status,
+    create_all_pcf_csv_zip,
+    create_qmt_basket_csv,
+    default_work_dir,
+    get_etf_components,
+    normalize_market,
+    normalize_stock_code,
+    run_pipeline,
+    workbook_bytes,
+)
 
 
 RENDER_SERVICE_URL = "https://privatefund-ipos-assistant-km21.onrender.com"
@@ -33,10 +48,18 @@ EXPOSED_HEADERS = [
     "X-Max-Recovery-Period",
     "X-PDF-Withdraw-Summary",
     "X-Recovery-Periods",
+    "X-PCF-Matches",
+    "X-PCF-CSV-Files",
+    "X-PCF-CSV-Components",
+    "X-PCF-Warnings",
+    "X-PCF-Summary",
 ]
 
 app = Flask(__name__)
 CORS(app, expose_headers=EXPOSED_HEADERS)
+PCF_JOB_LOCK = threading.Lock()
+PCF_PIPELINE_LOCK = threading.Lock()
+FRONTEND_DIR = Path(__file__).resolve().parent / "frontend"
 
 
 def debug_log(message: str) -> None:
@@ -62,6 +85,11 @@ def add_app_headers(response):
 @app.route("/api/health", methods=["GET"])
 def health_check():
     return jsonify({"status": "ok", "service_url": RENDER_SERVICE_URL, "version": APP_VERSION}), 200
+
+
+@app.route("/frontend/<path:filename>", methods=["GET"])
+def frontend_file(filename: str):
+    return send_from_directory(FRONTEND_DIR, filename)
 
 
 def get_render_port() -> int:
@@ -503,9 +531,408 @@ def api_fund():
     return run_document_tool(process_related_notice_files, "_related_notice_docs.zip")
 
 
+def parse_pcf_payload() -> tuple[str, str, list[str], bool]:
+    payload = request.get_json(silent=True) or {}
+    stock_code = str(payload.get("stock_code", "")).strip()
+    stock_name = str(payload.get("stock_name", "")).strip()
+    raw_markets = payload.get("markets", ["SH", "SZ"])
+    if not stock_code:
+        raise ValueError("请输入股票代码")
+    if not isinstance(raw_markets, list) or not raw_markets:
+        raise ValueError("请至少选择一个市场")
+    normalize_stock_code(stock_code)
+    markets = list(dict.fromkeys(normalize_market(str(item)) for item in raw_markets))
+    return stock_code, stock_name, markets, payload.get("refresh") is True
+
+
+def pcf_jobs_dir() -> Path:
+    path = default_work_dir() / "jobs"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def validate_pcf_job_id(job_id: str) -> str:
+    if len(job_id) != 32 or any(char not in "0123456789abcdef" for char in job_id):
+        raise ValueError("无效的任务编号")
+    return job_id
+
+
+def pcf_job_paths(job_id: str) -> tuple[Path, Path]:
+    safe_id = validate_pcf_job_id(job_id)
+    root = pcf_jobs_dir()
+    return root / f"{safe_id}.json", root / f"{safe_id}.xlsx"
+
+
+def pcf_job_data_path(job_id: str) -> Path:
+    safe_id = validate_pcf_job_id(job_id)
+    return pcf_jobs_dir() / f"{safe_id}.result.json"
+
+
+def read_pcf_job(job_id: str) -> dict[str, object] | None:
+    status_path, _ = pcf_job_paths(job_id)
+    with PCF_JOB_LOCK:
+        if not status_path.exists():
+            return None
+        try:
+            return json.loads(status_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError("任务状态暂时不可读取") from exc
+
+
+def update_pcf_job(job_key: str, **changes: object) -> dict[str, object]:
+    status_path, _ = pcf_job_paths(job_key)
+    with PCF_JOB_LOCK:
+        current: dict[str, object] = {}
+        if status_path.exists():
+            try:
+                current = json.loads(status_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                current = {}
+        current.update(changes)
+        current["updated_at"] = time.time()
+        temp_path = status_path.with_suffix(f".{threading.get_ident()}.tmp")
+        temp_path.write_text(
+            json.dumps(current, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        temp_path.replace(status_path)
+    return current
+
+
+def cleanup_pcf_jobs() -> None:
+    cutoff = time.time() - 24 * 60 * 60
+    for status_path in pcf_jobs_dir().glob("*.json"):
+        if len(status_path.stem) != 32:
+            continue
+        try:
+            if status_path.stat().st_mtime >= cutoff:
+                continue
+            result_path = status_path.with_suffix(".xlsx")
+            data_path = pcf_job_data_path(status_path.stem)
+            status_path.unlink(missing_ok=True)
+            result_path.unlink(missing_ok=True)
+            data_path.unlink(missing_ok=True)
+        except OSError:
+            continue
+
+
+def pcf_progress_message(progress: dict[str, object]) -> str:
+    market = str(progress.get("market", ""))
+    phase = str(progress.get("phase", ""))
+    current = int(progress.get("current", 0))
+    total = int(progress.get("total", 0))
+    if phase == "links":
+        return f"正在获取 {market} ETF 链接"
+    if phase == "download":
+        return f"正在处理 {market} PCF：{current} / {total}"
+    if phase == "scan":
+        return f"正在检索 {market} PCF：{current} / {total}"
+    return "正在处理 PCF"
+
+
+def run_pcf_job(
+    job_id: str,
+    stock_code: str,
+    stock_name: str,
+    markets: list[str],
+    refresh: bool,
+) -> None:
+    try:
+        update_pcf_job(
+            job_id,
+            state="running",
+            phase="waiting",
+            message="正在等待 PCF 数据任务",
+        )
+
+        def on_progress(progress: dict[str, object]) -> None:
+            update_pcf_job(
+                job_id,
+                state="running",
+                message=pcf_progress_message(progress),
+                **progress,
+            )
+
+        with PCF_PIPELINE_LOCK:
+            update_pcf_job(
+                job_id,
+                state="running",
+                phase="prepare",
+                message="正在准备 PCF 数据",
+            )
+            result = run_pipeline(
+                stock_code,
+                stock_name,
+                markets=markets,
+                refresh=refresh,
+                progress_callback=on_progress,
+            )
+        _, result_path = pcf_job_paths(job_id)
+        result["workbook"].save(result_path)
+        data_path = pcf_job_data_path(job_id)
+        result_data = {
+            "job_id": job_id,
+            "stock_code": result["stock_code"],
+            "stock_name": result["stock_name"],
+            "matches": result["matches"],
+            "warnings": result["errors"],
+            "rows": [asdict(record) for record in result["records"]],
+        }
+        temp_data_path = data_path.with_suffix(f".{threading.get_ident()}.tmp")
+        temp_data_path.write_text(
+            json.dumps(result_data, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        temp_data_path.replace(data_path)
+        update_pcf_job(
+            job_id,
+            state="completed",
+            phase="complete",
+            message=f"处理完成，匹配 {result['matches']} 个 ETF",
+            matches=result["matches"],
+            warnings=result["errors"],
+            download_ready=True,
+        )
+    except Exception as exc:
+        debug_log(f"PCF job {job_id} failed: {exc}")
+        update_pcf_job(
+            job_id,
+            state="failed",
+            phase="failed",
+            message=f"PCF 处理失败: {exc}",
+            error=str(exc),
+            download_ready=False,
+        )
+
+
+@app.route("/api/pcf/jobs", methods=["POST"])
+def api_pcf_jobs_create():
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        stock_code, stock_name, markets, refresh = parse_pcf_payload()
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    cleanup_pcf_jobs()
+    job_id = uuid.uuid4().hex
+    update_pcf_job(
+        job_id,
+        job_id=job_id,
+        state="queued",
+        phase="queued",
+        message="任务已创建",
+        current=0,
+        total=0,
+        downloaded=0,
+        skipped=0,
+        failed=0,
+        market="",
+        matches=0,
+        warnings=[],
+        download_ready=False,
+        stock_code=stock_code,
+        stock_name=stock_name,
+        markets=markets,
+        created_at=time.time(),
+    )
+    worker = threading.Thread(
+        target=run_pcf_job,
+        args=(job_id, stock_code, stock_name, markets, refresh),
+        daemon=True,
+        name=f"pcf-{job_id[:8]}",
+    )
+    worker.start()
+    return jsonify({"job_id": job_id, "state": "queued"}), 202
+
+
+@app.route("/api/pcf/jobs/<job_id>", methods=["GET"])
+def api_pcf_jobs_status(job_id: str):
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        job = read_pcf_job(job_id)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except RuntimeError as exc:
+        return jsonify({"error": str(exc)}), 503
+    if job is None:
+        return jsonify({"error": "任务不存在或已过期"}), 404
+    return jsonify(job), 200
+
+
+@app.route("/api/pcf/jobs/<job_id>/result", methods=["GET"])
+def api_pcf_jobs_result(job_id: str):
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        job = read_pcf_job(job_id)
+        data_path = pcf_job_data_path(job_id)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except RuntimeError as exc:
+        return jsonify({"error": str(exc)}), 503
+    if job is None:
+        return jsonify({"error": "任务不存在或已过期"}), 404
+    if job.get("state") != "completed" or not data_path.exists():
+        return jsonify({"error": "任务尚未完成"}), 409
+    try:
+        return jsonify(json.loads(data_path.read_text(encoding="utf-8"))), 200
+    except (OSError, json.JSONDecodeError):
+        return jsonify({"error": "白名单结果文件不可用"}), 500
+
+
+@app.route("/api/pcf/etfs/<market>/<etf_code>/components", methods=["GET"])
+def api_pcf_etf_components(market: str, etf_code: str):
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        result = get_etf_components(market, etf_code)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except FileNotFoundError as exc:
+        return jsonify({"error": str(exc)}), 404
+    except Exception as exc:
+        debug_log(f"PCF component read failed: {exc}")
+        return jsonify({"error": f"PCF 成分读取失败: {exc}"}), 500
+    result["components"] = [asdict(component) for component in result["components"]]
+    return jsonify(result), 200
+
+
+@app.route("/api/pcf/etfs/<market>/<etf_code>/qmt-basket", methods=["GET"])
+def api_pcf_etf_qmt_basket(market: str, etf_code: str):
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        content, row_count, trading_day = create_qmt_basket_csv(market, etf_code)
+        normalized_market = normalize_market(market)
+        normalized_code = str(etf_code).strip()
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except FileNotFoundError as exc:
+        return jsonify({"error": str(exc)}), 404
+    except Exception as exc:
+        debug_log(f"QMT basket creation failed: {exc}")
+        return jsonify({"error": f"指定篮子生成失败: {exc}"}), 500
+
+    date_suffix = trading_day.replace("-", "") if trading_day else ""
+    filename = f"{normalized_code}_{normalized_market}_指定价篮子"
+    if date_suffix:
+        filename += f"_{date_suffix}"
+    response = send_file(
+        io.BytesIO(content),
+        as_attachment=True,
+        download_name=f"{filename}.csv",
+        mimetype="text/csv",
+    )
+    response.headers["Content-Type"] = "text/csv; charset=gb18030"
+    response.headers["X-PCF-Basket-Rows"] = str(row_count)
+    return response
+
+
+@app.route("/api/pcf/etfs/all/components-csv", methods=["GET"])
+def api_pcf_all_components_csv():
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        content, summary = create_all_pcf_csv_zip()
+    except Exception as exc:
+        debug_log(f"All-market PCF CSV export failed: {exc}")
+        return jsonify({"error": f"全市场 PCF 导出失败: {exc}"}), 500
+
+    date_suffix = str(summary.get("data_date", "")).replace("-", "")
+    filename = "全市场ETF_PCF清单"
+    if date_suffix:
+        filename += f"_{date_suffix}"
+    response = send_file(
+        io.BytesIO(content),
+        as_attachment=True,
+        download_name=f"{filename}.zip",
+        mimetype="application/zip",
+    )
+    response.headers["X-PCF-CSV-Files"] = str(summary["file_count"])
+    response.headers["X-PCF-CSV-Components"] = str(summary["component_count"])
+    return response
+
+
+@app.route("/api/pcf/jobs/<job_id>/download", methods=["GET"])
+def api_pcf_jobs_download(job_id: str):
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+    try:
+        job = read_pcf_job(job_id)
+        _, result_path = pcf_job_paths(job_id)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except RuntimeError as exc:
+        return jsonify({"error": str(exc)}), 503
+    if job is None:
+        return jsonify({"error": "任务不存在或已过期"}), 404
+    if job.get("state") != "completed" or not result_path.exists():
+        return jsonify({"error": "任务尚未完成"}), 409
+
+    response = send_file(
+        result_path,
+        as_attachment=True,
+        download_name=f"PCF白名单_{job.get('stock_name') or job.get('stock_code')}.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    warnings = job.get("warnings", [])
+    response.headers["X-PCF-Matches"] = str(job.get("matches", 0))
+    response.headers["X-PCF-Warnings"] = str(len(warnings) if isinstance(warnings, list) else 0)
+    return response
+
+
 @app.route("/api/pcf/crawl", methods=["POST"])
 def api_pcf_crawl():
-    return developing()
+    auth_error = require_secret_token()
+    if auth_error:
+        return auth_error
+
+    try:
+        stock_code, stock_name, markets, refresh = parse_pcf_payload()
+        result = run_pipeline(
+            stock_code,
+            stock_name,
+            markets=markets,
+            refresh=refresh,
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        debug_log(f"PCF crawl failed: {exc}")
+        return jsonify({"error": f"PCF 处理失败: {exc}"}), 502
+
+    response = send_file(
+        workbook_bytes(result["workbook"]),
+        as_attachment=True,
+        download_name=f"PCF白名单_{stock_name or result['stock_code']}.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    summary = {
+        "matches": result["matches"],
+        "warnings": result["errors"],
+        "markets": markets,
+    }
+    response.headers["X-PCF-Matches"] = str(result["matches"])
+    response.headers["X-PCF-Warnings"] = str(len(result["errors"]))
+    response.headers["X-PCF-Summary"] = quote(
+        json.dumps(summary, ensure_ascii=False, separators=(",", ":"))
+    )
+    return response
+
+
+@app.route("/api/pcf/status", methods=["GET"])
+def api_pcf_status():
+    status = cache_status()
+    return jsonify(status), 200
 
 
 if __name__ == "__main__":
