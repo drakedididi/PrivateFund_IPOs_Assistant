@@ -1,6 +1,6 @@
 # PrivateFund_IPOs_Assistant
 
-本链接(https://fundassistant.pages.dev/frontend/IPO)仅展示部分线上功能，如有个性化需求，部署【本地版】请联系管理员
+本链接 (https://fundassistant.pages.dev/frontend/IPO) 仅展示部分线上功能，如有个性化需求，部署【本地版】请联系管理员
 
 PrivateFund_IPOs_Assistant 是一个面向私募基金 打新/运营/交易场景的 Web 化工具集合。项目以静态前端页面承载业务入口，以 Flask 提供文件处理、数据爬取和交易辅助 API，可部署为 Cloudflare Pages 前端 + Render 后端，也支持部分交易工具在本地启动使用。
 
