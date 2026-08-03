@@ -6,10 +6,7 @@ on:
       - main
 
   schedule:
-    - cron: '0 21 * * *'
-    - cron: '0 22 * * *'
     - cron: '0 23 * * *'
-    - cron: '30 23 * * *'
 
   workflow_dispatch:
 

@@ -1,4 +1,4 @@
-# PrivateFund_IPOs_Assistant
+# 私募助手【Web试用版】
 
 本链接 (https://fundassistant.pages.dev/frontend/IPO) 仅展示部分线上功能，如有个性化需求，部署【本地版】请联系管理员
 
